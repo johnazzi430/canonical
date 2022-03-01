@@ -14,7 +14,7 @@
         </v-navigation-drawer>
         <v-main style="height: 100vh; margin-left:100px">
           <v-container style="margin-left:100px">
-            <h3>Products  <v-btn type="button" name="button" v-on:click='expandDetail'>Add product</v-btn></h3>
+            <h3>Products  <v-btn type="button" name="button" v-on:click='addItem("product")'>Add product</v-btn></h3>
             <v-row
               no-gutters
               style="height: 200px;
@@ -33,9 +33,9 @@
                 <v-card-header>
                   <div>
                     <div class="text-overline mb-1">
-                      {{product.name}}
+                      {{product.data.name}}
                     </div>
-                    <div class="text-caption">{{product.description}}</div>
+                    <div class="text-caption">{{product.data.description}}</div>
                   </div>
                 </v-card-header>
 
@@ -44,7 +44,7 @@
                     variant="outlined"
                     rounded
                     text
-                    v-on:click='expandDetail'
+                    v-on:click='expandDetail(product.id,"product")'
                   >
                     Button
                   </v-btn>
@@ -83,14 +83,13 @@
         <div id="right-sidepanel" class="sidepanel-right">
           <h1><a href="javascript:void(0)"
             class="closebtn" @click="closeDetail(); ">&times;</a></h1>
-            <productAdd/>
+            <productAdd v-if='selectedItemType = "product"'/>
         </div>
       </v-layout>
 </template>
 
 <script type="text/javascript">
 import productAdd from "./productAdd";
-import {product} from "../../services/firebaseDataService";
 
 export default {
   name: 'product-panel',
@@ -99,16 +98,28 @@ export default {
   },
   data() {
     return {
-      products:[]
+      selectedItemType: null
+      // products:[]
    }
   },
   async beforeMount() {
-    const data = await new product().getAll()
-    this.products = data
+    this.$store.commit('getProducts')
+  },
+  computed: {
+    products() {
+       return this.$store.state.products
+    }
   },
   methods: {
+    expandDetail(index,source) {
+      this.$store.commit('selectItem',{index,source})
+      this.selectedItemType = source
+      document.getElementById("right-sidepanel").style.width = "80%";
+    },
 
-    expandDetail() {
+    addItem(source) {
+      this.$store.commit('selectItem',{index:null, source})
+      this.selectedItemType = source
       document.getElementById("right-sidepanel").style.width = "80%";
     },
 

@@ -18,6 +18,7 @@
     "vue-router": "^4.0.13",
     "vuefire": "^2.2.5",
     "vuetify": "npm:@vuetify/nightly@next",
+    "vuex": "^4.0.2",
     "webfontloader": "^1.0.0"
   },
   "devDependencies": {
