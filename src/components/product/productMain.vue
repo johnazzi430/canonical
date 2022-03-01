@@ -6,6 +6,7 @@
           permanent>
           <v-list nav color="transparent">
             <v-list-item prepend-icon="mdi-semantic-web" title="Products" value="products"></v-list-item>
+            <v-list-item prepend-icon="mdi-application" title="Features" value="Features"></v-list-item>
             <v-list-item prepend-icon="mdi-lightbulb" title="Ideas" value="ideas"></v-list-item>
             <v-list-item prepend-icon="mdi-chart-areaspline" title="Goals" value="goals"></v-list-item>
             <v-list-item prepend-icon="mdi-flag" title="Risks" value="risks"></v-list-item>
@@ -25,7 +26,7 @@
                     flex-direction: column;
                     overflow-x: auto;">
               <v-card
-              v-for="product in products"
+              v-for="product in $store.state.products"
               v-bind:key="product"
               max-width="344"
               variant="outlined"
@@ -51,45 +52,133 @@
                 </v-card-actions>
               </v-card>
             </v-row>
+            <h3>Features  <v-btn type="button" name="button" v-on:click='addItem("feature")'>Add product</v-btn></h3>
+            <v-row
+              no-gutters
+              style="height: 200px;
+                    overflow-x:scroll;
+                    white-space: nowrap;
+                    display: flex;
+                    flex-wrap: wrap;
+                    flex-direction: column;
+                    overflow-x: auto;">
+              <v-card
+              v-for="feature in $store.state.features"
+              v-bind:key="feature"
+              max-width="344"
+              variant="outlined"
+              >
+                <v-card-header>
+                  <div>
+                    <div class="text-overline mb-1">
+                      {{feature.data.name}}
+                    </div>
+                    <div class="text-caption">{{feature.data.description}}</div>
+                  </div>
+                </v-card-header>
+
+                <v-card-actions>
+                  <v-btn
+                    variant="outlined"
+                    rounded
+                    text
+                    v-on:click='expandDetail(feature.id,"feature")'
+                  >
+                    Button
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-row>
             <h3>Ideas<v-btn type="button" name="button" v-on:click='expandDetail'>Add Idea</v-btn></h3>
-            <v-row               no-gutters
-                          style="height: 200px;
-                                overflow-x:scroll;
-                                white-space: nowrap;
-                                display: flex;
-                                flex-wrap: wrap;
-                                flex-direction: column;
-                                overflow-x: auto;"></v-row>
+            <v-row
+              no-gutters
+              style="height: 200px;
+                    overflow-x:scroll;
+                    white-space: nowrap;
+                    display: flex;
+                    flex-wrap: wrap;
+                    flex-direction: column;
+                    overflow-x: auto;">
+              <v-card
+              v-for="idea in $store.state.ideas"
+              v-bind:key="idea"
+              max-width="344"
+              variant="outlined"
+              >
+                <v-card-header>
+                  <div>
+                    <div class="text-overline mb-1">
+                      {{idea.data.idea}}
+                    </div>
+                    <div class="text-caption">{{idea.data.description}}</div>
+                  </div>
+                </v-card-header>
+
+                <v-card-actions>
+                  <v-btn
+                    variant="outlined"
+                    rounded
+                    text
+                    v-on:click='expandDetail(idea.id,"idea")'
+                  >
+                    Button
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-row>
             <h3>Goals<v-btn type="button" name="button" v-on:click='expandDetail'>Add Goal</v-btn></h3>
-            <v-row               no-gutters
-                          style="height: 200px;
-                                overflow-x:scroll;
-                                white-space: nowrap;
-                                display: flex;
-                                flex-wrap: wrap;
-                                flex-direction: column;
-                                overflow-x: auto;"></v-row>
+            <v-row
+              no-gutters
+              style="height: 200px;
+                    overflow-x:scroll;
+                    white-space: nowrap;
+                    display: flex;
+                    flex-wrap: wrap;
+                    flex-direction: column;
+                    overflow-x: auto;">
+              <v-card
+              v-for="goal in $store.state.goals"
+              v-bind:key="goal"
+              max-width="344"
+              variant="outlined"
+              >
+                <v-card-header>
+                  <div>
+                    <div class="text-overline mb-1">
+                      {{goal.data.name}}
+                    </div>
+                    <div class="text-caption">{{goal.data.description}}</div>
+                  </div>
+                </v-card-header>
+
+                <v-card-actions>
+                  <v-btn
+                    variant="outlined"
+                    rounded
+                    text
+                    v-on:click='expandDetail(goal.id,"goal")'
+                  >
+                    Button
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-row>
             <h3>Risks<v-btn type="button" name="button" v-on:click='expandDetail'>Add Risk</v-btn></h3>
-            <v-row               no-gutters
-                          style="height: 200px;
-                                overflow-x:scroll;
-                                white-space: nowrap;
-                                display: flex;
-                                flex-wrap: wrap;
-                                flex-direction: column;
-                                overflow-x: auto;"></v-row>
           </v-container>
         </v-main>
         <div id="right-sidepanel" class="sidepanel-right">
           <h1><a href="javascript:void(0)"
             class="closebtn" @click="closeDetail(); ">&times;</a></h1>
-            <productAdd v-if='selectedItemType = "product"'/>
+            {{selected.source}}
+            <productAdd v-if='selected.source === "product"'/>
+            <!-- <featureDetail v-if-else='$store.state.selected.source ==="feature"'/> -->
         </div>
       </v-layout>
 </template>
 
 <script type="text/javascript">
 import productAdd from "./productAdd";
+//import featureDetail from "./featureDetail";
 
 export default {
   name: 'product-panel',
@@ -104,23 +193,27 @@ export default {
   },
   async beforeMount() {
     this.$store.commit('getProducts')
+    this.$store.commit('getFeatures')
+    this.$store.commit('getIdeas')
+    this.$store.commit('getGoals')
   },
   computed: {
     products() {
        return this.$store.state.products
+    },
+    selected() {
+      return this.$store.state.selected
     }
   },
   methods: {
     expandDetail(index,source) {
       this.$store.commit('selectItem',{index,source})
-      this.selectedItemType = source
-      document.getElementById("right-sidepanel").style.width = "80%";
+      document.getElementById("right-sidepanel").style.width = "40%";
     },
 
     addItem(source) {
       this.$store.commit('selectItem',{index:null, source})
-      this.selectedItemType = source
-      document.getElementById("right-sidepanel").style.width = "80%";
+      document.getElementById("right-sidepanel").style.width = "40%";
     },
 
     closeDetail() {

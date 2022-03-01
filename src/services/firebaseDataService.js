@@ -47,6 +47,76 @@ export class product {
   }
 }
 
+export class feature {
+
+  async getAll() {
+    const snapshot = await db.collection("features").get();
+    return snapshot.docs.map(doc => ({id:doc.id, data:doc.data()}) );
+  }
+
+  createFeature(value) {
+    value.createDate = Date();
+    value.updatedDate = Date();
+    value.archived = false;
+    return db.collection("features").add(value);
+  }
+
+  updateFeature(id ,value) {
+    return db.collection("features").doc(id).update(value);
+  }
+
+  deleteFeature(id) {
+    return db.collection("features").doc(id).delete();
+  }
+}
+
+export class idea {
+
+  async getAll() {
+    const snapshot = await db.collection("ideas").get();
+    return snapshot.docs.map(doc => ({id:doc.id, data:doc.data()}) );
+  }
+
+  createidea(value) {
+    value.createDate = Date();
+    value.updatedDate = Date();
+    value.archived = false;
+    return db.collection("ideas").add(value);
+  }
+
+  updateidea(id ,value) {
+    return db.collection("ideas").doc(id).update(value);
+  }
+
+  deleteidea(id) {
+    return db.collection("ideas").doc(id).delete();
+  }
+}
+
+export class goal {
+
+  async getAll() {
+    const snapshot = await db.collection("productGoals").get();
+    return snapshot.docs.map(doc => ({id:doc.id, data:doc.data()}) );
+  }
+
+  creategoal(value) {
+    value.createDate = Date();
+    value.updatedDate = Date();
+    value.archived = false;
+    return db.collection("productGoals").add(value);
+  }
+
+  updategoal(id ,value) {
+    return db.collection("productGoals").doc(id).update(value);
+  }
+
+  deletegoal(id) {
+    return db.collection("productGoals").doc(id).delete();
+  }
+}
+
+
 export class persona {
   async getAll() {
     const snapshot = await db.collection("personas").get();
