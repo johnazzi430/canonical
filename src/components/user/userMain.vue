@@ -6,11 +6,11 @@
         permanent
         >
           <v-list nav color="transparent">
-            <v-list-item prepend-icon="mdi-email" title="Users" value="users"></v-list-item>
-            <v-list-item prepend-icon="mdi-account-supervisor-circle" title="insights" value="insights"></v-list-item>
-            <v-list-item prepend-icon="mdi-clock-start" title="Needs" value="needs"></v-list-item>
-            <v-list-item prepend-icon="mdi-clock-start" title="Journeys" value="journeys"></v-list-item>
-            <v-list-item prepend-icon="mdi-clock-start" title="Jobs to be done" value="jobsToBeDone"></v-list-item>
+            <v-list-item prepend-icon="mdi-account-supervisor-circle" title="Personas" value="persona"></v-list-item>
+            <v-list-item prepend-icon="mdi-binoculars" title="insights" value="insights"></v-list-item>
+            <v-list-item prepend-icon="mdi-fire" title="Needs" value="needs"></v-list-item>
+            <v-list-item prepend-icon="mdi-account-convert" title="Journeys" value="journeys"></v-list-item>
+            <v-list-item prepend-icon="mdi-wrench" title="Jobs to be done" value="jobsToBeDone"></v-list-item>
           </v-list>
         </v-navigation-drawer>
         <v-main style="height: 100%; margin-left:100px">

@@ -5,11 +5,11 @@
           width="250px"
           permanent>
           <v-list nav color="transparent">
-            <v-list-item prepend-icon="mdi-email" title="Products" value="products"></v-list-item>
-            <v-list-item prepend-icon="mdi-account-supervisor-circle" title="Ideas" value="ideas"></v-list-item>
-            <v-list-item prepend-icon="mdi-clock-start" title="Goals" value="goals"></v-list-item>
-            <v-list-item prepend-icon="mdi-clock-start" title="Risks" value="risks"></v-list-item>
-            <v-list-item prepend-icon="mdi-clock-start" title="Architecture" value="architecture"></v-list-item>
+            <v-list-item prepend-icon="mdi-semantic-web" title="Products" value="products"></v-list-item>
+            <v-list-item prepend-icon="mdi-lightbulb" title="Ideas" value="ideas"></v-list-item>
+            <v-list-item prepend-icon="mdi-chart-areaspline" title="Goals" value="goals"></v-list-item>
+            <v-list-item prepend-icon="mdi-flag" title="Risks" value="risks"></v-list-item>
+            <v-list-item prepend-icon="mdi-desktop-classic" title="Architecture" value="architecture"></v-list-item>
           </v-list>
         </v-navigation-drawer>
         <v-main style="height: 100vh; margin-left:100px">
