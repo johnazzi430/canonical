@@ -108,9 +108,10 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .center {
   margin: auto;
+  margin-top: 88px;
   width: 50%;
   border: 3px solid green;
   padding: 10px;

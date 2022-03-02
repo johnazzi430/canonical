@@ -7,30 +7,30 @@
       elevate-on-scroll
       scroll-target="#scrolling-techniques-7"
       >
-        <v-app-bar-title to="/">Canonical</v-app-bar-title>
+        <v-app-bar-title><v-btn variant="plain" to="/"> Canonical</v-btn></v-app-bar-title>
         <v-btn-toggle dark v-model="toggle_exclusive">
-          <v-btn to="/product">
+          <v-btn dark variant="contained-text" to="/product">
             Product
           </v-btn>
-          <v-btn to="/user">
+          <v-btn dark variant="contained-text" to="/user">
             User
           </v-btn>
           <v-spacer></v-spacer>
-          <v-btn to="/about">
-            About
-          </v-btn>
-          <v-btn to="/help">
-            Help
-          </v-btn>
-          <v-btn v-if='$store.state.user.loggedIn === false' to="/Login">
-              Login
-          </v-btn>
-          <v-btn v-else-if='$store.state.user.loggedIn === true' @click="logout">
-              Logout
-          </v-btn>
           <div v-if='$store.state.user.loggedIn === true'>
             {{$store.state.user.email}}
           </div>
+          <v-btn variant="contained-text" to="/about">
+            About
+          </v-btn>
+          <v-btn variant="contained-text" to="/help">
+            Help
+          </v-btn>
+          <v-btn variant="contained-text" v-if='$store.state.user.loggedIn === false' to="/Login">
+              Login
+          </v-btn>
+          <v-btn variant="contained-text" v-else-if='$store.state.user.loggedIn === true' @click="logout">
+              Logout
+          </v-btn>
 
         </v-btn-toggle>
       </v-app-bar>

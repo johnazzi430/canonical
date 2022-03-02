@@ -32,8 +32,9 @@
               <v-card
               v-for="product in $store.state.products"
               v-bind:key="product"
-              max-width="344"
-              variant="outlined"
+              width="400"
+              height="200"
+              elevation="3"
               >
                 <v-card-header>
                   <div>
@@ -46,9 +47,8 @@
 
                 <v-card-actions>
                   <v-btn
-                    variant="outlined"
-                    rounded
-                    text
+                    variant="text"
+                    color="orange"
                     v-on:click='expandDetail(product.id,"product")'
                   >
                     Button
@@ -69,8 +69,9 @@
               <v-card
               v-for="feature in $store.state.features"
               v-bind:key="feature"
-              max-width="344"
-              variant="outlined"
+              width="200"
+              height="120"
+              elevation="3"
               >
                 <v-card-header>
                   <div>
@@ -83,9 +84,8 @@
 
                 <v-card-actions>
                   <v-btn
-                    variant="outlined"
-                    rounded
-                    text
+                  variant="text"
+                  color="orange"
                     v-on:click='expandDetail(feature.id,"feature")'
                   >
                     Button
@@ -106,8 +106,9 @@
               <v-card
               v-for="idea in $store.state.ideas"
               v-bind:key="idea"
-              max-width="344"
-              variant="outlined"
+              width="200"
+              height="120"
+              elevation="3"
               >
                 <v-card-header>
                   <div>
@@ -120,8 +121,8 @@
 
                 <v-card-actions>
                   <v-btn
-                    variant="outlined"
-                    rounded
+                  variant="text"
+                  color="orange"
                     text
                     v-on:click='expandDetail(idea.id,"idea")'
                   >
@@ -143,8 +144,9 @@
               <v-card
               v-for="goal in $store.state.goals"
               v-bind:key="goal"
-              max-width="344"
-              variant="outlined"
+              width="200"
+              height="120"
+              elevation="3"
               >
                 <v-card-header>
                   <div>
@@ -157,9 +159,8 @@
 
                 <v-card-actions>
                   <v-btn
-                    variant="outlined"
-                    rounded
-                    text
+                  variant="text"
+                  color="orange"
                     v-on:click='expandDetail(goal.id,"goal")'
                   >
                     Button
@@ -180,8 +181,9 @@
               <v-card
               v-for="risk in $store.state.risks"
               v-bind:key="risk"
-              max-width="344"
-              variant="outlined"
+              width="200"
+              height="120"
+              elevation="3"
               >
                 <v-card-header>
                   <div>
@@ -194,9 +196,8 @@
 
                 <v-card-actions>
                   <v-btn
-                    variant="outlined"
-                    rounded
-                    text
+                  variant="text"
+                  color="orange"
                     v-on:click='expandDetail(risk.id,"risk")'
                   >
                     Button

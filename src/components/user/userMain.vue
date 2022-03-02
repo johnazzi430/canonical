@@ -29,7 +29,8 @@
               <v-card
               v-for="persona in $store.state.personas"
               v-bind:key="persona"
-              max-width="344"
+              width="200"
+              height="120"
               variant="outlined"
               >
                 <v-card-header>
@@ -43,12 +44,11 @@
 
                 <v-card-actions>
                   <v-btn
-                    variant="outlined"
-                    rounded
-                    text
+                    variant="text"
+                    color="orange"
                     v-on:click='expandDetail(persona.id,"persona")'
                   >
-                    Button
+                    Details
                   </v-btn>
                 </v-card-actions>
               </v-card>
@@ -66,7 +66,8 @@
               <v-card
               v-for="insight in $store.state.insights"
               v-bind:key="insight"
-              max-width="344"
+              width="200"
+              height="120"
               variant="outlined"
               >
                 <v-card-header>
@@ -103,7 +104,8 @@
               <v-card
               v-for="need in $store.state.needs"
               v-bind:key="need"
-              max-width="344"
+              width="200"
+              height="120"
               variant="outlined"
               >
                 <v-card-header>
@@ -140,7 +142,8 @@
               <v-card
               v-for="journey in $store.state.journeys"
               v-bind:key="journey"
-              max-width="344"
+              width="200"
+              height="120"
               variant="outlined"
               >
                 <v-card-header>
@@ -177,7 +180,8 @@
               <v-card
               v-for="jobToBeDone in $store.state.jobToBeDones"
               v-bind:key="jobToBeDone"
-              max-width="344"
+              width="200"
+              height="120"
               variant="outlined"
               >
                 <v-card-header>
