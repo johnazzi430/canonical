@@ -209,13 +209,12 @@
         <div id="right-sidepanel" class="sidepanel-right">
           <h1><a href="javascript:void(0)"
             class="closebtn" @click="closeDetail(); ">&times;</a></h1>
-            {{$store.state.selected.source}}
+            <h1 style="text-transform:uppercase">{{$store.state.selected.source}}</h1>
             <div v-if='$store.state.selected.source === "product"'><productDetail :key='$store.state.selected.index' /></div>
             <div v-else-if='$store.state.selected.source ==="feature"'><featureDetail :key='$store.state.selected.index'/></div>
             <div v-else-if='$store.state.selected.source ==="idea"'><ideaDetail :key='$store.state.selected.index'/></div>
             <div v-else-if='$store.state.selected.source ==="goal"'><goalDetail :key='$store.state.selected.index'/></div>
             <div v-else-if='$store.state.selected.source ==="risk"'><riskDetail :key='$store.state.selected.index'/></div>
-
         </div>
       </v-layout>
 </template>
@@ -295,12 +294,14 @@ export default {
   position: fixed; /* Stay in place */
   top: 0 ;
   z-index: 1; /* Stay on top */
-  right: -16px;
+  right: -48px;
   background-color: #FFFFFF; /* Black*/
   overflow-x: hidden; /* Disable horizontal scroll */
-  padding-top: 75px; /* Place content 60px from the top */
-  padding-right: 15px;
-  transition: 0.5s; /* 0.5 second transition effect to slide in the sidepanel */
+  padding-top: 88px; /* Place content 60px from the top */
+  padding-right: 24px;
+  padding-left: 24px;
+  padding-bottom: 88px;
+  transition: 0.4s; /* 0.5 second transition effect to slide in the sidepanel */
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 

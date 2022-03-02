@@ -25,7 +25,7 @@
           <v-btn v-if='$store.state.user.loggedIn === false' to="/Login">
               Login
           </v-btn>
-          <v-btn v-else-if='$store.state.user.loggedIn === true' to="/Logout">
+          <v-btn v-else-if='$store.state.user.loggedIn === true' @click="logout">
               Logout
           </v-btn>
           <div v-if='$store.state.user.loggedIn === true'>
@@ -40,12 +40,17 @@
 </template>
 
 <script>
+import {User} from "./services/firebaseDataService";
 
 export default {
   name: 'App',
-
   data: () => ({
     toggle_exclusive: 0,
   }),
+  methods: {
+    logout(){
+      User.logout()
+    }
+  }
 }
 </script>

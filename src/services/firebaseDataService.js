@@ -37,6 +37,7 @@ export class User{
     signOut(auth).then(() => {
       // Sign-out successful.
     }).catch((err) => {throw err});
+    store.commit('logout')
   }
 
   static async createUser(form){
@@ -79,9 +80,6 @@ export class User{
 
 
 }
-
-
-
 
 export class Product {
 
@@ -237,12 +235,10 @@ export class Risk {
   }
 }
 
-
-
 export class Persona {
   static async getAll() {
     const snapshot = await db.collection("personas").where("archived","==", false).get();
-    return snapshot.docs.map(doc => doc.data());
+    return snapshot.docs.map(doc => ({id:doc.id, data:doc.data()}) );
   }
   static createPersona(tutorial) {
     return db.collection("personas").add(tutorial);
@@ -254,5 +250,95 @@ export class Persona {
 
   static deletePersona(id) {
     return db.collection("personas").doc(id).delete();
+  }
+}
+
+export class Need {
+  static async getAll() {
+    const snapshot = await db.collection("needs").where("archived","==", false).get();
+    return snapshot.docs.map(doc => ({id:doc.id, data:doc.data()}) );
+  }
+  static createNeed(tutorial) {
+    return db.collection("needs").add(tutorial);
+  }
+
+  static updateNeed(id,value) {
+    return db.collection("needs").doc(id).update(value);
+  }
+
+  static deleteNeed(id) {
+    return db.collection("needs").doc(id).delete();
+  }
+}
+
+export class Insight {
+  static async getAll() {
+    const snapshot = await db.collection("insights").where("archived","==", false).get();
+    return snapshot.docs.map(doc => ({id:doc.id, data:doc.data()}) );
+  }
+  static createInsight(tutorial) {
+    return db.collection("insights").add(tutorial);
+  }
+
+  static updateInsight(id,value) {
+    return db.collection("insights").doc(id).update(value);
+  }
+
+  static deleteInsight(id) {
+    return db.collection("insights").doc(id).delete();
+  }
+}
+
+export class Journey {
+  static async getAll() {
+    const snapshot = await db.collection("journeymaps").where("archived","==", false).get();
+    return snapshot.docs.map(doc => ({id:doc.id, data:doc.data()}) );
+  }
+  static createJourney(tutorial) {
+    return db.collection("journeymaps").add(tutorial);
+  }
+
+  static updateJourney(id,value) {
+    return db.collection("journeymaps").doc(id).update(value);
+  }
+
+  static deleteJourney(id) {
+    return db.collection("journeymaps").doc(id).delete();
+  }
+}
+
+export class JobToBeDone {
+  static async getAll() {
+    const snapshot = await db.collection("jobsToBeDone").where("archived","==", false).get();
+    return snapshot.docs.map(doc => ({id:doc.id, data:doc.data()}) );
+  }
+  static createJobToBeDone(tutorial) {
+    return db.collection("jobsToBeDone").add(tutorial);
+  }
+
+  static updateJobToBeDone(id,value) {
+    return db.collection("jobsToBeDone").doc(id).update(value);
+  }
+
+  static deleteJobToBeDone(id) {
+    return db.collection("jobsToBeDone").doc(id).delete();
+  }
+}
+
+export class Interview {
+  static async getAll() {
+    const snapshot = await db.collection("interviewFeedback").where("archived","==", false).get();
+    return snapshot.docs.map(doc => ({id:doc.id, data:doc.data()}) );
+  }
+  static createInterview(tutorial) {
+    return db.collection("interviewFeedback").add(tutorial);
+  }
+
+  static updateInterview(id,value) {
+    return db.collection("interviewFeedback").doc(id).update(value);
+  }
+
+  static deleteInterview(id) {
+    return db.collection("interviewFeedback").doc(id).delete();
   }
 }
