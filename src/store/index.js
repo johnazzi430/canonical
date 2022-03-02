@@ -5,6 +5,13 @@ import {Product,Feature,Idea,Goal,Risk,Persona} from '../services/firebaseDataSe
 const store = createStore({
   state () {
     return {
+      user:{
+        loggedIn: false,
+        displayName: "",
+        uid:"",
+        email: "",
+        group: ""
+      },
       personas: [],
       features: [],
       ideas: [],
@@ -20,6 +27,22 @@ const store = createStore({
     }
   },
   mutations: {
+
+    login(state,payload){
+      state.user.loggedIn = true;
+      state.user.displayName = payload.displayName;
+      state.user.uid = payload.id;
+      state.user.email = payload.email;
+      state.user.group = payload.group;
+    },
+
+    logout(state){
+      state.user.loggedIn = false;
+      state.user.displayName = "";
+      state.user.uid = "";
+      state.user.email = "";
+      state.user.group = "";
+    },
 
     closeDetail(state){
       state.detailClose = state.detailClose + 1;

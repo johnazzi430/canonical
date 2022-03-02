@@ -1,67 +1,81 @@
 import firebase from "../firebase";
 import 'firebase/compat/firestore';
-import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut  } from "firebase/auth";
+import store from "../store";
 
 const db = firebase.firestore();
 
 export class User{
+
+  static async getUserData(id){
+    return await db.collection("users").doc(id).get().then((doc) => ({ id:doc.id, ...doc.data()}));
+  }
+
   static async login(form){
     const auth = getAuth();
-    await signInWithEmailAndPassword(auth, form.email, form.password)
-          .then((userCredential) => {
-            // const user = userCredential.user;
-            console.log(userCredential.user)
-            return
-          })
-          .catch((err) => {throw err});
+    const userCredential = await signInWithEmailAndPassword(auth, form.email, form.password)
+      .then((result) => {return result})
+      .catch((err) => {throw err});
+    const userDetails = await db.collection("users").doc(userCredential.user.uid).get().then((doc) => ({ id:doc.id, ...doc.data()}));
+    store.commit('login',userDetails)
     return;
   }
 
   static async loginWithGoogle(){
     const auth = getAuth();
     const provider = new GoogleAuthProvider();
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        console.log(credential)
-        // const token = credential.accessToken;
-        // const user = result.user;
-        return
-        // ...
-      }).catch((err) => {throw err;});
+    const userCredential = await signInWithPopup(auth, provider)
+      .then((result) => {return result})
+      .catch((err) => {throw err});
+    const userDetails = await db.collection("users").doc(userCredential.user.uid).get().then((doc) => ({ id:doc.id, ...doc.data()}));
+    store.commit('login',userDetails)
+    return;
   }
 
   static async logout(){
-
+    const auth = getAuth();
+    signOut(auth).then(() => {
+      // Sign-out successful.
+    }).catch((error) => {
+      console.log(error)
+    });
   }
 
   static async createUser(form){
-    // const auth = getAuth();
-    // const provider = new GoogleAuthProvider();
-
-
-    // check if user exists
-
-
-
-    firebase
-        .auth()
-        .createUserWithEmailAndPassword(form.email, form.password)
-        .then(data => {
-          data.user
-            .updateProfile({
-              displayName: form.name
-            })
-            .then(() => {});
-        })
-        .catch(err => {
-          this.error = err.message;
-        });
+    const auth = getAuth();
+    const userCredential = await createUserWithEmailAndPassword(auth, form.email, form.password)
+      .then((result) => {
+        return result;
+      })
+      .catch((error) => {
+        console.log(error.message)
+      });
+    const newUser = {
+      displayName : form.firstName + ' ' +form.lastName,
+      email : form.email,
+      group : null
+    }
+    await db.collection("users").doc(userCredential.user.uid).set(newUser);
+    const userDetails = await db.collection("users").doc(userCredential.user.uid).get().then((doc) => ({ id:doc.id, ...doc.data()}));
+    store.commit('login',userDetails)
+    return
   }
 
   static async createUserWithGoogle(){
-    // const auth = getAuth();
-    // const provider = new GoogleAuthProvider();
+    const auth = getAuth();
+    const provider = new GoogleAuthProvider();
+    const userCredential = await signInWithPopup(auth, provider)
+      .then((result) => {return result})
+      .catch((err) => {throw err})
+    const newUser ={
+        displayName : userCredential.user.displayName,
+        email : userCredential.user.email,
+        group : null
+    }
+    await db.collection("users").doc(userCredential.user.uid).set(newUser);
+    const userDetails = await db.collection("users").doc(userCredential.user.uid).get().then((doc) => ({ id:doc.id, ...doc.data()}));
+    store.commit('login',userDetails)
+    return
 
   }
 
