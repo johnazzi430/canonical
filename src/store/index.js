@@ -26,7 +26,8 @@ const store = createStore({
     },
 
     async getProducts (state) {
-      state.products = await new product().getAll()
+      const products = await new product().getAll()
+      state.products = products
     },
 
     async getFeatures (state) {
