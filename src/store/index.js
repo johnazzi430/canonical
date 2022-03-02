@@ -1,6 +1,6 @@
 import { createStore } from 'vuex'
 //import {product, persona} from '../services/firebaseDataService'
-import {product,feature,idea,goal} from '../services/firebaseDataService'
+import {product,feature,idea,goal,risk,persona} from '../services/firebaseDataService'
 
 const store = createStore({
   state () {
@@ -9,16 +9,22 @@ const store = createStore({
       features: [],
       ideas: [],
       goals: [],
+      risks: [],
       products: [],
       selected:{
         isSelected: false,
         index: null,
         source: null
-      }
-
+      },
+      detailClose: 1
     }
   },
   mutations: {
+
+    closeDetail(state){
+      state.detailClose = state.detailClose + 1;
+    },
+
     async getProducts (state) {
       state.products = await new product().getAll()
     },
@@ -33,6 +39,14 @@ const store = createStore({
 
     async getGoals (state) {
       state.goals = await new goal().getAll()
+    },
+
+    async getRisks (state) {
+      state.risks = await new risk().getAll()
+    },
+
+    async getPersona (state) {
+      state.personas = await new persona().getAll()
     },
 
     selectItem (state, {index, source}) {

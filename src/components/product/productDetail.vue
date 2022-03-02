@@ -1,5 +1,5 @@
 <template>
-  <div v-if="editing=true" class="">
+  <div class="">
     <v-form
       ref="form"
       v-model="valid"
@@ -133,6 +133,8 @@
         </v-expansion-panel>
       </v-expansion-panels>
 
+      <hr>
+
       <div v-if="selected.index === null">
         <v-btn
           color="success"
@@ -168,7 +170,7 @@
         <v-btn
           color="info"
           class="mr-4"
-          @click="editing = false"
+          @click="editing = false; this.$store.commit('closeDetail')"
         >Cancel
         </v-btn>
         <v-btn
@@ -187,7 +189,7 @@ import {product} from "../../services/firebaseDataService";
 
 export default {
     data: () => ({
-      editing: false,
+      editing: true,
       valid: true,
       product:{
         id: null,
@@ -231,8 +233,15 @@ export default {
       select: null,
       checkbox: false,
     }),
+    beforeMount(){
+      if (this.selected.index != null){
+        const selectedData = this.$store.state.products.find(doc => doc.id === this.selected.index)
+        this.editing = false;
+        this.product = JSON.parse(JSON.stringify(selectedData));
+      }
+    },
     methods: {
-      async addProuct () {
+      async addProduct () {
         await this.$refs.form.validate();
         let Product = new product()
         this.valid ? await Product.createProduct(this.product.data) : console.log('not valid');
@@ -259,19 +268,5 @@ export default {
         return this.$store.state.selected
       }
     },
-    watch: {
-      selected: {
-        deep:true,
-        handler: function(){
-          const selectedData = this.$store.state.products.find(doc => doc.id === this.selected.index)
-          if (this.selected.index === null){
-            this.$refs.form.reset()
-          } else {
-            this.editing = false;
-            this.product = JSON.parse(JSON.stringify(selectedData));
-          }
-        }
-      }
-    }
   }
 </script>

@@ -13,7 +13,11 @@
             <v-list-item prepend-icon="mdi-desktop-classic" title="Architecture" value="architecture"></v-list-item>
           </v-list>
         </v-navigation-drawer>
-        <v-main style="height: 100vh; margin-left:100px">
+        <v-main style="
+        height: 100%;
+        margin-left:100px;
+        overflow-x:hidden;
+        ">
           <v-container style="margin-left:100px">
             <h3>Products  <v-btn type="button" name="button" v-on:click='addItem("product")'>Add product</v-btn></h3>
             <v-row
@@ -52,7 +56,7 @@
                 </v-card-actions>
               </v-card>
             </v-row>
-            <h3>Features  <v-btn type="button" name="button" v-on:click='addItem("feature")'>Add product</v-btn></h3>
+            <h3>Features  <v-btn type="button" name="button" v-on:click='addItem("feature")'>Add Feature</v-btn></h3>
             <v-row
               no-gutters
               style="height: 200px;
@@ -89,7 +93,7 @@
                 </v-card-actions>
               </v-card>
             </v-row>
-            <h3>Ideas<v-btn type="button" name="button" v-on:click='expandDetail'>Add Idea</v-btn></h3>
+            <h3>Ideas<v-btn type="button" name="button" v-on:click='addItem("idea")'>Add Idea</v-btn></h3>
             <v-row
               no-gutters
               style="height: 200px;
@@ -126,7 +130,7 @@
                 </v-card-actions>
               </v-card>
             </v-row>
-            <h3>Goals<v-btn type="button" name="button" v-on:click='expandDetail'>Add Goal</v-btn></h3>
+            <h3>Goals<v-btn type="button" name="button" v-on:click='addItem("goal")'>Add Goal</v-btn></h3>
             <v-row
               no-gutters
               style="height: 200px;
@@ -163,31 +167,77 @@
                 </v-card-actions>
               </v-card>
             </v-row>
-            <h3>Risks<v-btn type="button" name="button" v-on:click='expandDetail'>Add Risk</v-btn></h3>
+            <h3>Risks<v-btn type="button" name="button" v-on:click='addItem("risk")'>Add Risk</v-btn></h3>
+            <v-row
+              no-gutters
+              style="height: 200px;
+                    overflow-x:scroll;
+                    white-space: nowrap;
+                    display: flex;
+                    flex-wrap: wrap;
+                    flex-direction: column;
+                    overflow-x: auto;">
+              <v-card
+              v-for="risk in $store.state.risks"
+              v-bind:key="risk"
+              max-width="344"
+              variant="outlined"
+              >
+                <v-card-header>
+                  <div>
+                    <div class="text-overline mb-1">
+                      {{risk.data.name}}
+                    </div>
+                    <div class="text-caption">{{risk.data.description}}</div>
+                  </div>
+                </v-card-header>
+
+                <v-card-actions>
+                  <v-btn
+                    variant="outlined"
+                    rounded
+                    text
+                    v-on:click='expandDetail(goal.id,"risk")'
+                  >
+                    Button
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-row>
           </v-container>
         </v-main>
         <div id="right-sidepanel" class="sidepanel-right">
           <h1><a href="javascript:void(0)"
             class="closebtn" @click="closeDetail(); ">&times;</a></h1>
-            {{selected.source}}
-            <productAdd v-if='selected.source === "product"'/>
-            <!-- <featureDetail v-if-else='$store.state.selected.source ==="feature"'/> -->
+            {{$store.state.selected.source}}
+            <div v-if='$store.state.selected.source === "product"'><productDetail :key='$store.state.selected.index' /></div>
+            <div v-else-if='$store.state.selected.source ==="feature"'><featureDetail :key='$store.state.selected.index'/></div>
+            <div v-else-if='$store.state.selected.source ==="idea"'><ideaDetail :key='$store.state.selected.index'/></div>
+            <div v-else-if='$store.state.selected.source ==="goal"'><goalDetail :key='$store.state.selected.index'/></div>
+            <div v-else-if='$store.state.selected.source ==="risk"'><riskDetail :key='$store.state.selected.index'/></div>
+
         </div>
       </v-layout>
 </template>
 
 <script type="text/javascript">
-import productAdd from "./productAdd";
-//import featureDetail from "./featureDetail";
+import productDetail from "./productDetail";
+import featureDetail from "./featureDetail";
+import ideaDetail from "./ideaDetail";
+import goalDetail from "./goalDetail";
+import riskDetail from "./riskDetail";
 
 export default {
   name: 'product-panel',
   components: {
-    productAdd
+    productDetail,
+    featureDetail,
+    ideaDetail,
+    goalDetail,
+    riskDetail
   },
   data() {
     return {
-      selectedItemType: null
       // products:[]
    }
   },
@@ -196,13 +246,19 @@ export default {
     this.$store.commit('getFeatures')
     this.$store.commit('getIdeas')
     this.$store.commit('getGoals')
+    this.$store.commit('getRisks')
+  },
+  watch:{
+    closeDetail_(){
+      document.getElementById("right-sidepanel").style.width = "0px";
+    }
   },
   computed: {
     products() {
-       return this.$store.state.products
+      return this.$store.state.products
     },
-    selected() {
-      return this.$store.state.selected
+    closeDetail_(){
+      return this.$store.state.detailClose
     }
   },
   methods: {

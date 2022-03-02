@@ -1,12 +1,12 @@
 <template>
-  <div v-if="editing=true" class="">
+  <div class="">
     <v-form
       ref="form"
       v-model="valid"
       lazy-validation
     >
       <v-text-field
-        v-model="product.data.name"
+        v-model="feature.data.name"
         :counter="10"
         :rules="[rules.required,rules.counter]"
         label="Name"
@@ -15,129 +15,68 @@
       ></v-text-field>
 
       <v-textarea
-        v-model="product.data.description"
+        v-model="feature.data.description"
         :rules="[rules.required]"
         label="Description"
         :disabled="!editing"
         required
       ></v-textarea>
 
-      <v-text-field
-        v-model="product.data.version"
-        label="Version"
+      priority
+      <v-slider
+        v-model="feature.data.priority"
+        step="1"
+        max="5"
+        show-ticks="always"
+        label="Priority"
+        thumb-label="always"
         :disabled="!editing"
-      ></v-text-field>
-
-      <v-select
-        v-model="product.data.lifesCycleStage"
-        :items="lifesCycleStageOptions"
-        label="Life Cycle Stage"
-        :disabled="!editing"
-      ></v-select>
+      ></v-slider>
 
       <v-text-field
-        v-model="product.data.githubLink"
+        v-model="feature.data.jiraLink"
         label="Github Link"
         :rules="[rules.url]"
         :disabled="!editing"
       ></v-text-field>
 
-      <v-text-field
-        v-model="product.data.url"
-        label="Home Link"
-        :rules="[rules.url]"
+      <v-textarea
+        v-model="feature.data.leadingIndicators"
+        label="leading indicators"
         :disabled="!editing"
-      ></v-text-field>
+      ></v-textarea>
 
-      <v-expansion-panels>
-        <v-expansion-panel>
-          <v-expansion-panel-title>
-            SWOT Analysis (optional)
-          </v-expansion-panel-title>
-          <v-expansion-panel-text>
-            <v-row>
-              <v-col cols="12" sm="6">
-                <v-textarea
-                  v-model="product.data.strengths"
-                  label="Strengths"
-                  :disabled="!editing"
-                ></v-textarea>
-              </v-col>
-              <v-col cols="12" sm="6">
-                <v-textarea
-                  v-model="product.data.weakness"
-                  label="Weakeness"
-                  :disabled="!editing"
-                ></v-textarea>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="12" sm="6">
-                <v-textarea
-                  v-model="product.data.opportunities"
-                  label="Opportunities"
-                  :disabled="!editing"
-                ></v-textarea>
-              </v-col>
-              <v-col cols="12" sm="6">
-                <v-textarea
-                  v-model="product.data.threats"
-                  label="Threats"
-                  :disabled="!editing"
-                ></v-textarea>
-              </v-col>
-            </v-row>
-          </v-expansion-panel-text>
-        </v-expansion-panel>
-      </v-expansion-panels>
+      <v-textarea
+        v-model="feature.data.businessOutcomes"
+        label="Business Outcomes"
+        :disabled="!editing"
+      ></v-textarea>
 
-      <v-expansion-panels>
-        <v-expansion-panel>
-          <v-expansion-panel-title>
-            Business Canvas (optional)
-          </v-expansion-panel-title>
-          <v-expansion-panel-text>
-            <v-row>
-              <v-col cols="12" sm="6">
-                <v-textarea
-                  v-model="product.data.partners"
-                  label="partners"
-                  :disabled="!editing"
-                ></v-textarea>
-              </v-col>
-              <v-col cols="12" sm="6">
-                <v-textarea
-                  v-model="product.data.customerEngagementModel"
-                  label="Customer Engagement Model"
-                  :disabled="!editing"
-                ></v-textarea>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="12" sm="6">
-                <v-textarea
-                  v-model="product.data.businessModel"
-                  label="Business Model"
-                  :disabled="!editing"
-                ></v-textarea>
-              </v-col>
-              <v-col cols="12" sm="6">
-                <v-textarea
-                  v-model="product.data.economicModel"
-                  label="Economic Model"
-                  :disabled="!editing"
-                ></v-textarea>
-              </v-col>
-            </v-row>
-          </v-expansion-panel-text>
-        </v-expansion-panel>
-      </v-expansion-panels>
+      <v-textarea
+        v-model="feature.data.nonFunctionalRequirements"
+        label="Non Functional Requirements"
+        :disabled="!editing"
+      ></v-textarea>
+
+      <v-switch
+        v-model="feature.data.delivered"
+        :label="`delivered: ${feature.data.delivered}`"
+      ></v-switch>
+
+      <v-switch
+        v-model="feature.data.validated"
+        :label="`validated: ${feature.data.validated}`"
+      ></v-switch>
+
+      Feature owner: {{feature.data.owner}}
+
+      <hr>
 
       <div v-if="selected.index === null">
         <v-btn
           color="success"
           class="mr-4"
-          @click="addProduct()"
+          @click="addFeature()"
         >
           Add
         </v-btn>
@@ -162,7 +101,7 @@
         <v-btn
           color="success"
           class="mr-4"
-          @click="updateProduct()"
+          @click="updateFeature()"
         >Confirm
         </v-btn>
         <v-btn
@@ -174,7 +113,7 @@
         <v-btn
           color="error"
           class="mr-4"
-          @click="deleteProduct()"
+          @click="deleteFeature()"
         >Delete
         </v-btn>
       </div>
@@ -183,68 +122,61 @@
 </template>
 
 <script>
-import {product} from "../../services/firebaseDataService";
+import {feature} from "../../services/firebaseDataService";
 
 export default {
     data: () => ({
-      editing: false,
+      editing: true,
       valid: true,
-      product:{
+      feature:{
         id: null,
         data : {
-          name:'',
-          description:'',
-          archived : false,
-          businessModel: "",
-          createDate: null,
-          createdBy:"",
-          updatedDate:"",
-          githubLink:"",
-          url:"",
-          version:"",
-          lifesCycleStag: "POC",
-          partners: "",
-          customerEngagementModel:"",
-          economicModel:"",
-          weaknesses:"",
-          strengths: "",
-          threats:"",
-          opportunities:''
+          businessOutcomes:"",
+          delivered: false,
+          description:"",
+          jiraLink:"",
+          leadingIndicators:"",
+          name:"",
+          nonFunctionalRequirements:"",
+          owner:null,
+          priority:1,
+          validated:false
         }
       },
       rules:{
         required: value => !!value || 'Required.',
         counter: value => value.length <= 20 || 'Max 20 characters',
-        email: value => {
-          // eslint-disable-next-line
-            const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-            return pattern.test(value) || 'Invalid e-mail.'
-          },
         url: value => {
           // eslint-disable-next-line
           const pattern = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/
           return (pattern.test(value) || value.length == 0) || 'Invalid url.'
         }
-
       },
-      lifesCycleStageOptions: ["POC","MVP","Growth","Scale","Monetization","Decline"],
       select: null,
       checkbox: false,
     }),
+    beforeMount(){
+      if (this.selected.index != null){
+        const selectedData = this.$store.state.features.find(doc => doc.id === this.selected.index)
+        this.editing = false;
+        this.feature = JSON.parse(JSON.stringify(selectedData));
+      }
+    },
     methods: {
-      async addProuct () {
+      async addFeature () {
         await this.$refs.form.validate();
-        let Product = new product()
-        this.valid ? await Product.createProduct(this.product.data) : console.log('not valid');
+        let Feature = new feature()
+        this.valid ? await Feature.createFeature(this.feature.data) : console.log('not valid');
         this.$refs.form.resetValidation();
+        this.$store.commit('getFeatures')
       },
-      async updateProduct () {
+      async updateFeature () {
         await this.$refs.form.validate();
         // let Product = new product()
         // this.valid ? await Product.createProduct(this.product.data) : console.log('not valid');
         this.$refs.form.resetValidation();
       },
-      async deleteProduct () {
+      async deleteFeature () {
         // await this.$refs.form.validate();
         // let Product = new product()
         // this.valid ? await Product.createProduct(this.product.data) : console.log('not valid');
@@ -259,22 +191,5 @@ export default {
         return this.$store.state.selected
       }
     },
-    watch: {
-      selected: {
-        deep:true,
-        handler: function(){
-          console.log(this.$store.state.selected.source)
-          if (this.$store.state.selected.source === 'product') {
-            const selectedData = this.$store.state.products.find(doc => doc.id === this.selected.index)
-            if (this.selected.index === null ){
-              this.$refs.form.reset()
-            } else {
-              this.editing = false;
-              this.product = JSON.parse(JSON.stringify(selectedData));
-            }
-          }
-        }
-      }
-    }
   }
 </script>

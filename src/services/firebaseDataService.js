@@ -116,6 +116,30 @@ export class goal {
   }
 }
 
+export class risk {
+
+  async getAll() {
+    const snapshot = await db.collection("productRisks").get();
+    return snapshot.docs.map(doc => ({id:doc.id, data:doc.data()}) );
+  }
+
+  createRisk(value) {
+    value.createDate = Date();
+    value.updatedDate = Date();
+    value.archived = false;
+    return db.collection("productRisks").add(value);
+  }
+
+  updateRisk(id ,value) {
+    return db.collection("productRisks").doc(id).update(value);
+  }
+
+  deleteRisk(id) {
+    return db.collection("productRisks").doc(id).delete();
+  }
+}
+
+
 
 export class persona {
   async getAll() {
