@@ -68,6 +68,16 @@
         :label="`validated: ${feature.data.validated}`"
       ></v-switch>
 
+      <!-- <v-select
+        :v-model="feature.product"
+        :items="$store.state.products"
+        return-object
+        item-text='data.name'
+        item-value='id'
+        label="feature"
+        required
+      ></v-select> -->
+
       Feature owner: {{feature.data.owner}}
 
       <hr>
@@ -130,6 +140,7 @@ export default {
       valid: true,
       feature:{
         id: null,
+        product: {},
         data : {
           businessOutcomes:"",
           delivered: false,
@@ -140,7 +151,7 @@ export default {
           nonFunctionalRequirements:"",
           owner:null,
           priority:1,
-          validated:false
+          validated:false,
         }
       },
       rules:{

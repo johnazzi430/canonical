@@ -204,18 +204,18 @@ export class Goal {
     return snapshot.docs.map(doc => ({id:doc.id, data:doc.data()}) );
   }
 
-  static creategoal(value) {
+  static createGoal(value) {
     value.createDate = Date();
     value.updatedDate = Date();
     value.archived = false;
     return db.collection("productGoals").add(value);
   }
 
-  static updategoal(id ,value) {
+  static updateGoal(id ,value) {
     return db.collection("productGoals").doc(id).update(value);
   }
 
-  static deletegoal(id) {
+  static deleteGoal(id) {
     return db.collection("productGoals").doc(id).delete();
   }
 }
@@ -250,15 +250,15 @@ export class Persona {
     const snapshot = await db.collection("personas").where("archived","==", false).get();
     return snapshot.docs.map(doc => doc.data());
   }
-  static create(tutorial) {
+  static createPersona(tutorial) {
     return db.collection("personas").add(tutorial);
   }
 
-  static update(id,value) {
+  static updatePersona(id,value) {
     return db.collection("personas").doc(id).update(value);
   }
 
-  static delete(id) {
+  static deletePersona(id) {
     return db.collection("personas").doc(id).delete();
   }
 }

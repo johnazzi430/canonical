@@ -197,7 +197,7 @@
                     variant="outlined"
                     rounded
                     text
-                    v-on:click='expandDetail(goal.id,"risk")'
+                    v-on:click='expandDetail(risk.id,"risk")'
                   >
                     Button
                   </v-btn>
