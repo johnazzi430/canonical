@@ -1,110 +1,117 @@
 <template>
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-md-8">
-        <div class="card">
-          <div class="card-header">Register</div>
-          <button type="button" name="button" @click='googleReg'>Register with Google</button>
-          <div class="card-body">
-            <div v-if="error" class="alert alert-danger">{{error}}</div>
-            <form action="#" @submit.prevent="submit">
-              <div class="form-group row">
-                <label for="name" class="col-md-4 col-form-label text-md-right">Name</label>
+  <div class="container center">
+    <v-form
+      ref="form"
+      v-model="valid"
+      lazy-validation
+    >
 
-                <div class="col-md-6">
-                  <input
-                    id="name"
-                    type="name"
-                    class="form-control"
-                    name="name"
-                    value
-                    required
-                    autofocus
-                    v-model="form.name"
-                  />
-                </div>
-              </div>
+      <v-text-field
+        v-model="form.firstName"
+        :rules="[rules.name]"
+        label="First Name"
+        required
+        :error='error ? true: false'
+      ></v-text-field>
 
-              <div class="form-group row">
-                <label for="email" class="col-md-4 col-form-label text-md-right">Email</label>
+      <v-text-field
+        v-model="form.lastName"
+        :rules="[rules.name]"
+        label="Last Name"
+        required
+        :error='error ? true: false'
+      ></v-text-field>
 
-                <div class="col-md-6">
-                  <input
-                    id="email"
-                    type="email"
-                    class="form-control"
-                    name="email"
-                    value
-                    required
-                    autofocus
-                    v-model="form.email"
-                  />
-                </div>
-              </div>
+      <v-text-field
+        v-model="form.email"
+        :rules="[rules.email]"
+        label="E-mail"
+        required
+        :error='error ? true: false'
+      ></v-text-field>
 
-              <div class="form-group row">
-                <label for="password" class="col-md-4 col-form-label text-md-right">Password</label>
+      <v-text-field
+        v-model="form.password"
+        label="Password"
+        :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+        :rules="[rules.required, rules.min]"
+        :type="show1 ? 'text' : 'password'"
+        @click:append="show1 = !show1"
+        required
+        :error='error ? true: false'
+      ></v-text-field>
 
-                <div class="col-md-6">
-                  <input
-                    id="password"
-                    type="password"
-                    class="form-control"
-                    name="password"
-                    required
-                    v-model="form.password"
-                  />
-                </div>
-              </div>
+      <v-btn
+        color="success"
+        class="mr-4"
+        @click="register"
+      >
+        Register
+      </v-btn>
+      <v-btn
+        class="mr-4"
+        @click="registerWithGoogle"
+      >
+        register with google
+      </v-btn>
 
-              <div class="form-group row mb-0">
-                <div class="col-md-8 offset-md-4">
-                  <button type="submit" class="btn btn-primary">Register</button>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
+      <v-btn
+        color="error"
+        class="mr-4"
+        @click="clear"
+      >
+        Clear Form
+      </v-btn>
+
+    </v-form>
   </div>
 </template>
 
 
 <script>
-import firebase from "../firebase";
+import {User} from "../services/firebaseDataService";
 
 export default {
   data() {
     return {
+      valid: true,
+      show1: false,
       form: {
-        name: "",
+        firstName: "",
+        lastName: "",
         email: "",
         password: ""
+      },
+      rules: {
+        email: v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+        required: value => !!value || 'Required.',
+        min: v => v.length >= 8 || 'Min 8 characters',
+        emailMatch: () => (`The email and password you entered don't match`)
       },
       error: null
     };
   },
   methods: {
-    submit() {
-      firebase
-        .auth()
-        .createUserWithEmailAndPassword(this.form.email, this.form.password)
-        .then(data => {
-          data.user
-            .updateProfile({
-              displayName: this.form.name
-            })
-            .then(() => {});
-        })
-        .catch(err => {
-          this.error = err.message;
-        });
+    register() {
+      User.createUser(this.form)
     },
-    googleReg(){
-      var google_provider = new firebase.auth.GoogleAuthProvider();
-      firebase.auth().signInWithPopup(google_provider)
+
+    registerWithGoogle(){
+      User.createUserWithGoogle()
+    },
+
+    clear(){
+      this.$refs.form.reset()
     }
   }
 };
 </script>
+
+<style>
+.center {
+  margin: auto;
+  width: 50%;
+  border: 3px solid green;
+  padding: 10px;
+}
+</style>

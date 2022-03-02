@@ -1,83 +1,112 @@
 <template>
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-md-8">
-        <div class="card">
-          <div class="card-header">Login</div>
-          <div class="card-body">
-            <div v-if="error" class="alert alert-danger">{{error}}</div>
-            <form action="#" @submit.prevent="submit">
-              <div class="form-group row">
-                <label for="email" class="col-md-4 col-form-label text-md-right">Email</label>
+  <div class="container center">
+    <v-form
+      ref="form"
+      v-model="valid"
+      lazy-validation
+    >
 
-                <div class="col-md-6">
-                  <input
-                    id="email"
-                    type="email"
-                    class="form-control"
-                    name="email"
-                    value
-                    required
-                    autofocus
-                    v-model="form.email"
-                  />
-                </div>
-              </div>
+      <v-text-field
+        v-model="form.email"
+        :rules="[rules.email]"
+        label="E-mail"
+        required
+        :error='error ? true: false'
+      ></v-text-field>
 
-              <div class="form-group row">
-                <label for="password" class="col-md-4 col-form-label text-md-right">Password</label>
+      <v-text-field
+        v-model="form.password"
+        label="Password"
+        :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+        :rules="[rules.required, rules.min]"
+        :type="show1 ? 'text' : 'password'"
+        @click:append="show1 = !show1"
+        required
+        :error='error ? true: false'
+      ></v-text-field>
 
-                <div class="col-md-6">
-                  <input
-                    id="password"
-                    type="password"
-                    class="form-control"
-                    name="password"
-                    required
-                    v-model="form.password"
-                  />
-                </div>
-              </div>
+      <v-btn
+        color="success"
+        class="mr-4"
+        @click="login"
+      >
+        Login
+      </v-btn>
+      <v-btn
+        class="mr-4"
+        @click="loginWithGoogle"
+      >
+        Login with google
+      </v-btn>
 
-              <div class="form-group row mb-0">
-                <div class="col-md-8 offset-md-4">
-                  <button type="submit" class="btn btn-primary">Login</button>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
+      <v-btn
+        color="error"
+        class="mr-4"
+        @click="clear"
+      >
+        Clear Form
+      </v-btn>
+
+      <v-btn
+        color="warning"
+        to="/register"
+      >
+        Register
+      </v-btn>
+    </v-form>
   </div>
 </template>
 
 <script>
-import firebase from "../firebase";
+import {User} from "../services/firebaseDataService";
 
 export default {
   data() {
     return {
+      valid: true,
+      show1: false,
       form: {
         email: "",
         password: ""
+      },
+      rules: {
+        email: v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+        required: value => !!value || 'Required.',
+        min: v => v.length >= 8 || 'Min 8 characters',
+        emailMatch: () => (`The email and password you entered don't match`)
       },
       error: null
     };
   },
   methods: {
-    submit() {
-      firebase
-        .auth()
-        .signInWithEmailAndPassword(this.form.email, this.form.password)
-        .then(data => {
-          this.$router.replace({ name: "Dashboard" });
-          return data
-        })
-        .catch(err => {
-          this.error = err.message;
-        });
+    async login() {
+      await User.login(this.form)
+        .then(
+          console.log('no dice!')
+          // this.$router.replace({ path: '/' }
+        ).catch(
+          console.log('caught ya!')
+        )
+    },
+
+    clear(){
+      this.$refs.form.reset()
+    },
+
+    async loginWithGoogle(){
+      await User.loginWithGoogle()
+      this.$router.replace({ path: '/' })
     }
+
   }
 };
 </script>
+
+<style>
+.center {
+  margin: auto;
+  width: 50%;
+  border: 3px solid green;
+  padding: 10px;
+}
+</style>

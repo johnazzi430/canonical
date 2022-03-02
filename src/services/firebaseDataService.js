@@ -1,7 +1,79 @@
 import firebase from "../firebase";
 import 'firebase/compat/firestore';
+import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword } from "firebase/auth";
 
 const db = firebase.firestore();
+
+export class User{
+  static async login(form){
+    const auth = getAuth();
+    await signInWithEmailAndPassword(auth, form.email, form.password)
+          .then((userCredential) => {
+            // const user = userCredential.user;
+            console.log(userCredential.user)
+            return
+          })
+          .catch((err) => {throw err});
+    return;
+  }
+
+  static async loginWithGoogle(){
+    const auth = getAuth();
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        console.log(credential)
+        // const token = credential.accessToken;
+        // const user = result.user;
+        return
+        // ...
+      }).catch((err) => {throw err;});
+  }
+
+  static async logout(){
+
+  }
+
+  static async createUser(form){
+    // const auth = getAuth();
+    // const provider = new GoogleAuthProvider();
+
+
+    // check if user exists
+
+
+
+    firebase
+        .auth()
+        .createUserWithEmailAndPassword(form.email, form.password)
+        .then(data => {
+          data.user
+            .updateProfile({
+              displayName: form.name
+            })
+            .then(() => {});
+        })
+        .catch(err => {
+          this.error = err.message;
+        });
+  }
+
+  static async createUserWithGoogle(){
+    // const auth = getAuth();
+    // const provider = new GoogleAuthProvider();
+
+  }
+
+  static async updateUser(){
+
+  }
+
+
+}
+
+
+
 
 export class Product {
 
