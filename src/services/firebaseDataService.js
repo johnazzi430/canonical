@@ -28,15 +28,19 @@ export class product {
 
   async getAll() {
     const snapshot = await db.collection("products").get();
-    const snapshotIDs = snapshot.docs.map(doc => doc.id)
-    const personaQuery = await db.collection("linkProductPersona").where("productId", "in", snapshotIDs ).get()
-    const personas = personaQuery.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    return snapshot.docs.map(doc => ({
+    const products = await Promise.all(snapshot.docs.map(async(doc) => ({
       id:doc.id,
       data:doc.data(),
-      personas: personas.filter(link => link.productId === doc.id)
-//        personas: getPersonas(doc.id)
-      }));
+      persona: await db.collection("linkProductPersona").where("productId","==", doc.id).get().then((querySnapshot) => {
+                return querySnapshot.docs.map((doc) => ({ id:doc.id, ...doc.data()}));
+                })
+    })));
+    console.log(products)
+    return products
+    // return snapshot.docs.map(doc => ({
+    //   id:doc.id,
+    //   data:doc.data(),
+    //   }));
   }
 
 
