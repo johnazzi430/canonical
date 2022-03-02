@@ -1,6 +1,6 @@
 import { createStore } from 'vuex'
 //import {product, persona} from '../services/firebaseDataService'
-import {product,feature,idea,goal,risk,persona} from '../services/firebaseDataService'
+import {Product,Feature,Idea,Goal,Risk,Persona} from '../services/firebaseDataService'
 
 const store = createStore({
   state () {
@@ -26,28 +26,28 @@ const store = createStore({
     },
 
     async getProducts (state) {
-      const products = await new product().getAll()
+      const products = await Product.getAll()
       state.products = products
     },
 
     async getFeatures (state) {
-      state.features = await new feature().getAll()
+      state.features = await Feature.getAll()
     },
 
     async getIdeas (state) {
-      state.ideas = await new idea().getAll()
+      state.ideas = await Idea.getAll()
     },
 
     async getGoals (state) {
-      state.goals = await new goal().getAll()
+      state.goals = await Goal.getAll()
     },
 
     async getRisks (state) {
-      state.risks = await new risk().getAll()
+      state.risks = await Risk.getAll()
     },
 
     async getPersona (state) {
-      state.personas = await new persona().getAll()
+      state.personas = await Persona.getAll()
     },
 
     selectItem (state, {index, source}) {

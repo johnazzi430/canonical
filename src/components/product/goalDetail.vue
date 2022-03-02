@@ -7,7 +7,7 @@
     >
       <v-text-field
         v-model="goal.data.name"
-        :counter="10"
+        :counter="20"
         :rules="[rules.required,rules.counter]"
         label="Name"
         required
@@ -66,7 +66,7 @@
         <v-btn
           color="info"
           class="mr-4"
-          @click="editing = false"
+          @click="editing = false; this.$store.commit('closeDetail')"
         >Cancel
         </v-btn>
         <v-btn
@@ -81,7 +81,7 @@
 </template>
 
 <script>
-import {goal} from "../../services/firebaseDataService";
+import {Goal} from "../../services/firebaseDataService";
 
 export default {
     data: () => ({
@@ -118,10 +118,11 @@ export default {
     methods: {
       async addGoal () {
         await this.$refs.form.validate();
-        let Goal = new goal()
-        this.valid ? await Goal.createGoal(this.goal.data) : console.log('not valid');
-        this.$refs.form.resetValidation();
-        this.$store.commit('getGoals')
+        if (this.valid ){
+          await Goal.createGoal(this.goal.data);
+          this.$store.commit('getGoals');
+          this.$store.commit('closeDetail');
+        }
       },
       async updateGoal () {
         await this.$refs.form.validate();
@@ -130,9 +131,9 @@ export default {
         this.$refs.form.resetValidation();
       },
       async deleteGoal () {
-        // await this.$refs.form.validate();
-        // let Product = new product()
-        // this.valid ? await Product.createProduct(this.product.data) : console.log('not valid');
+        await Goal.deleteGoal(this.selected.index)
+        this.$store.commit('closeDetail')
+        this.$store.commit('getGoals')
         this.$refs.form.resetValidation();
       },
       resetForm () {

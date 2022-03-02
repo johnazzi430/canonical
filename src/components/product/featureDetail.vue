@@ -7,7 +7,7 @@
     >
       <v-text-field
         v-model="feature.data.name"
-        :counter="10"
+        :counter="20"
         :rules="[rules.required,rules.counter]"
         label="Name"
         required
@@ -107,7 +107,7 @@
         <v-btn
           color="info"
           class="mr-4"
-          @click="editing = false"
+          @click="editing = false; this.$store.commit('closeDetail')"
         >Cancel
         </v-btn>
         <v-btn
@@ -122,7 +122,7 @@
 </template>
 
 <script>
-import {feature} from "../../services/firebaseDataService";
+import {Feature} from "../../services/firebaseDataService";
 
 export default {
     data: () => ({
@@ -165,10 +165,11 @@ export default {
     methods: {
       async addFeature () {
         await this.$refs.form.validate();
-        let Feature = new feature()
-        this.valid ? await Feature.createFeature(this.feature.data) : console.log('not valid');
-        this.$refs.form.resetValidation();
-        this.$store.commit('getFeatures')
+        if (this.valid ){
+          await Feature.createFeature(this.feature.data)
+          this.$store.commit('getFeatures')
+          this.$store.commit('closeDetail')
+        }
       },
       async updateFeature () {
         await this.$refs.form.validate();
@@ -177,9 +178,9 @@ export default {
         this.$refs.form.resetValidation();
       },
       async deleteFeature () {
-        // await this.$refs.form.validate();
-        // let Product = new product()
-        // this.valid ? await Product.createProduct(this.product.data) : console.log('not valid');
+        Feature.deleteFeature(this.selected.index)
+        this.$store.commit('closeDetail')
+        this.$store.commit('getFeatures')
         this.$refs.form.resetValidation();
       },
       resetForm () {

@@ -7,7 +7,7 @@
     >
       <v-text-field
         v-model="risk.data.name"
-        :counter="10"
+        :counter="20"
         :rules="[rules.required,rules.counter]"
         label="Name"
         required
@@ -72,7 +72,7 @@
         <v-btn
           color="info"
           class="mr-4"
-          @click="editing = false"
+          @click="editing = false; this.$store.commit('closeDetail')"
         >Cancel
         </v-btn>
         <v-btn
@@ -87,7 +87,7 @@
 </template>
 
 <script>
-import {risk} from "../../services/firebaseDataService";
+import {Risk} from "../../services/firebaseDataService";
 
 export default {
     data: () => ({
@@ -123,11 +123,11 @@ export default {
     methods: {
       async addRisk () {
         await this.$refs.form.validate();
-        let Risk = new risk()
-        this.valid ? await Risk.createRisk(this.risk.data) : console.log('not valid');
-        this.$refs.form.resetValidation();
-        this.$store.commit('getRisks')
-        this.$store.commit('closeDetail')
+        if (this.valid ){
+          await Risk.createRisk(this.risk.data)
+          this.$store.commit('getRisks')
+          this.$store.commit('closeDetail')
+        }
       },
       async updateRisk () {
         await this.$refs.form.validate();
@@ -136,9 +136,9 @@ export default {
         this.$refs.form.resetValidation();
       },
       async deleteRisk () {
-        // await this.$refs.form.validate();
-        // let Product = new product()
-        // this.valid ? await Product.createProduct(this.product.data) : console.log('not valid');
+        Risk.deleteRisk(this.selected.index)
+        this.$store.commit('closeDetail')
+        this.$store.commit('getRisks')
         this.$refs.form.resetValidation();
       },
       resetForm () {

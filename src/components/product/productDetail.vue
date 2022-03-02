@@ -7,7 +7,7 @@
     >
       <v-text-field
         v-model="product.data.name"
-        :counter="10"
+        :counter="20"
         :rules="[rules.required,rules.counter]"
         label="Name"
         required
@@ -185,7 +185,7 @@
 </template>
 
 <script>
-import {product} from "../../services/firebaseDataService";
+import {Product} from "../../services/firebaseDataService";
 
 export default {
     data: () => ({
@@ -243,20 +243,23 @@ export default {
     methods: {
       async addProduct () {
         await this.$refs.form.validate();
-        let Product = new product()
-        this.valid ? await Product.createProduct(this.product.data) : console.log('not valid');
-        this.$refs.form.resetValidation();
+        if (this.valid ){
+          await Product.createProduct(this.product.data)
+          this.$store.commit('closeDetail')
+          this.$store.commit('getProducts')
+        }
       },
       async updateProduct () {
         await this.$refs.form.validate();
         // let Product = new product()
         // this.valid ? await Product.createProduct(this.product.data) : console.log('not valid');
+        this.$store.commit('getProducts')
         this.$refs.form.resetValidation();
       },
       async deleteProduct () {
-        // await this.$refs.form.validate();
-        // let Product = new product()
-        // this.valid ? await Product.createProduct(this.product.data) : console.log('not valid');
+        await Product.deleteProduct(this.selected.index)
+        this.$store.commit('closeDetail')
+        this.$store.commit('getProducts')
         this.$refs.form.resetValidation();
       },
       resetForm () {

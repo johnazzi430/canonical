@@ -7,7 +7,7 @@
     >
       <v-text-field
         v-model="idea.data.idea"
-        :counter="10"
+        :counter="20"
         :rules="[rules.required,rules.counter]"
         label="idea"
         required
@@ -72,7 +72,7 @@
         <v-btn
           color="info"
           class="mr-4"
-          @click="editing = false"
+          @click="editing = false; this.$store.commit('closeDetail')"
         >Cancel
         </v-btn>
         <v-btn
@@ -87,7 +87,7 @@
 </template>
 
 <script>
-import {idea} from "../../services/firebaseDataService";
+import {Idea} from "../../services/firebaseDataService";
 
 export default {
     data: () => ({
@@ -123,10 +123,11 @@ export default {
     methods: {
       async addIdea () {
         await this.$refs.form.validate();
-        let Idea = new idea()
-        this.valid ? await Idea.createIdea(this.idea.data) : console.log('not valid');
-        this.$refs.form.resetValidation();
-        this.$store.commit('getIdeas')
+        if (this.valid ){
+          await Idea.createIdea(this.idea.data);
+          this.$store.commit('getIdeas')
+          this.$store.commit('closeDetail')
+        }
       },
       async updateIdea () {
         await this.$refs.form.validate();
@@ -135,9 +136,9 @@ export default {
         this.$refs.form.resetValidation();
       },
       async deleteIdea () {
-        // await this.$refs.form.validate();
-        // let Product = new product()
-        // this.valid ? await Product.createProduct(this.product.data) : console.log('not valid');
+        await Idea.deleteIdea(this.selected.index)
+        this.$store.commit('closeDetail')
+        this.$store.commit('getIdeas')
         this.$refs.form.resetValidation();
       },
       resetForm () {

@@ -3,7 +3,7 @@ import 'firebase/compat/firestore';
 
 const db = firebase.firestore();
 
-export class product {
+export class Product {
 
   // constructor({}){
   //   this.name = value.name;
@@ -26,148 +26,153 @@ export class product {
   //   this.opportunities= value.opportunities;
   // }
 
-  async getAll() {
-    const snapshot = await db.collection("products").get();
+  static async getAll() {
+    const snapshot = await db.collection("products").where("archived","==", false).get();
     const products = await Promise.all(snapshot.docs.map(async(doc) => ({
       id:doc.id,
       data:doc.data(),
-      persona: await db.collection("linkProductPersona").where("productId","==", doc.id).get().then((querySnapshot) => {
+      personas: await db.collection("linkProductPersona").where("productId","==", doc.id).get().then((querySnapshot) => {
                 return querySnapshot.docs.map((doc) => ({ id:doc.id, ...doc.data()}));
                 })
     })));
-    console.log(products)
-    return products
-    // return snapshot.docs.map(doc => ({
-    //   id:doc.id,
-    //   data:doc.data(),
-    //   }));
+    return await products
   }
 
 
-  createProduct(value) {
+  static async createProduct(value) {
     value.createDate = Date();
     value.updatedDate = Date();
     value.archived = false;
-    return db.collection("products").add(value);
+
+    return await db.collection("products").add(value);
+//    const { id } = await db.collection("products").add(value)
+    //// TODO: Need to make sure "personas" arent inserted into above
+
+    // value.personas.forEach((personaId) => {
+    //   var row = {productID: id , personaId:personaId}
+    //   var docRef = db.collection("linkProductPersona").doc(); //automatically generate unique id
+    //   batch.set(docRef, row);
+    // });
+    // batch.commit()
   }
 
-  update(id ,value) {
-    return db.collection("products").doc(id).update(value);
+  static async updateProduct(id ,value) {
+    return await db.collection("products").doc(id).update(value);
   }
 
-  delete(id) {
-    return db.collection("products").doc(id).delete();
+  static async deleteProduct(id) {
+    return await db.collection("products").doc(id).update({archived: true});
   }
 }
 
-export class feature {
+export class Feature {
 
-  async getAll() {
-    const snapshot = await db.collection("features").get();
+  static async getAll() {
+    const snapshot = await db.collection("features").where("archived","==", false).get();
     return snapshot.docs.map(doc => ({id:doc.id, data:doc.data()}) );
   }
 
-  createFeature(value) {
+  static createFeature(value) {
     value.createDate = Date();
     value.updatedDate = Date();
     value.archived = false;
     return db.collection("features").add(value);
   }
 
-  updateFeature(id ,value) {
-    return db.collection("features").doc(id).update(value);
+  static updateFeature(id ,value) {
+    return db.ref("features/"+id).update(value);
   }
 
-  deleteFeature(id) {
-    return db.collection("features").doc(id).delete();
+  static deleteFeature(id) {
+    return db.collection("features").doc(id).update({archived: true});
   }
 }
 
-export class idea {
+export class Idea {
 
-  async getAll() {
+  static async getAll() {
     const snapshot = await db.collection("ideas").get();
     return snapshot.docs.map(doc => ({id:doc.id, data:doc.data()}) );
   }
 
-  createidea(value) {
+  static createidea(value) {
     value.createDate = Date();
     value.updatedDate = Date();
     value.archived = false;
     return db.collection("ideas").add(value);
   }
 
-  updateidea(id ,value) {
+  static updateidea(id ,value) {
     return db.collection("ideas").doc(id).update(value);
   }
 
-  deleteidea(id) {
+  static deleteidea(id) {
     return db.collection("ideas").doc(id).delete();
   }
 }
 
-export class goal {
+export class Goal {
 
-  async getAll() {
-    const snapshot = await db.collection("productGoals").get();
+  static async getAll() {
+    const snapshot = await db.collection("productGoals").where("archived","==", false).get();
     return snapshot.docs.map(doc => ({id:doc.id, data:doc.data()}) );
   }
 
-  creategoal(value) {
+  static creategoal(value) {
     value.createDate = Date();
     value.updatedDate = Date();
     value.archived = false;
     return db.collection("productGoals").add(value);
   }
 
-  updategoal(id ,value) {
+  static updategoal(id ,value) {
     return db.collection("productGoals").doc(id).update(value);
   }
 
-  deletegoal(id) {
+  static deletegoal(id) {
     return db.collection("productGoals").doc(id).delete();
   }
 }
 
-export class risk {
+export class Risk {
 
-  async getAll() {
-    const snapshot = await db.collection("productRisks").get();
+  static async getAll() {
+    const snapshot = await db.collection("productRisks").where("archived","==", false).get();
     return snapshot.docs.map(doc => ({id:doc.id, data:doc.data()}) );
   }
 
-  createRisk(value) {
+  static createRisk(value) {
     value.createDate = Date();
     value.updatedDate = Date();
     value.archived = false;
     return db.collection("productRisks").add(value);
   }
 
-  updateRisk(id ,value) {
+  static updateRisk(id ,value) {
     return db.collection("productRisks").doc(id).update(value);
   }
 
-  deleteRisk(id) {
+  static deleteRisk(id) {
     return db.collection("productRisks").doc(id).delete();
   }
 }
 
 
 
-export class persona {
-  async getAll() {
-    const snapshot = await db.collection("personas").get();
+export class Persona {
+  static async getAll() {
+    const snapshot = await db.collection("personas").where("archived","==", false).get();
     return snapshot.docs.map(doc => doc.data());
   }
-  create(tutorial) {
+  static create(tutorial) {
     return db.collection("personas").add(tutorial);
   }
 
-  update(id,value) {
+  static update(id,value) {
     return db.collection("personas").doc(id).update(value);
   }
 
-  delete(id) {
+  static delete(id) {
     return db.collection("personas").doc(id).delete();
   }
 }

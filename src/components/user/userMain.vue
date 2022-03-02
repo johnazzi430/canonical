@@ -100,7 +100,7 @@
 </template>
 
 <script type="text/javascript">
-import {persona} from "../../services/firebaseDataService";
+import {Persona} from "../../services/firebaseDataService";
 
 export default {
   name: 'persona-panel',
@@ -112,7 +112,7 @@ export default {
    }
   },
   async beforeMount() {
-    const data = await new persona().getAll()
+    const data = await Persona.getAll()
     this.personas = data
   },
   methods: {
