@@ -49,7 +49,7 @@
       </div>
       <div v-if="editing === false">
         <v-btn
-          v-if="selected.index != null"
+          v-if="selected.index != null && $store.getters.isUserLoggedIn"
           color="success"
           class="mr-4"
           @click="editing = true"

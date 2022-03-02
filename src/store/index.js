@@ -26,6 +26,11 @@ const store = createStore({
       detailClose: 1
     }
   },
+  getters: {
+    isUserLoggedIn (state) {
+      return state.user.loggedIn
+    }
+  },
   mutations: {
 
     login(state,payload){

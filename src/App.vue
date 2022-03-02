@@ -22,9 +22,15 @@
           <v-btn to="/help">
             Help
           </v-btn>
-          <v-btn to="/Login">
-            Login
+          <v-btn v-if='$store.state.user.loggedIn === false' to="/Login">
+              Login
           </v-btn>
+          <v-btn v-else-if='$store.state.user.loggedIn === true' to="/Logout">
+              Logout
+          </v-btn>
+          <div v-if='$store.state.user.loggedIn === true'>
+            {{$store.state.user.email}}
+          </div>
 
         </v-btn-toggle>
       </v-app-bar>

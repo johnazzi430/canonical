@@ -8,7 +8,7 @@
 
       <v-text-field
         v-model="form.firstName"
-        :rules="[rules.name]"
+        :rules="[rules.required, rules.name]"
         label="First Name"
         required
         :error='error ? true: false'
@@ -16,7 +16,7 @@
 
       <v-text-field
         v-model="form.lastName"
-        :rules="[rules.name]"
+        :rules="[rules.required, rules.name]"
         label="Last Name"
         required
         :error='error ? true: false'
@@ -24,7 +24,7 @@
 
       <v-text-field
         v-model="form.email"
-        :rules="[rules.email]"
+        :rules="[rules.required, rules.email]"
         label="E-mail"
         required
         :error='error ? true: false'
@@ -40,6 +40,13 @@
         required
         :error='error ? true: false'
       ></v-text-field>
+
+      <v-alert
+        v-model="error"
+        type="error"
+        closable
+        close-label="Close Alert">{{errorMessage}}
+      </v-alert>
 
       <v-btn
         color="success"
@@ -88,16 +95,22 @@ export default {
         min: v => v.length >= 8 || 'Min 8 characters',
         emailMatch: () => (`The email and password you entered don't match`)
       },
-      error: null
+      error: null,
+      errorMessage: null
     };
   },
   methods: {
     register() {
       User.createUser(this.form)
+        .catch((error) => {
+          this.error = true;
+          this.errorMessage = error;
+        });
     },
 
     registerWithGoogle(){
       User.createUserWithGoogle()
+        .catch((error) => {this.error = error;});
     },
 
     clear(){

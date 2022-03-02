@@ -19,7 +19,7 @@
         overflow-x:hidden;
         ">
           <v-container style="margin-left:100px">
-            <h3>Products  <v-btn type="button" name="button" v-on:click='addItem("product")'>Add product</v-btn></h3>
+            <h3>Products  <v-btn v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("product")'>Add product</v-btn></h3>
             <v-row
               no-gutters
               style="height: 200px;
@@ -56,7 +56,7 @@
                 </v-card-actions>
               </v-card>
             </v-row>
-            <h3>Features  <v-btn type="button" name="button" v-on:click='addItem("feature")'>Add Feature</v-btn></h3>
+            <h3>Features  <v-btn v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("feature")'>Add Feature</v-btn></h3>
             <v-row
               no-gutters
               style="height: 200px;
@@ -93,7 +93,7 @@
                 </v-card-actions>
               </v-card>
             </v-row>
-            <h3>Ideas<v-btn type="button" name="button" v-on:click='addItem("idea")'>Add Idea</v-btn></h3>
+            <h3>Ideas <v-btn v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("idea")'>Add Idea</v-btn></h3>
             <v-row
               no-gutters
               style="height: 200px;
@@ -130,7 +130,7 @@
                 </v-card-actions>
               </v-card>
             </v-row>
-            <h3>Goals<v-btn type="button" name="button" v-on:click='addItem("goal")'>Add Goal</v-btn></h3>
+            <h3>Goals<v-btn v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("goal")'>Add Goal</v-btn></h3>
             <v-row
               no-gutters
               style="height: 200px;
@@ -167,7 +167,7 @@
                 </v-card-actions>
               </v-card>
             </v-row>
-            <h3>Risks<v-btn type="button" name="button" v-on:click='addItem("risk")'>Add Risk</v-btn></h3>
+            <h3>Risks<v-btn v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("risk")'>Add Risk</v-btn></h3>
             <v-row
               no-gutters
               style="height: 200px;

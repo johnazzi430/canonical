@@ -15,7 +15,7 @@ export class User{
     const auth = getAuth();
     const userCredential = await signInWithEmailAndPassword(auth, form.email, form.password)
       .then((result) => {return result})
-      .catch((err) => {throw err});
+      .catch((err) => {throw err; });
     const userDetails = await db.collection("users").doc(userCredential.user.uid).get().then((doc) => ({ id:doc.id, ...doc.data()}));
     store.commit('login',userDetails)
     return;
@@ -36,20 +36,14 @@ export class User{
     const auth = getAuth();
     signOut(auth).then(() => {
       // Sign-out successful.
-    }).catch((error) => {
-      console.log(error)
-    });
+    }).catch((err) => {throw err});
   }
 
   static async createUser(form){
     const auth = getAuth();
-    const userCredential = await createUserWithEmailAndPassword(auth, form.email, form.password)
-      .then((result) => {
-        return result;
-      })
-      .catch((error) => {
-        console.log(error.message)
-      });
+    const userCredential = createUserWithEmailAndPassword(auth, form.email, form.password)
+      .then((result) => {return result})
+      .catch((err) => {throw err});
     const newUser = {
       displayName : form.firstName + ' ' +form.lastName,
       email : form.email,

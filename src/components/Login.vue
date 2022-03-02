@@ -25,6 +25,12 @@
         :error='error ? true: false'
       ></v-text-field>
 
+      <v-alert
+        v-model="error"
+        type="error"
+        closable
+        close-label="Close Alert">{{errorMessage}}</v-alert>
+
       <v-btn
         color="success"
         class="mr-4"
@@ -75,18 +81,18 @@ export default {
         min: v => v.length >= 8 || 'Min 8 characters',
         emailMatch: () => (`The email and password you entered don't match`)
       },
-      error: null
+      error: null,
+      errorMessage: null
     };
   },
   methods: {
     async login() {
       await User.login(this.form)
-        .then(
-          console.log('no dice!')
-          // this.$router.replace({ path: '/' }
-        ).catch(
-          console.log('caught ya!')
-        )
+        .catch((error) => {
+          this.error = true;
+          this.errorMessage = error;
+        });
+//      this.$router.replace({ path: '/' })
     },
 
     clear(){
