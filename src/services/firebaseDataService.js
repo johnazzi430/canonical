@@ -23,7 +23,7 @@ function removeDeletedAddNew(list,from,to){
 function addInDefaults(value){
   if (!store.state.user.uid) {throw 'user must be logged in to add product'}
   value.createdBy = store.state.user.uid;
-  value.group = store.state.user.group;
+  value.project = store.state.user.project;
   value.createDate = Date();
   value.updatedDate = Date();
   value.archived = false;
@@ -72,7 +72,7 @@ export class User{
     const newUser = {
       displayName : form.firstName + ' ' +form.lastName,
       email : form.email,
-      group : null
+      project : 'nCHJGmd9sx9VuiiqKrFN' //hardcode to default projectID
     }
     await db.collection("users").doc(userCredential.user.uid).set(newUser);
     const userDetails = await db.collection("users").doc(userCredential.user.uid).get().then((doc) => ({ id:doc.id, ...doc.data()}));
@@ -89,7 +89,7 @@ export class User{
     const newUser ={
         displayName : userCredential.user.displayName,
         email : userCredential.user.email,
-        group : null
+        project : 'nCHJGmd9sx9VuiiqKrFN' //hardcode to default projectID
     }
     await db.collection("users").doc(userCredential.user.uid).set(newUser);
     const userDetails = await db.collection("users").doc(userCredential.user.uid).get().then((doc) => ({ id:doc.id, ...doc.data()}));
@@ -129,7 +129,10 @@ export class Product {
   // }
 
   static async getAll() {
-    const snapshot = await db.collection("products").where("archived","==", false).get();
+    const snapshot = await db.collection("products")
+      .where("archived","==", false)
+      .where("project","==",store.state.user.project)
+      .get();
     const products = await Promise.all(snapshot.docs.map(async(doc) => ({
       id:doc.id,
       data:doc.data(),

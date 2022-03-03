@@ -10,7 +10,7 @@ const store = createStore({
         displayName: null,
         uid:null,
         email: null,
-        group: null
+        project: 'nCHJGmd9sx9VuiiqKrFN' //hardcode to default projectID
       },
       personas: [],
       features: [],
@@ -43,7 +43,7 @@ const store = createStore({
       state.user.displayName = payload.displayName;
       state.user.uid = payload.id;
       state.user.email = payload.email;
-      state.user.group = payload.group;
+      state.user.project = payload.project;
     },
 
     logout(state){

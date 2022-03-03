@@ -20,7 +20,6 @@
         ">
           <v-container style="margin-left:100px">
             <h3>Products  <v-btn v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("product")'>Add product</v-btn></h3>
-            <h3>Products  <v-btn type="button" name="button" v-on:click='addItem("product")'>Add product</v-btn></h3>
             <v-row
               no-gutters
               style="height: 200px;
