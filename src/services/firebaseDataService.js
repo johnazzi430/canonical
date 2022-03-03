@@ -181,7 +181,10 @@ export class Product {
 
 export class Feature {
   static async getAll() {
-    const snapshot = await db.collection("features").where("archived","==", false).get();
+    const snapshot = await db.collection("features")
+        .where("archived","==", false)
+        .where("project","==",store.state.user.project)
+        .get();
     const products = await db.collection("products").where("features","!=", []).get();
     const joinProducts = products.docs.map(doc => ({id:doc.id, features:doc.data().features}) );
     return snapshot.docs.map(doc => ({
@@ -209,7 +212,10 @@ export class Feature {
 export class Idea {
 
   static async getAll() {
-    const snapshot = await db.collection("ideas").get();
+    const snapshot = await db.collection("ideas")
+            .where("archived","==", false)
+            .where("project","==",store.state.user.project)
+            .get();
     const products = await db.collection("products").where("ideas","!=", []).get();
     const joinProducts = products.docs.map(doc => ({id:doc.id, ideas:doc.data().ideas}) );
     return snapshot.docs.map(doc => ({
@@ -236,7 +242,10 @@ export class Idea {
 export class Goal {
 
   static async getAll() {
-    const snapshot = await db.collection("productGoals").where("archived","==", false).get();
+    const snapshot = await db.collection("productGoals")
+            .where("archived","==", false)
+            .where("project","==",store.state.user.project)
+            .get();
     const products = await db.collection("products").where("goals","!=", []).get();
     const joinProducts = products.docs.map(doc => ({id:doc.id, goals:doc.data().goals}) );
     return snapshot.docs.map(doc => ({
@@ -263,7 +272,10 @@ export class Goal {
 export class Risk {
 
   static async getAll() {
-    const snapshot = await db.collection("productRisks").where("archived","==", false).get();
+    const snapshot = await db.collection("productRisks")
+            .where("archived","==", false)
+            .where("project","==",store.state.user.project)
+            .get();
     const products = await db.collection("products").where("risks","!=", []).get();
     const joinProducts = products.docs.map(doc => ({id:doc.id, risks:doc.data().risks}) );
     return snapshot.docs.map(doc => ({
@@ -289,7 +301,10 @@ export class Risk {
 
 export class Persona {
   static async getAll() {
-    const snapshot = await db.collection("personas").where("archived","==", false).get();
+    const snapshot = await db.collection("personas")
+          .where("archived","==", false)
+          .where("project","==",store.state.user.project)
+          .get();
     return snapshot.docs.map(doc => ({id:doc.id, data:doc.data()}) );
   }
   static createPersona(value) {
@@ -308,7 +323,10 @@ export class Persona {
 
 export class Need {
   static async getAll() {
-    const snapshot = await db.collection("needs").where("archived","==", false).get();
+    const snapshot = await db.collection("needs")
+            .where("archived","==", false)
+            .where("project","==",store.state.user.project)
+            .get();
     return snapshot.docs.map(doc => ({id:doc.id, data:doc.data()}) );
   }
   static createNeed(value) {
@@ -327,7 +345,10 @@ export class Need {
 
 export class Insight {
   static async getAll() {
-    const snapshot = await db.collection("insights").where("archived","==", false).get();
+    const snapshot = await db.collection("insights")
+              .where("archived","==", false)
+              .where("project","==",store.state.user.project)
+              .get();
     return snapshot.docs.map(doc => ({id:doc.id, data:doc.data()}) );
   }
   static createInsight(value) {
@@ -346,7 +367,10 @@ export class Insight {
 
 export class Journey {
   static async getAll() {
-    const snapshot = await db.collection("journeymaps").where("archived","==", false).get();
+    const snapshot = await db.collection("journeymaps")
+          .where("archived","==", false)
+          .where("project","==",store.state.user.project)
+          .get();
     return snapshot.docs.map(doc => ({id:doc.id, data:doc.data()}) );
   }
   static createJourney(value) {
@@ -365,7 +389,10 @@ export class Journey {
 
 export class JobToBeDone {
   static async getAll() {
-    const snapshot = await db.collection("jobsToBeDone").where("archived","==", false).get();
+    const snapshot = await db.collection("jobsToBeDone")
+            .where("archived","==", false)
+            .where("project","==",store.state.user.project)
+            .get();
     return snapshot.docs.map(doc => ({id:doc.id, data:doc.data()}) );
   }
   static createJobToBeDone(value) {
@@ -384,7 +411,10 @@ export class JobToBeDone {
 
 export class Interview {
   static async getAll() {
-    const snapshot = await db.collection("interviewFeedback").where("archived","==", false).get();
+    const snapshot = await db.collection("interviewFeedback")
+            .where("archived","==", false)
+            .where("project","==",store.state.user.project)
+            .get();
     return snapshot.docs.map(doc => ({id:doc.id, data:doc.data()}) );
   }
   static createInterview(value) {
