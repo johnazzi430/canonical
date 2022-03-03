@@ -2,7 +2,8 @@
       <v-layout>
         <v-navigation-drawer
           theme="dark"
-          width="250px"
+          expand-on-hover
+          rail
           permanent>
           <v-list nav color="transparent">
             <v-list-item prepend-icon="mdi-semantic-web" title="Products" value="products"></v-list-item>
@@ -14,14 +15,13 @@
           </v-list>
         </v-navigation-drawer>
         <v-main style="
-        height: 100%;
-        margin-left:100px;
+        margin:16px;
         overflow-x:hidden;
         ">
-          <v-container style="margin-left:100px">
             <h3>Products  <v-btn v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("product")'>Add product</v-btn></h3>
             <v-row
               no-gutters
+              align-content="start"
               style="height: 200px;
                     overflow-x:scroll;
                     white-space: nowrap;
@@ -32,9 +32,11 @@
               <v-card
               v-for="product in $store.state.products"
               v-bind:key="product"
-              width="400"
+              class="rounded-0"
+              width="300"
               height="200"
               elevation="3"
+              variant ="contained-text"
               >
                 <v-card-header>
                   <div>
@@ -59,7 +61,8 @@
             <h3>Features  <v-btn v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("feature")'>Add Feature</v-btn></h3>
             <v-row
               no-gutters
-              style="height: 200px;
+              align-content="start"
+              style="height: 128px;
                     overflow-x:scroll;
                     white-space: nowrap;
                     display: flex;
@@ -69,9 +72,11 @@
               <v-card
               v-for="feature in $store.state.features"
               v-bind:key="feature"
+              class="rounded-0"
               width="200"
-              height="120"
+              height="128"
               elevation="3"
+              variant ="contained-text"
               >
                 <v-card-header>
                   <div>
@@ -96,7 +101,8 @@
             <h3>Ideas <v-btn v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("idea")'>Add Idea</v-btn></h3>
             <v-row
               no-gutters
-              style="height: 200px;
+              align-content="start"
+              style="height: 128px;
                     overflow-x:scroll;
                     white-space: nowrap;
                     display: flex;
@@ -106,9 +112,11 @@
               <v-card
               v-for="idea in $store.state.ideas"
               v-bind:key="idea"
+              class="rounded-0"
               width="200"
-              height="120"
+              height="128"
               elevation="3"
+              variant ="contained-text"
               >
                 <v-card-header>
                   <div>
@@ -134,7 +142,8 @@
             <h3>Goals<v-btn v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("goal")'>Add Goal</v-btn></h3>
             <v-row
               no-gutters
-              style="height: 200px;
+              align-content="start"
+              style="height: 128px;
                     overflow-x:scroll;
                     white-space: nowrap;
                     display: flex;
@@ -144,9 +153,11 @@
               <v-card
               v-for="goal in $store.state.goals"
               v-bind:key="goal"
+              class="rounded-0"
               width="200"
-              height="120"
+              height="128"
               elevation="3"
+              variant ="contained-text"
               >
                 <v-card-header>
                   <div>
@@ -171,7 +182,8 @@
             <h3>Risks<v-btn v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("risk")'>Add Risk</v-btn></h3>
             <v-row
               no-gutters
-              style="height: 200px;
+              align-content="start"
+              style="height: 128px;
                     overflow-x:scroll;
                     white-space: nowrap;
                     display: flex;
@@ -181,9 +193,11 @@
               <v-card
               v-for="risk in $store.state.risks"
               v-bind:key="risk"
+              class="rounded-0"
               width="200"
-              height="120"
+              height="128"
               elevation="3"
+              variant ="contained-text"
               >
                 <v-card-header>
                   <div>
@@ -205,7 +219,6 @@
                 </v-card-actions>
               </v-card>
             </v-row>
-          </v-container>
         </v-main>
         <div id="right-sidepanel" class="sidepanel-right">
           <h1><a href="javascript:void(0)"
@@ -288,6 +301,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+.v-card{
+  margin: 4px;
+}
 
 .sidepanel-right{
   height: 100%; /* Specify a height */

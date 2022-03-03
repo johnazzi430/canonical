@@ -15,25 +15,20 @@
       ></v-text-field>
 
       <v-textarea
-        v-model="journey.data.description"
+        v-model="journey.data.inputs"
         :rules="[rules.required]"
-        label="Description"
+        label="Inputs"
         :disabled="!editing"
         required
       ></v-textarea>
 
-      priority
-      <v-slider
-        v-model="journey.data.impact"
-        step="1"
-        max="5"
-        show-ticks="always"
-        label="Impact"
-        thumb-label="always"
+      <v-textarea
+        v-model="journey.data.outputs"
+        :rules="[rules.required]"
+        label="Outputs"
         :disabled="!editing"
-      ></v-slider>
-
-      Journey owner: {{journey.data.owner}}
+        required
+      ></v-textarea>
 
       <hr>
 
@@ -96,9 +91,10 @@ export default {
       journey:{
         id: null,
         data : {
-          description:"",
           name:"",
-          impact:1
+          inputs:"",
+          outputs:"",
+          jobs:[]
         }
       },
       rules:{

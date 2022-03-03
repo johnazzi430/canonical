@@ -22,11 +22,11 @@
         required
       ></v-textarea>
 
-      <v-textarea
+      <v-text-field
         v-model="insight.data.opportunity"
-        label="Description"
+        label="Opportunity"
         :disabled="!editing"
-      ></v-textarea>
+      ></v-text-field>
 
       <v-select
         v-model="insight.data.vector"

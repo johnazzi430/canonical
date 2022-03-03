@@ -6,32 +6,21 @@
       lazy-validation
     >
       <v-text-field
-        v-model="interview.data.name"
+        v-model="interview.data.interviewee"
         :counter="20"
         :rules="[rules.required,rules.counter]"
-        label="Name"
+        label="Interview Name"
         required
         :disabled="!editing"
       ></v-text-field>
 
       <v-textarea
-        v-model="interview.data.description"
+        v-model="interview.data.details"
         :rules="[rules.required]"
-        label="Description"
+        label="Details"
         :disabled="!editing"
         required
       ></v-textarea>
-
-      priority
-      <v-slider
-        v-model="interview.data.impact"
-        step="1"
-        max="5"
-        show-ticks="always"
-        label="Impact"
-        thumb-label="always"
-        :disabled="!editing"
-      ></v-slider>
 
       Interview owner: {{interview.data.owner}}
 
@@ -96,9 +85,9 @@ export default {
       interview:{
         id: null,
         data : {
-          description:"",
-          name:"",
-          impact:1
+          details:"",
+          interviewee:"",
+          owner: null
         }
       },
       rules:{

@@ -22,7 +22,7 @@
         required
       ></v-textarea>
 
-      priority
+      Impact
       <v-slider
         v-model="need.data.impact"
         step="1"

@@ -22,18 +22,17 @@
         required
       ></v-textarea>
 
-      priority
-      <v-slider
-        v-model="jobToBeDone.data.impact"
-        step="1"
-        max="5"
-        show-ticks="always"
-        label="Impact"
-        thumb-label="always"
+      <v-textarea
+        v-model="persona.data.gains"
+        label="Gains"
         :disabled="!editing"
-      ></v-slider>
+      ></v-textarea>
 
-      JobToBeDone owner: {{jobToBeDone.data.owner}}
+      <v-textarea
+        v-model="persona.data.pains"
+        label="Pains"
+        :disabled="!editing"
+      ></v-textarea>
 
       <hr>
 
@@ -98,7 +97,8 @@ export default {
         data : {
           description:"",
           name:"",
-          impact:1
+          pains:"",
+          gains:"",
         }
       },
       rules:{
