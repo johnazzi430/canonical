@@ -10,7 +10,7 @@
             <v-list-item prepend-icon="mdi-lightbulb" title="Ideas" value="ideas"></v-list-item>
             <v-list-item prepend-icon="mdi-chart-areaspline" title="Goals" value="goals"></v-list-item>
             <v-list-item prepend-icon="mdi-flag" title="Risks" value="risks"></v-list-item>
-            <v-list-item prepend-icon="mdi-desktop-classic" title="Architecture" value="architecture"></v-list-item>
+            <!-- <v-list-item prepend-icon="mdi-desktop-classic" title="Architecture" value="architecture"></v-list-item> -->
           </v-list>
         </v-navigation-drawer>
         <v-main style="

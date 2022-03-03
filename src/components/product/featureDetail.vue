@@ -132,7 +132,7 @@
 </template>
 
 <script>
-import {Feature} from "../../services/firebaseDataService";
+import {Feature,Product} from "../../services/firebaseDataService";
 
 export default {
     data: () => ({
@@ -187,6 +187,11 @@ export default {
         // let Product = new product()
         // this.valid ? await Product.createProduct(this.product.data) : console.log('not valid');
         this.$refs.form.resetValidation();
+      },
+      async updateProductRel(){
+//        await Product.updateProductRel('GDnNvXVDdFF7GPQH0hMt','features',[],[this.feature.id])
+        await Product.updateProductRel('GDnNvXVDdFF7GPQH0hMt','features',['test'],['test feature'])
+        return;
       },
       async deleteFeature () {
         Feature.deleteFeature(this.selected.index)

@@ -49,6 +49,20 @@
         :disabled="!editing"
       ></v-text-field>
 
+      <h4>User Segments</h4>
+      <v-chip class="ma-2" v-for="persona in product.personas" v-bind:key="persona">
+        {{persona.personaId}}
+      </v-chip>
+
+      <h4>Features</h4>
+      <v-select
+            v-model="product.data.features"
+            :items="featureOptions"
+            label="Select"
+            single-line
+            multiple>
+      </v-select>
+
       <v-expansion-panels>
         <v-expansion-panel>
           <v-expansion-panel-title>
@@ -193,6 +207,7 @@ export default {
       valid: true,
       product:{
         id: null,
+        personas:[],
         data : {
           name:'',
           description:'',
@@ -211,7 +226,8 @@ export default {
           weaknesses:"",
           strengths: "",
           threats:"",
-          opportunities:''
+          opportunities:'',
+          features: [],
         }
       },
       rules:{
@@ -253,6 +269,7 @@ export default {
         await this.$refs.form.validate();
         // let Product = new product()
         // this.valid ? await Product.createProduct(this.product.data) : console.log('not valid');
+        await Product.updateProduct(this.product.id, this.product.data)
         this.$store.commit('getProducts')
         this.$refs.form.resetValidation();
       },
@@ -267,6 +284,11 @@ export default {
       },
     },
     computed:{
+      featureOptions(){
+//        return [{id:'test',name:'test'}]
+        return this.$store.state.features.map(doc => (doc.data.name));
+      },
+
       selected() {
         return this.$store.state.selected
       }

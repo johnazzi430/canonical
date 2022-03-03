@@ -5,8 +5,23 @@ import store from "../store";
 
 const db = firebase.firestore();
 
-export class User{
+function removeDeletedAddNew(list,from,to){
+  // this function removes values in the :list array that contain items in the :from array
+  // then the function adds values to the :list array from the :to array
+  for (var i = 0; i < from.length; i++) {
+    list = list.filter(val => val != from[i])
+  }
+  // remove "to" datasets from what already exists in database
+  for (var j = 0; j < to.length; j++) {
+    list = list.filter(val => val != to[j])
+  }
+  // push updates
+  to.forEach(e => list.push(e));
+  return list
+}
 
+
+export class User{
   static async getUserData(id){
     return await db.collection("users").doc(id).get().then((doc) => ({ id:doc.id, ...doc.data()}));
   }
@@ -138,16 +153,34 @@ export class Product {
     return await db.collection("products").doc(id).update(value);
   }
 
+  static async updateProductField(id ,field, value) {
+    return await db.collection("products").doc(id).update({$field:value});
+  }
+
+  static async updateProductRel(id ,field, from, to) {
+    const doc = await db.collection("products").doc(id).get()
+    const newList = removeDeletedAddNew(doc.data()[field],from,to)
+    var dict = {};
+    dict[field]=newList
+    return await db.collection("products").doc(id).update(dict);
+  }
+
   static async deleteProduct(id) {
     return await db.collection("products").doc(id).update({archived: true});
   }
 }
 
 export class Feature {
-
   static async getAll() {
     const snapshot = await db.collection("features").where("archived","==", false).get();
-    return snapshot.docs.map(doc => ({id:doc.id, data:doc.data()}) );
+    const products = await db.collection("products").where("features","!=", []).get();
+    const joinProducts = products.docs.map(doc => ({id:doc.id, features:doc.data().features}) );
+    return snapshot.docs.map(doc => ({
+      id:doc.id,
+      data:doc.data(),
+                                                          //// TODO: remove name here and replace with id
+      products: joinProducts.filter(e => e.features.includes(doc.data().name)).map(e=> ({id:e.id}))
+    }));
   }
 
   static createFeature(value) {
@@ -170,7 +203,13 @@ export class Idea {
 
   static async getAll() {
     const snapshot = await db.collection("ideas").get();
-    return snapshot.docs.map(doc => ({id:doc.id, data:doc.data()}) );
+    const products = await db.collection("products").where("ideas","!=", []).get();
+    const joinProducts = products.docs.map(doc => ({id:doc.id, ideas:doc.data().ideas}) );
+    return snapshot.docs.map(doc => ({
+      id:doc.id,
+      data:doc.data(),
+      products: joinProducts.filter(e => e.ideas.includes(doc.data().id)).map(e=> ({id:e.id}))
+    }));
   }
 
   static createidea(value) {
@@ -193,7 +232,13 @@ export class Goal {
 
   static async getAll() {
     const snapshot = await db.collection("productGoals").where("archived","==", false).get();
-    return snapshot.docs.map(doc => ({id:doc.id, data:doc.data()}) );
+    const products = await db.collection("products").where("goals","!=", []).get();
+    const joinProducts = products.docs.map(doc => ({id:doc.id, goals:doc.data().goals}) );
+    return snapshot.docs.map(doc => ({
+      id:doc.id,
+      data:doc.data(),
+      products: joinProducts.filter(e => e.goals.includes(doc.data().id)).map(e=> ({id:e.id}))
+    }));
   }
 
   static createGoal(value) {
@@ -216,7 +261,13 @@ export class Risk {
 
   static async getAll() {
     const snapshot = await db.collection("productRisks").where("archived","==", false).get();
-    return snapshot.docs.map(doc => ({id:doc.id, data:doc.data()}) );
+    const products = await db.collection("products").where("risks","!=", []).get();
+    const joinProducts = products.docs.map(doc => ({id:doc.id, risks:doc.data().risks}) );
+    return snapshot.docs.map(doc => ({
+      id:doc.id,
+      data:doc.data(),
+      products: joinProducts.filter(e => e.risks.includes(doc.data().id)).map(e=> ({id:e.id}))
+    }));
   }
 
   static createRisk(value) {
