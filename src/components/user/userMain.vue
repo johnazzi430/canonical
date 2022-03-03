@@ -17,7 +17,7 @@
 
           <v-container style="margin-left:100px;">
             <h3>Personas <v-btn v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("persona")'>Add Persona</v-btn></h3>
-            <v-row
+          <v-row
               no-gutters
               style="height: 200px;
                     overflow-x:scroll;

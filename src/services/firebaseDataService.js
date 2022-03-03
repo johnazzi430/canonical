@@ -20,6 +20,15 @@ function removeDeletedAddNew(list,from,to){
   return list
 }
 
+function addInDefaults(value){
+  if (!store.state.user.uid) {throw 'user must be logged in to add product'}
+  value.createdBy = store.state.user.uid;
+  value.group = store.state.user.group;
+  value.createDate = Date();
+  value.updatedDate = Date();
+  value.archived = false;
+  return value
+}
 
 export class User{
   static async getUserData(id){
@@ -133,10 +142,7 @@ export class Product {
 
 
   static async createProduct(value) {
-    value.createDate = Date();
-    value.updatedDate = Date();
-    value.archived = false;
-
+    value = addInDefaults(value)
     return await db.collection("products").add(value);
 //    const { id } = await db.collection("products").add(value)
     //// TODO: Need to make sure "personas" arent inserted into above
@@ -184,9 +190,7 @@ export class Feature {
   }
 
   static createFeature(value) {
-    value.createDate = Date();
-    value.updatedDate = Date();
-    value.archived = false;
+    value = addInDefaults(value)
     return db.collection("features").add(value);
   }
 
@@ -213,9 +217,7 @@ export class Idea {
   }
 
   static createidea(value) {
-    value.createDate = Date();
-    value.updatedDate = Date();
-    value.archived = false;
+    value = addInDefaults(value)
     return db.collection("ideas").add(value);
   }
 
@@ -242,9 +244,7 @@ export class Goal {
   }
 
   static createGoal(value) {
-    value.createDate = Date();
-    value.updatedDate = Date();
-    value.archived = false;
+    value = addInDefaults(value)
     return db.collection("productGoals").add(value);
   }
 
@@ -271,9 +271,7 @@ export class Risk {
   }
 
   static createRisk(value) {
-    value.createDate = Date();
-    value.updatedDate = Date();
-    value.archived = false;
+    value = addInDefaults(value)
     return db.collection("productRisks").add(value);
   }
 
@@ -291,8 +289,9 @@ export class Persona {
     const snapshot = await db.collection("personas").where("archived","==", false).get();
     return snapshot.docs.map(doc => ({id:doc.id, data:doc.data()}) );
   }
-  static createPersona(tutorial) {
-    return db.collection("personas").add(tutorial);
+  static createPersona(value) {
+    value = addInDefaults(value)
+    return db.collection("personas").add(value);
   }
 
   static updatePersona(id,value) {
@@ -309,8 +308,9 @@ export class Need {
     const snapshot = await db.collection("needs").where("archived","==", false).get();
     return snapshot.docs.map(doc => ({id:doc.id, data:doc.data()}) );
   }
-  static createNeed(tutorial) {
-    return db.collection("needs").add(tutorial);
+  static createNeed(value) {
+    value = addInDefaults(value)
+    return db.collection("needs").add(value);
   }
 
   static updateNeed(id,value) {
@@ -327,8 +327,9 @@ export class Insight {
     const snapshot = await db.collection("insights").where("archived","==", false).get();
     return snapshot.docs.map(doc => ({id:doc.id, data:doc.data()}) );
   }
-  static createInsight(tutorial) {
-    return db.collection("insights").add(tutorial);
+  static createInsight(value) {
+    value = addInDefaults(value)
+    return db.collection("insights").add(value);
   }
 
   static updateInsight(id,value) {
@@ -345,8 +346,9 @@ export class Journey {
     const snapshot = await db.collection("journeymaps").where("archived","==", false).get();
     return snapshot.docs.map(doc => ({id:doc.id, data:doc.data()}) );
   }
-  static createJourney(tutorial) {
-    return db.collection("journeymaps").add(tutorial);
+  static createJourney(value) {
+    value = addInDefaults(value)
+    return db.collection("journeymaps").add(value);
   }
 
   static updateJourney(id,value) {
@@ -363,8 +365,9 @@ export class JobToBeDone {
     const snapshot = await db.collection("jobsToBeDone").where("archived","==", false).get();
     return snapshot.docs.map(doc => ({id:doc.id, data:doc.data()}) );
   }
-  static createJobToBeDone(tutorial) {
-    return db.collection("jobsToBeDone").add(tutorial);
+  static createJobToBeDone(value) {
+    value = addInDefaults(value)
+    return db.collection("jobsToBeDone").add(value);
   }
 
   static updateJobToBeDone(id,value) {
@@ -381,8 +384,9 @@ export class Interview {
     const snapshot = await db.collection("interviewFeedback").where("archived","==", false).get();
     return snapshot.docs.map(doc => ({id:doc.id, data:doc.data()}) );
   }
-  static createInterview(tutorial) {
-    return db.collection("interviewFeedback").add(tutorial);
+  static createInterview(value) {
+    value = addInDefaults(value)
+    return db.collection("interviewFeedback").add(value);
   }
 
   static updateInterview(id,value) {

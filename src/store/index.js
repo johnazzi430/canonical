@@ -7,10 +7,10 @@ const store = createStore({
     return {
       user:{
         loggedIn: false,
-        displayName: "",
-        uid:"",
-        email: "",
-        group: ""
+        displayName: null,
+        uid:null,
+        email: null,
+        group: null
       },
       personas: [],
       features: [],
