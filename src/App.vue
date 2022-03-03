@@ -16,7 +16,8 @@
             User
           </v-btn>
           <v-spacer></v-spacer>
-          <v-menu>
+          <v-menu
+          :close-on-content-click='true'>
               <template v-slot:activator="{ props }">
                 <v-avatar
                     color="black"
@@ -27,10 +28,11 @@
                     {{$store.state.user.email[0].toUpperCase()}}</span>
                   </v-avatar>
               </template>
-              <v-list>
+              <v-list density="compact" variant="plain">
                 <v-list-item
                   v-for="(item, index) in ['logout']"
                   :key="index"
+                  variant="plain"
                 >
                   <v-list-item-title variant="contained-text" v-if='$store.state.user.loggedIn === true' @click="logout">
                       Logout
@@ -38,12 +40,12 @@
                 </v-list-item>
               </v-list>
           </v-menu>
-          <v-btn variant="contained-text" to="/about">
+          <!-- <v-btn variant="contained-text" to="/about">
             About
           </v-btn>
           <v-btn variant="contained-text" to="/help">
             Help
-          </v-btn>
+          </v-btn> -->
           <v-btn variant="contained-text" v-if='$store.state.user.loggedIn === false' to="/Login">
               Login
           </v-btn>

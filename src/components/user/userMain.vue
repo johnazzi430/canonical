@@ -38,19 +38,12 @@
               elevation="3"
               variant ="contained-text"
               >
-                <v-card-header>
-                  <div>
-                    <div class="text-overline mb-1">
-                      {{persona.data.name}}
-                    </div>
-                    <div class="text-caption">{{persona.data.description}}</div>
-                  </div>
-                </v-card-header>
-
+                <v-card-header>{{persona.data.name}}</v-card-header>
+                <v-card-text>{{persona.data.description}}</v-card-text>
                 <v-card-actions>
                   <v-btn
                     variant="text"
-                    color="orange"
+                    color="blue"
                     v-on:click='expandDetail(persona.id,"persona")'
                   >
                     Details
@@ -89,12 +82,11 @@
 
                 <v-card-actions>
                   <v-btn
-                    variant="outlined"
-                    rounded
-                    text
+                    variant="text"
+                    color="blue"
                     v-on:click='expandDetail(insight.id,"insight")'
                   >
-                    Button
+                    Details
                   </v-btn>
                 </v-card-actions>
               </v-card>
@@ -103,7 +95,7 @@
             <v-row
               no-gutters
               align-content="start"
-              style="height: 128px;
+              style="height: 140px;
                     overflow-x:scroll;
                     white-space: nowrap;
                     display: flex;
@@ -113,29 +105,25 @@
               <v-card
               v-for="need in $store.state.needs"
               v-bind:key="need"
+              density ="compact"
               class="rounded-0"
               width="200"
               height="128"
               elevation="3"
               variant ="contained-text"
-              >
-                <v-card-header>
-                  <div>
-                    <div class="text-overline mb-1">
-                      {{need.data.name}}
-                    </div>
-                    <div class="text-caption">{{need.data.description}}</div>
-                  </div>
-                </v-card-header>
+              :ripple = 'true'>
+              <v-card-header>{{need.data.name}}</v-card-header>
+              <v-card-text
+                class="text-wrap"
+              >{{need.data.description}}</v-card-text>
 
                 <v-card-actions>
                   <v-btn
-                    variant="outlined"
-                    rounded
-                    text
+                    variant="text"
+                    color="blue"
                     v-on:click='expandDetail(need.id,"need")'
                   >
-                    Button
+                    Details
                   </v-btn>
                 </v-card-actions>
               </v-card>
@@ -171,12 +159,11 @@
 
                 <v-card-actions>
                   <v-btn
-                    variant="outlined"
-                    rounded
-                    text
+                    variant="text"
+                    color="blue"
                     v-on:click='expandDetail(journey.id,"journey")'
                   >
-                    Button
+                    Details
                   </v-btn>
                 </v-card-actions>
               </v-card>
@@ -212,9 +199,8 @@
 
                 <v-card-actions>
                   <v-btn
-                    variant="outlined"
-                    rounded
-                    text
+                    variant="text"
+                    color="blue"
                     v-on:click='expandDetail(jobToBeDone.id,"jobToBeDone")'
                   >
                     Button
@@ -348,6 +334,24 @@ export default {
 <style lang="scss" scoped>
 .v-card{
   margin: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.v-card-actions{
+  position: absolute;
+  bottom: 0;
+}
+
+.v-card-text{
+  height:4em;
+  overflow-y: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  line-height: 1em;
+  padding-top:0;
 }
 
 .sidepanel-right{

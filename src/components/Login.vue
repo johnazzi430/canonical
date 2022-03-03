@@ -102,7 +102,7 @@ export default {
     async loginWithGoogle(){
       await User.loginWithGoogle()
       //// TODO: fix this
-      this.$router.push(this.$route.query.from);
+      this.$router.push('/product');
       return
     }
 

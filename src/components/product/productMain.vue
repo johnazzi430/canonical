@@ -53,7 +53,7 @@
                     color="orange"
                     v-on:click='expandDetail(product.id,"product")'
                   >
-                    Button
+                    Details
                   </v-btn>
                 </v-card-actions>
               </v-card>
@@ -93,7 +93,7 @@
                   color="orange"
                     v-on:click='expandDetail(feature.id,"feature")'
                   >
-                    Button
+                    Details
                   </v-btn>
                 </v-card-actions>
               </v-card>
@@ -134,7 +134,7 @@
                     text
                     v-on:click='expandDetail(idea.id,"idea")'
                   >
-                    Button
+                    Details
                   </v-btn>
                 </v-card-actions>
               </v-card>
@@ -174,7 +174,7 @@
                   color="orange"
                     v-on:click='expandDetail(goal.id,"goal")'
                   >
-                    Button
+                    Details
                   </v-btn>
                 </v-card-actions>
               </v-card>
@@ -214,7 +214,7 @@
                   color="orange"
                     v-on:click='expandDetail(risk.id,"risk")'
                   >
-                    Button
+                    Details
                   </v-btn>
                 </v-card-actions>
               </v-card>
