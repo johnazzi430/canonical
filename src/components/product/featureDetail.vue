@@ -60,11 +60,13 @@
 
       <v-switch
         v-model="feature.data.delivered"
+        color="primary"
         :label="`delivered: ${feature.data.delivered}`"
       ></v-switch>
 
       <v-switch
         v-model="feature.data.validated"
+        color="primary"
         :label="`validated: ${feature.data.validated}`"
       ></v-switch>
 

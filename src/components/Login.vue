@@ -101,7 +101,9 @@ export default {
 
     async loginWithGoogle(){
       await User.loginWithGoogle()
-      this.$router.replace({ path: '/' })
+      //// TODO: fix this
+      this.$router.push(this.$route.query.from);
+      return
     }
 
   }
