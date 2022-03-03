@@ -95,7 +95,7 @@
             <v-row
               no-gutters
               align-content="start"
-              style="height: 140px;
+              style="height: 150px;
                     overflow-x:scroll;
                     white-space: nowrap;
                     display: flex;
@@ -113,10 +113,7 @@
               variant ="contained-text"
               :ripple = 'true'>
               <v-card-header>{{need.data.name}}</v-card-header>
-              <v-card-text
-                class="text-wrap"
-              >{{need.data.description}}</v-card-text>
-
+              <v-card-text>{{need.data.description}}</v-card-text>
                 <v-card-actions>
                   <v-btn
                     variant="text"
@@ -132,7 +129,7 @@
             <v-row
               no-gutters
               align-content="start"
-              style="height: 128px;
+              style="height: 158px;
                     overflow-x:scroll;
                     white-space: nowrap;
                     display: flex;
@@ -172,7 +169,7 @@
             <v-row
               no-gutters
               align-content="start"
-              style="height: 128px;
+              style="height: 150px;
                     overflow-x:scroll;
                     white-space: nowrap;
                     display: flex;
@@ -212,7 +209,7 @@
             <v-row
               no-gutters
               align-content="start"
-              style="height: 128px;
+              style="height: 150px;
                     overflow-x:scroll;
                     white-space: nowrap;
                     display: flex;
@@ -224,7 +221,7 @@
               class="rounded-0"
               v-bind:key="interview"
               width="200"
-              height="128"
+              height="130"
               elevation="3"
               variant ="contained-text"
               >
@@ -344,6 +341,7 @@ export default {
 }
 
 .v-card-text{
+  white-space: normal !important;
   height:4em;
   overflow-y: hidden;
   text-overflow: ellipsis;

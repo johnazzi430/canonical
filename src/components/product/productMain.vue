@@ -38,14 +38,8 @@
               elevation="3"
               variant ="contained-text"
               >
-                <v-card-header>
-                  <div>
-                    <div class="text-overline mb-1">
-                      {{product.data.name}}
-                    </div>
-                    <div class="text-caption">{{product.data.description}}</div>
-                  </div>
-                </v-card-header>
+                <v-card-header>{{product.data.name}}</v-card-header>
+                <v-card-text class="text-wrap">{{product.data.description}}</v-card-text>
 
                 <v-card-actions>
                   <v-btn
@@ -62,7 +56,7 @@
             <v-row
               no-gutters
               align-content="start"
-              style="height: 128px;
+              style="height: 150px;
                     overflow-x:scroll;
                     white-space: nowrap;
                     display: flex;
@@ -74,19 +68,12 @@
               v-bind:key="feature"
               class="rounded-0"
               width="200"
-              height="128"
+              height="150"
               elevation="3"
               variant ="contained-text"
               >
-                <v-card-header>
-                  <div>
-                    <div class="text-overline mb-1">
-                      {{feature.data.name}}
-                    </div>
-                    <div class="text-caption">{{feature.data.description}}</div>
-                  </div>
-                </v-card-header>
-
+                <v-card-header>{{feature.data.name}}</v-card-header>
+                <v-card-text>{{feature.data.description}}</v-card-text>
                 <v-card-actions>
                   <v-btn
                   variant="text"
@@ -102,7 +89,7 @@
             <v-row
               no-gutters
               align-content="start"
-              style="height: 128px;
+              style="height: 150px;
                     overflow-x:scroll;
                     white-space: nowrap;
                     display: flex;
@@ -114,18 +101,12 @@
               v-bind:key="idea"
               class="rounded-0"
               width="200"
-              height="128"
+              height="150"
               elevation="3"
               variant ="contained-text"
               >
-                <v-card-header>
-                  <div>
-                    <div class="text-overline mb-1">
-                      {{idea.data.idea}}
-                    </div>
-                    <div class="text-caption">{{idea.data.description}}</div>
-                  </div>
-                </v-card-header>
+                <v-card-header>{{idea.data.idea}}</v-card-header>
+                <v-card-text>{{idea.data.description}}</v-card-text>
 
                 <v-card-actions>
                   <v-btn
@@ -143,7 +124,7 @@
             <v-row
               no-gutters
               align-content="start"
-              style="height: 128px;
+              style="height: 150px;
                     overflow-x:scroll;
                     white-space: nowrap;
                     display: flex;
@@ -154,19 +135,13 @@
               v-for="goal in $store.state.goals"
               v-bind:key="goal"
               class="rounded-0"
-              width="200"
-              height="128"
+              width="280"
+              height="150"
               elevation="3"
               variant ="contained-text"
               >
-                <v-card-header>
-                  <div>
-                    <div class="text-overline mb-1">
-                      {{goal.data.name}}
-                    </div>
-                    <div class="text-caption">{{goal.data.description}}</div>
-                  </div>
-                </v-card-header>
+                <v-card-header>{{goal.data.name}}{{goal.data.description}}</v-card-header>
+                <v-card-text>{{goal.data.description}}</v-card-text>
 
                 <v-card-actions>
                   <v-btn
@@ -183,7 +158,7 @@
             <v-row
               no-gutters
               align-content="start"
-              style="height: 128px;
+              style="height: 150px;
                     overflow-x:scroll;
                     white-space: nowrap;
                     display: flex;
@@ -195,18 +170,12 @@
               v-bind:key="risk"
               class="rounded-0"
               width="200"
-              height="128"
+              height="150"
               elevation="3"
               variant ="contained-text"
               >
-                <v-card-header>
-                  <div>
-                    <div class="text-overline mb-1">
-                      {{risk.data.name}}
-                    </div>
-                    <div class="text-caption">{{risk.data.description}}</div>
-                  </div>
-                </v-card-header>
+                <v-card-header>{{risk.data.name}}</v-card-header>
+                <v-card-text>{{risk.data.description}}</v-card-text>
 
                 <v-card-actions>
                   <v-btn
@@ -304,6 +273,25 @@ export default {
 
 .v-card{
   margin: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.v-card-actions{
+  position: absolute;
+  bottom: 0;
+}
+
+.v-card-text{
+  white-space: normal !important;
+  height:4em;
+  overflow-y: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  line-height: 1em;
+  padding-top:0;
 }
 
 .sidepanel-right{

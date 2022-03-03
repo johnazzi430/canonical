@@ -225,16 +225,16 @@ export class Idea {
     }));
   }
 
-  static createidea(value) {
+  static createIdea(value) {
     value = addInDefaults(value)
     return db.collection("ideas").add(value);
   }
 
-  static updateidea(id ,value) {
+  static updateIdea(id ,value) {
     return db.collection("ideas").doc(id).update(value);
   }
 
-  static deleteidea(id) {
+  static deleteIdea(id) {
     return db.collection("ideas").doc(id).delete();
   }
 }
