@@ -16,9 +16,28 @@
             User
           </v-btn>
           <v-spacer></v-spacer>
-          <div v-if='$store.state.user.loggedIn === true'>
-            {{$store.state.user.email}}
-          </div>
+          <v-menu>
+              <template v-slot:activator="{ props }">
+                <v-avatar
+                    color="black"
+                    v-if='$store.state.user.loggedIn === true'
+                    v-bind="props">
+                  <span
+                    class="white--text text-h5">
+                    {{$store.state.user.email[0].toUpperCase()}}</span>
+                  </v-avatar>
+              </template>
+              <v-list>
+                <v-list-item
+                  v-for="(item, index) in ['logout']"
+                  :key="index"
+                >
+                  <v-list-item-title variant="contained-text" v-if='$store.state.user.loggedIn === true' @click="logout">
+                      Logout
+                  </v-list-item-title>
+                </v-list-item>
+              </v-list>
+          </v-menu>
           <v-btn variant="contained-text" to="/about">
             About
           </v-btn>
@@ -27,9 +46,6 @@
           </v-btn>
           <v-btn variant="contained-text" v-if='$store.state.user.loggedIn === false' to="/Login">
               Login
-          </v-btn>
-          <v-btn variant="contained-text" v-else-if='$store.state.user.loggedIn === true' @click="logout">
-              Logout
           </v-btn>
 
         </v-btn-toggle>
@@ -54,3 +70,26 @@ export default {
   }
 }
 </script>
+
+<style>
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+</style>

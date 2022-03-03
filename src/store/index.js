@@ -51,7 +51,7 @@ const store = createStore({
       state.user.displayName = "";
       state.user.uid = "";
       state.user.email = "";
-      state.user.group = "";
+      state.user.project= 'nCHJGmd9sx9VuiiqKrFN';
     },
 
     closeDetail(state){
