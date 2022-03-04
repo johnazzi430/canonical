@@ -38,10 +38,15 @@ const store = createStore({
       return state.user.loggedIn
     },
     filteredFeatures (state){
-      return state.features.filter(function(feature) {
+      const newFeatures =  structuredClone(state.features).filter(function(feature) {
+        var justTheData = [];
+        Object.keys(feature.data).forEach(k => {
+          justTheData.push(feature.data[k])
+        });
         let regex = new RegExp('(' + state.filter+ ')', 'i');
-        return JSON.stringify(feature).match(regex);
+        return JSON.stringify({justTheData}).match(regex);
       })
+      return newFeatures
     }
   },
   mutations: {
