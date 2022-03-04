@@ -18,6 +18,13 @@
           margin:16px;
           overflow-x:hidden;
           ">
+          <v-row>
+            <v-text-field
+              v-model="search"
+              @input="$store.commit('filter',search.trim())"
+              variant="underlined"
+            ></v-text-field>
+          </v-row>
             <h3 class="text-medium-emphasis">Personas <v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("persona")'>Add Persona +</v-btn></h3>
             <v-row
               no-gutters
@@ -257,7 +264,7 @@ export default {
   },
   data() {
     return {
-      personas:[]
+      search:""
    }
   },
   async beforeMount() {

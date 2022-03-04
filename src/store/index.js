@@ -28,12 +28,20 @@ const store = createStore({
         index: null,
         source: null
       },
-      detailClose: 1
+      detailClose: 1,
+      globalAlerts:[],
+      filter: null
     }
   },
   getters: {
     isUserLoggedIn (state) {
       return state.user.loggedIn
+    },
+    filteredFeatures (state){
+      return state.features.filter(function(feature) {
+        let regex = new RegExp('(' + state.filter+ ')', 'i');
+        return JSON.stringify(feature).match(regex);
+      })
     }
   },
   mutations: {
@@ -52,6 +60,24 @@ const store = createStore({
       state.user.uid = "";
       state.user.email = "";
       state.user.project= 'nCHJGmd9sx9VuiiqKrFN';
+    },
+
+    alert(state,payload){
+      const alert = {
+        time: Date.now(),
+        show: false,
+        type: payload.type,
+        message: payload.message
+      }
+      this.globalAlerts.push(alert)
+    },
+
+    filter(state,payload){
+      state.filter = payload
+    },
+
+    resetFilter(state){
+      state.filter = null
     },
 
     closeDetail(state){

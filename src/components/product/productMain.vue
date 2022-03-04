@@ -18,6 +18,13 @@
         margin:16px;
         overflow-x:hidden;
         ">
+            <v-row>
+              <v-text-field
+                v-model="search"
+                @input="$store.commit('filter',search.trim())"
+                variant="underlined"
+              ></v-text-field>
+            </v-row>
             <h3 class="text-medium-emphasis">Products  <v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("product")'>Add product +</v-btn></h3>
             <v-row
               no-gutters
@@ -64,7 +71,7 @@
                     flex-direction: column;
                     overflow-x: auto;">
               <v-card
-              v-for="feature in $store.state.features"
+              v-for="feature in $store.getters.filteredFeatures"
               v-bind:key="feature"
               class="rounded-0"
               width="200"
@@ -221,7 +228,7 @@ export default {
   },
   data() {
     return {
-      // products:[]
+      search:""
    }
   },
   async beforeMount() {
@@ -296,7 +303,7 @@ export default {
 .product-risk-card{
   border-left-style: solid;
   border-left-width: thick;
-  
+
   &.r0{
     border-left-color: green;
   }
