@@ -37,7 +37,7 @@
                     flex-direction: column;
                     overflow-x: auto;">
               <v-card
-              v-for="product in $store.state.products"
+              v-for="product in $store.getters.filteredProducts"
               v-bind:key="product"
               class="rounded-0 product-card"
               width="300"
@@ -104,7 +104,7 @@
                     flex-direction: column;
                     overflow-x: auto;">
               <v-card
-              v-for="idea in $store.state.ideas"
+              v-for="idea in $store.getters.filteredIdeas"
               v-bind:key="idea"
               class="rounded-0"
               width="200"
@@ -139,7 +139,7 @@
                     flex-direction: column;
                     overflow-x: auto;">
               <v-card
-              v-for="goal in $store.state.goals"
+              v-for="goal in $store.getters.filteredGoals"
               v-bind:key="goal"
               class="rounded-0"
               width="280"
@@ -173,7 +173,7 @@
                     flex-direction: column;
                     overflow-x: auto;">
               <v-card
-              v-for="risk in $store.state.risks"
+              v-for="risk in $store.getters.filteredRisks"
               v-bind:key="risk"
               class="rounded-0 product-risk-card"
               :class='"r"+risk.data.impact'
@@ -232,6 +232,7 @@ export default {
    }
   },
   async beforeMount() {
+    this.search = this.$store.state.filter
     this.$store.commit('getProducts')
     this.$store.commit('getFeatures')
     this.$store.commit('getIdeas')

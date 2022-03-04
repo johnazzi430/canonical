@@ -37,7 +37,7 @@
                     flex-direction: column;
                     overflow-x: auto;">
               <v-card
-              v-for="persona in $store.state.personas"
+              v-for="persona in $store.getters.filteredPersonas"
               v-bind:key="persona"
               class="rounded-0 persona-card"
               width="400"
@@ -70,7 +70,7 @@
                     flex-direction: column;
                     overflow-x: auto;">
               <v-card
-              v-for="insight in $store.state.insights"
+              v-for="insight in $store.getters.filteredInsights"
               v-bind:key="insight"
               :class="insight.data.vector"
               class="rounded-0 insightCard"
@@ -104,7 +104,7 @@
                     flex-direction: column;
                     overflow-x: auto;">
               <v-card
-              v-for="need in $store.state.needs"
+              v-for="need in $store.getters.filteredNeeds"
               v-bind:key="need"
               density ="compact"
               class="rounded-0"
@@ -138,7 +138,7 @@
                     flex-direction: column;
                     overflow-x: auto;">
               <v-card
-              v-for="journey in $store.state.journeys"
+              v-for="journey in $store.getters.filteredJourneys"
               v-bind:key="journey"
               class="rounded-0"
               width="200"
@@ -172,7 +172,7 @@
                     flex-direction: column;
                     overflow-x: auto;">
               <v-card
-              v-for="jobToBeDone in $store.state.jobToBeDones"
+              v-for="jobToBeDone in $store.getters.filteredJobsToBeDone"
               v-bind:key="jobToBeDone"
               class="rounded-0"
               width="200"
@@ -206,7 +206,7 @@
                     flex-direction: column;
                     overflow-x: auto;">
               <v-card
-              v-for="interview in $store.state.interviews"
+              v-for="interview in $store.getters.filteredInterviews"
               class="rounded-0"
               v-bind:key="interview"
               width="200"
@@ -268,6 +268,7 @@ export default {
    }
   },
   async beforeMount() {
+    this.search = this.$store.state.filter
     this.$store.commit('getPersonas')
     this.$store.commit('getInsights')
     this.$store.commit('getNeeds')

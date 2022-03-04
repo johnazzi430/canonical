@@ -2,6 +2,17 @@ import { createStore } from 'vuex'
 //import {product, persona} from '../services/firebaseDataService'
 import {Product,Feature,Idea,Goal,Risk,Persona,Insight,Need,Journey,JobToBeDone,Interview} from '../services/firebaseDataService'
 
+function filterHelper(list,filter){
+  return [...list].filter(function(item) {
+    var justTheData = [];
+    Object.keys(item.data).forEach(k => {
+      justTheData.push(item.data[k])
+    });
+    let regex = new RegExp('(' + filter+ ')', 'i');
+    return JSON.stringify({justTheData}).match(regex);
+  })
+}
+
 const store = createStore({
   state () {
     return {
@@ -30,23 +41,45 @@ const store = createStore({
       },
       detailClose: 1,
       globalAlerts:[],
-      filter: null
+      filter: "",
     }
   },
   getters: {
     isUserLoggedIn (state) {
       return state.user.loggedIn
     },
+    filteredProducts (state){
+      return filterHelper(state.products,state.filter)
+    },
     filteredFeatures (state){
-      const newFeatures =  structuredClone(state.features).filter(function(feature) {
-        var justTheData = [];
-        Object.keys(feature.data).forEach(k => {
-          justTheData.push(feature.data[k])
-        });
-        let regex = new RegExp('(' + state.filter+ ')', 'i');
-        return JSON.stringify({justTheData}).match(regex);
-      })
-      return newFeatures
+      return filterHelper(state.features,state.filter)
+    },
+    filteredIdeas (state){
+      return filterHelper(state.ideas,state.filter)
+    },
+    filteredGoals (state){
+      return filterHelper(state.goals,state.filter)
+    },
+    filteredRisks (state){
+      return filterHelper(state.risks,state.filter)
+    },
+    filteredPersonas (state){
+      return filterHelper(state.personas,state.filter)
+    },
+    filteredInsights (state){
+      return filterHelper(state.insights,state.filter)
+    },
+    filteredNeeds (state){
+      return filterHelper(state.needs,state.filter)
+    },
+    filteredJourneys (state){
+      return filterHelper(state.journeys,state.filter)
+    },
+    filteredJobsToBeDone(state){
+      return filterHelper(state.jobsToBeDone,state.filter)
+    },
+    filteredInterviews (state){
+      return filterHelper(state.interviews,state.filter)
     }
   },
   mutations: {
