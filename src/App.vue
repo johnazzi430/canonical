@@ -16,30 +16,6 @@
             User
           </v-btn>
           <v-spacer></v-spacer>
-          <v-menu
-          :close-on-content-click='true'>
-              <template v-slot:activator="{ props }">
-                <v-avatar
-                    color="black"
-                    v-if='$store.state.user.loggedIn === true'
-                    v-bind="props">
-                  <span
-                    class="white--text text-h5">
-                    {{$store.state.user.email[0].toUpperCase()}}</span>
-                  </v-avatar>
-              </template>
-              <v-list density="compact" variant="plain">
-                <v-list-item
-                  v-for="(item, index) in ['logout']"
-                  :key="index"
-                  variant="plain"
-                >
-                  <v-list-item-title variant="contained-text" v-if='$store.state.user.loggedIn === true' @click="logout">
-                      Logout
-                  </v-list-item-title>
-                </v-list-item>
-              </v-list>
-          </v-menu>
           <!-- <v-btn variant="contained-text" to="/about">
             About
           </v-btn>
@@ -51,6 +27,35 @@
           </v-btn>
 
         </v-btn-toggle>
+
+        <v-menu
+        offset-overflow
+        left
+        close-on-content-click>
+            <template v-slot:activator="{ props }">
+              <v-avatar
+                  size="32"
+                  color="black"
+                  v-if='$store.state.user.loggedIn === true'
+                  v-bind="props">
+                <span
+                  class="white--text text-h5">
+                  {{$store.state.user.email[0].toUpperCase()}}</span>
+                </v-avatar>
+            </template>
+            <v-list density="compact" variant="plain">
+              <v-list-item
+                v-for="(item, index) in ['logout']"
+                :key="index"
+                variant="plain"
+              >
+                <v-list-item-title variant="contained-text" v-if='$store.state.user.loggedIn === true' @click="logout">
+                    Logout
+                </v-list-item-title>
+              </v-list-item>
+            </v-list>
+        </v-menu>
+
       </v-app-bar>
       <router-view/>
     </v-main>
@@ -74,6 +79,11 @@ export default {
 </script>
 
 <style>
+
+.v-avatar{
+  margin:4px;
+}
+
 /* width */
 ::-webkit-scrollbar {
   width: 10px;
