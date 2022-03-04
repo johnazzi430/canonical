@@ -34,6 +34,12 @@ const store = createStore({
       journeys:[],
       jobsToBeDone:[],
       interviews:[],
+      loading:{
+        personas:{
+          loaded:false,
+          fetching:false
+        }
+      },
       selected:{
         isSelected: false,
         index: null,

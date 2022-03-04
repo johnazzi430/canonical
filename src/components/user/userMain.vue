@@ -269,6 +269,7 @@ export default {
   },
   async beforeMount() {
     this.search = this.$store.state.filter
+    //// TODO: reduce calls for new data when switching components
     this.$store.commit('getPersonas')
     this.$store.commit('getInsights')
     this.$store.commit('getNeeds')
