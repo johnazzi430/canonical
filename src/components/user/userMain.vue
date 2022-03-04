@@ -18,7 +18,7 @@
           margin:16px;
           overflow-x:hidden;
           ">
-            <h3>Personas <v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("persona")'>Add Persona +</v-btn></h3>
+            <h3 class="text-medium-emphasis">Personas <v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("persona")'>Add Persona +</v-btn></h3>
             <v-row
               no-gutters
               align-content="start"
@@ -32,7 +32,7 @@
               <v-card
               v-for="persona in $store.state.personas"
               v-bind:key="persona"
-              class="rounded-0"
+              class="rounded-0 persona-card"
               width="400"
               height="200"
               elevation="3"
@@ -51,7 +51,7 @@
                 </v-card-actions>
               </v-card>
             </v-row>
-            <h3>Insights <v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("insight")'>Add Insights +</v-btn></h3>
+            <h3 class="text-medium-emphasis">Insights <v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("insight")'>Add Insights +</v-btn></h3>
             <v-row
               align-content="start"
               no-gutters
@@ -65,7 +65,8 @@
               <v-card
               v-for="insight in $store.state.insights"
               v-bind:key="insight"
-              class="rounded-0"
+              :class="insight.data.vector"
+              class="rounded-0 insightCard"
               width="300"
               height="150"
               elevation="3"
@@ -84,7 +85,7 @@
                 </v-card-actions>
               </v-card>
             </v-row>
-            <h3>Needs <v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("need")'>Add Needs +</v-btn></h3>
+            <h3 class="text-medium-emphasis">Needs <v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("need")'>Add Needs +</v-btn></h3>
             <v-row
               no-gutters
               align-content="start"
@@ -118,7 +119,7 @@
                 </v-card-actions>
               </v-card>
             </v-row>
-            <h3>Journeys <v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("journey")'>Add Journey +</v-btn></h3>
+            <h3 class="text-medium-emphasis">Journeys <v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("journey")'>Add Journey +</v-btn></h3>
             <v-row
               no-gutters
               align-content="start"
@@ -152,7 +153,7 @@
                 </v-card-actions>
               </v-card>
             </v-row>
-            <h3>JobsToBeDone <v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("JobsToBeDone")'>Add JobsToBeDone +</v-btn></h3>
+            <h3 class="text-medium-emphasis">JobsToBeDone <v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("JobsToBeDone")'>Add JobsToBeDone +</v-btn></h3>
             <v-row
               no-gutters
               align-content="start"
@@ -186,7 +187,7 @@
                 </v-card-actions>
               </v-card>
             </v-row>
-            <h3>Interviews <v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("intervie")'>Add Interviews +</v-btn></h3>
+            <h3 class="text-medium-emphasis">Interviews <v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("intervie")'>Add Interviews +</v-btn></h3>
             <v-row
               no-gutters
               align-content="start"
@@ -304,11 +305,53 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 .v-card{
   margin: 4px;
   white-space: nowrap;
   overflow: hidden;
+
+  &:hover{
+      background: #E5E5E5;
+    }
+
+  &:active {
+      background: #D9D9D9;
+    }
 }
+
+.persona-card{
+  border: 0px;
+  border-top-style: solid;
+  border-top-width: medium;
+  border-image: linear-gradient(to right,#7799FF,purple) 1;
+
+  &:hover{
+      background: #E5E5E5;
+    }
+
+  &:active {
+      background: #D9D9D9;
+    }
+}
+
+.insightCard{
+  border-left-style: solid;
+  border-left-width: thick;
+}
+
+.insightCard.negative{
+  border-left-color: red;
+}
+
+.insightCard.positive{
+  border-left-color: green;
+}
+
+.insightCard.neutral{
+  border-left-color: grey;
+}
+
 
 .v-card-actions{
   position: absolute;

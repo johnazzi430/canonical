@@ -18,7 +18,7 @@
         margin:16px;
         overflow-x:hidden;
         ">
-            <h3>Products  <v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("product")'>Add product +</v-btn></h3>
+            <h3 class="text-medium-emphasis">Products  <v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("product")'>Add product +</v-btn></h3>
             <v-row
               no-gutters
               align-content="start"
@@ -32,7 +32,7 @@
               <v-card
               v-for="product in $store.state.products"
               v-bind:key="product"
-              class="rounded-0"
+              class="rounded-0 product-card"
               width="300"
               height="200"
               elevation="3"
@@ -52,7 +52,7 @@
                 </v-card-actions>
               </v-card>
             </v-row>
-            <h3>Features  <v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("feature")'>Add Feature +</v-btn></h3>
+            <h3 class="text-medium-emphasis">Features  <v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("feature")'>Add Feature +</v-btn></h3>
             <v-row
               no-gutters
               align-content="start"
@@ -85,7 +85,7 @@
                 </v-card-actions>
               </v-card>
             </v-row>
-            <h3>Ideas <v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("idea")'>Add Idea +</v-btn></h3>
+            <h3 class="text-medium-emphasis">Ideas <v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("idea")'>Add Idea +</v-btn></h3>
             <v-row
               no-gutters
               align-content="start"
@@ -120,7 +120,7 @@
                 </v-card-actions>
               </v-card>
             </v-row>
-            <h3>Goals<v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("goal")'>Add Goal +</v-btn></h3>
+            <h3 class="text-medium-emphasis">Goals<v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("goal")'>Add Goal +</v-btn></h3>
             <v-row
               no-gutters
               align-content="start"
@@ -154,7 +154,7 @@
                 </v-card-actions>
               </v-card>
             </v-row>
-            <h3>Risks<v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("risk")'>Add Risk +</v-btn></h3>
+            <h3 class="text-medium-emphasis">Risks<v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("risk")'>Add Risk +</v-btn></h3>
             <v-row
               no-gutters
               align-content="start"
@@ -168,7 +168,8 @@
               <v-card
               v-for="risk in $store.state.risks"
               v-bind:key="risk"
-              class="rounded-0"
+              class="rounded-0 product-risk-card"
+              :class='"r"+risk.data.impact'
               width="200"
               height="150"
               elevation="3"
@@ -275,6 +276,37 @@ export default {
   margin: 4px;
   white-space: nowrap;
   overflow: hidden;
+
+  &:hover{
+      background: #E5E5E5;
+    }
+
+  &:active {
+      background: #D9D9D9;
+    }
+}
+
+.product-card{
+  border: 0px;
+  border-top-style: solid;
+  border-top-width: medium;
+  border-image: linear-gradient(to right,gold,green) 1;
+}
+
+.product-risk-card{
+  border-left-style: solid;
+  border-left-width: thick;
+  
+  &.r0{
+    border-left-color: green;
+  }
+
+  &.r4{
+    border-left-color: yellow;
+  }
+  &.r5{
+    border-left-color: red;
+  }
 }
 
 .v-card-actions{
