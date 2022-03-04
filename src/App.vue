@@ -29,6 +29,7 @@
         </v-btn-toggle>
 
         <v-menu
+        class="user-menu"
         offset-overflow
         left
         close-on-content-click>
@@ -44,6 +45,12 @@
                 </v-avatar>
             </template>
             <v-list density="compact" variant="plain">
+              <v-list-item>
+                <p class="text-medium-emphasis">Signed in as</p>
+              </v-list-item>
+              <v-list-item>
+                <p>{{$store.state.user.email.split("@")[0]}}</p>
+              </v-list-item>
               <v-list-item
                 v-for="(item, index) in ['logout']"
                 :key="index"
@@ -78,7 +85,17 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
+
+
+.user-menu{
+   .v-overlay__content{
+    right: 0px !important;
+    left: auto !important;
+    border: solid thin lightgrey;
+    width: 158px;
+  }
+}
 
 .v-avatar{
   margin:4px;
