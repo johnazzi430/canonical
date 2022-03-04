@@ -131,8 +131,8 @@ export default {
       },
       async updateJobToBeDone () {
         await this.$refs.form.validate();
-        // let Product = new product()
-        // this.valid ? await Product.createProduct(this.product.data) : console.log('not valid');
+        this.valid ? await JobToBeDone.updateJobToBeDone(this.jobToBeDone.id,this.jobToBeDone.data) : console.log('not valid');
+        this.$store.commit('getJobToBeDones')
         this.$refs.form.resetValidation();
       },
       async deleteJobToBeDone () {

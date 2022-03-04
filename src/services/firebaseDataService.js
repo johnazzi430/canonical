@@ -201,7 +201,8 @@ export class Feature {
   }
 
   static updateFeature(id ,value) {
-    return db.ref("features/"+id).update(value);
+    value = addInDefaults(value)
+    return db.collection("features").doc(id).update(value);
   }
 
   static deleteFeature(id) {
@@ -231,6 +232,7 @@ export class Idea {
   }
 
   static updateIdea(id ,value) {
+    value = addInDefaults(value)
     return db.collection("ideas").doc(id).update(value);
   }
 
@@ -261,6 +263,7 @@ export class Goal {
   }
 
   static updateGoal(id ,value) {
+    value = addInDefaults(value)
     return db.collection("productGoals").doc(id).update(value);
   }
 
@@ -291,6 +294,7 @@ export class Risk {
   }
 
   static updateRisk(id ,value) {
+    value = addInDefaults(value)
     return db.collection("productRisks").doc(id).update(value);
   }
 
@@ -313,6 +317,7 @@ export class Persona {
   }
 
   static updatePersona(id,value) {
+    value = addInDefaults(value)
     return db.collection("personas").doc(id).update(value);
   }
 
@@ -335,6 +340,7 @@ export class Need {
   }
 
   static updateNeed(id,value) {
+    value = addInDefaults(value)
     return db.collection("needs").doc(id).update(value);
   }
 
@@ -357,6 +363,7 @@ export class Insight {
   }
 
   static updateInsight(id,value) {
+    value = addInDefaults(value)
     return db.collection("insights").doc(id).update(value);
   }
 
@@ -379,6 +386,7 @@ export class Journey {
   }
 
   static updateJourney(id,value) {
+    value = addInDefaults(value)
     return db.collection("journeymaps").doc(id).update(value);
   }
 
@@ -401,6 +409,7 @@ export class JobToBeDone {
   }
 
   static updateJobToBeDone(id,value) {
+    value = addInDefaults(value)
     return db.collection("jobsToBeDone").doc(id).update(value);
   }
 
@@ -423,6 +432,7 @@ export class Interview {
   }
 
   static updateInterview(id,value) {
+    value = addInDefaults(value)
     return db.collection("interviewFeedback").doc(id).update(value);
   }
 

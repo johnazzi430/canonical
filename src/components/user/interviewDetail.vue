@@ -120,8 +120,8 @@ export default {
       },
       async updateInterview () {
         await this.$refs.form.validate();
-        // let Product = new product()
-        // this.valid ? await Product.createProduct(this.product.data) : console.log('not valid');
+        this.valid ? await Interview.updateInterview(this.intervew.id,this.interview.data) : console.log('not valid');
+        this.$store.commit('getInterviews')
         this.$refs.form.resetValidation();
       },
       async deleteInterview () {

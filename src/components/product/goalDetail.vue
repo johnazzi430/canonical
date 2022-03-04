@@ -126,8 +126,8 @@ export default {
       },
       async updateGoal () {
         await this.$refs.form.validate();
-        // let Product = new product()
-        // this.valid ? await Product.createProduct(this.product.data) : console.log('not valid');
+        this.valid ? await Goal.updateGoal(this.goal.id,this.goal.data) : console.log('not valid');
+        this.$store.commit('getGoals')
         this.$refs.form.resetValidation();
       },
       async deleteGoal () {

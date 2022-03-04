@@ -131,8 +131,8 @@ export default {
       },
       async updateNeed () {
         await this.$refs.form.validate();
-        // let Product = new product()
-        // this.valid ? await Product.createProduct(this.product.data) : console.log('not valid');
+        this.valid ? await Need.updateNeed(this.need.id,this.need.data) : console.log('not valid');
+        this.$store.commit('getNeeds')
         this.$refs.form.resetValidation();
       },
       async deleteNeed () {

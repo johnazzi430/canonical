@@ -144,8 +144,8 @@ export default {
       },
       async updateInsight () {
         await this.$refs.form.validate();
-        // let Product = new product()
-        // this.valid ? await Product.createProduct(this.product.data) : console.log('not valid');
+        this.valid ? await Insight.updateInsight(this.insight.id,this.insight.data)  : console.log('not valid');
+        this.$store.commit('getInsights')
         this.$refs.form.resetValidation();
       },
       async deleteInsight () {

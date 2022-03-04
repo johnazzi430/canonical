@@ -186,8 +186,8 @@ export default {
       },
       async updateFeature () {
         await this.$refs.form.validate();
-        // let Product = new product()
-        // this.valid ? await Product.createProduct(this.product.data) : console.log('not valid');
+        this.valid ? await Feature.updateFeature(this.feature.id,this.feature.data) : console.log('not valid');
+        this.$store.commit('getFeatures')
         this.$refs.form.resetValidation();
       },
       async updateProductRel(){

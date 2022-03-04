@@ -131,8 +131,7 @@ export default {
       },
       async updateRisk () {
         await this.$refs.form.validate();
-        // let Product = new product()
-        // this.valid ? await Product.createProduct(this.product.data) : console.log('not valid');
+        this.valid ? await Risk.createRisk(this.risk.id,this.risk.data)  : console.log('not valid');
         this.$refs.form.resetValidation();
       },
       async deleteRisk () {

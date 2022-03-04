@@ -127,8 +127,8 @@ export default {
       },
       async updateJourney () {
         await this.$refs.form.validate();
-        // let Product = new product()
-        // this.valid ? await Product.createProduct(this.product.data) : console.log('not valid');
+        this.valid ? await Journey.updateJourney(this.journey.id,this.journey.data) : console.log('not valid');
+        this.$store.commit('getJourneys')
         this.$refs.form.resetValidation();
       },
       async deleteJourney () {

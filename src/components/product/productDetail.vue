@@ -267,9 +267,7 @@ export default {
       },
       async updateProduct () {
         await this.$refs.form.validate();
-        // let Product = new product()
-        // this.valid ? await Product.createProduct(this.product.data) : console.log('not valid');
-        await Product.updateProduct(this.product.id, this.product.data)
+        this.valid ? await Product.updateProduct(this.product.id, this.product.data) : console.log('not valid');
         this.$store.commit('getProducts')
         this.$refs.form.resetValidation();
       },
