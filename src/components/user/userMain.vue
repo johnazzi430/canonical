@@ -55,7 +55,7 @@
             <v-row
               align-content="start"
               no-gutters
-              style="height: 128px;
+              style="height: 150px;
                     overflow-x:scroll;
                     white-space: nowrap;
                     display: flex;
@@ -67,19 +67,12 @@
               v-bind:key="insight"
               class="rounded-0"
               width="300"
-              height="128"
+              height="150"
               elevation="3"
               variant ="contained-text"
               >
-                <v-card-header>
-                  <div>
-                    <div class="text-overline mb-1">
-                      {{insight.data.name}}
-                    </div>
-                    <div class="text-caption">{{insight.data.description}}</div>
-                  </div>
-                </v-card-header>
-
+                <v-card-header>{{insight.data.name}}</v-card-header>
+                <v-card-text>{{insight.data.description}}</v-card-text>
                 <v-card-actions>
                   <v-btn
                     variant="text"
@@ -108,7 +101,7 @@
               density ="compact"
               class="rounded-0"
               width="200"
-              height="128"
+              height="150"
               elevation="3"
               variant ="contained-text"
               :ripple = 'true'>
@@ -141,18 +134,12 @@
               v-bind:key="journey"
               class="rounded-0"
               width="200"
-              height="128"
+              height="150"
               elevation="3"
               variant ="contained-text"
               >
-                <v-card-header>
-                  <div>
-                    <div class="text-overline mb-1">
-                      {{journey.data.name}}
-                    </div>
-                    <div class="text-caption">{{journey.data.description}}</div>
-                  </div>
-                </v-card-header>
+                <v-card-header>{{journey.data.name}}</v-card-header>
+                <v-card-text>{{journey.data.description}}</v-card-text>
 
                 <v-card-actions>
                   <v-btn
@@ -181,18 +168,12 @@
               v-bind:key="jobToBeDone"
               class="rounded-0"
               width="200"
-              height="128"
+              height="150"
               elevation="3"
               variant ="contained-text"
               >
-                <v-card-header>
-                  <div>
-                    <div class="text-overline mb-1">
-                      {{jobToBeDone.data.name}}
-                    </div>
-                    <div class="text-caption">{{jobToBeDone.data.description}}</div>
-                  </div>
-                </v-card-header>
+                <v-card-header>{{jobToBeDone.data.name}}</v-card-header>
+                <v-card-text>{{jobToBeDone.data.description}}</v-card-text>
 
                 <v-card-actions>
                   <v-btn
@@ -225,14 +206,8 @@
               elevation="3"
               variant ="contained-text"
               >
-                <v-card-header>
-                  <div>
-                    <div class="text-overline mb-1">
-                      {{interview.data.name}}
-                    </div>
-                    <div class="text-caption">{{interview.data.description}}</div>
-                  </div>
-                </v-card-header>
+                <v-card-header>{{interview.data.name}}</v-card-header>
+                <v-card-text>{{interview.data.description}}</v-card-text>
 
                 <v-card-actions>
                   <v-btn
