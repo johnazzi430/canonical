@@ -44,6 +44,7 @@
               height="200"
               elevation="3"
               variant ="contained-text"
+              @click="search=product.id , $store.commit('filter',search.trim()) "
               >
                 <v-card-header>{{product.data.name}}</v-card-header>
                 <v-card-text class="text-wrap">{{product.data.description}}</v-card-text>

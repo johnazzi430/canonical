@@ -22,18 +22,6 @@
         required
       ></v-textarea>
 
-      <v-textarea
-        v-model="persona.data.gains"
-        label="Gains"
-        :disabled="!editing"
-      ></v-textarea>
-
-      <v-textarea
-        v-model="persona.data.pains"
-        label="Pains"
-        :disabled="!editing"
-      ></v-textarea>
-
       <hr>
 
       <div v-if="selected.index === null">
@@ -115,7 +103,7 @@ export default {
     }),
     beforeMount(){
       if (this.selected.index != null){
-        const selectedData = this.$store.state.jobToBeDones.find(doc => doc.id === this.selected.index)
+        const selectedData = this.$store.state.jobsToBeDone.find(doc => doc.id === this.selected.index)
         this.editing = false;
         this.jobToBeDone = JSON.parse(JSON.stringify(selectedData));
       }

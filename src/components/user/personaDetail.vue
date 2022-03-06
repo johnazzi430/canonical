@@ -138,7 +138,7 @@ export default {
       },
       async updatePersona () {
         await this.$refs.form.validate();
-        this.valid ? await Persona.updateProduct(this.persona.id,this.persona.data) : console.log('not valid');
+        this.valid ? await Persona.updatePersona(this.persona.id,this.persona.data) : console.log('not valid');
         this.$store.commit('getPersonas')
         this.$refs.form.resetValidation();
       },

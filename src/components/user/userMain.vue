@@ -160,7 +160,7 @@
                 </v-card-actions>
               </v-card>
             </v-row>
-            <h3 class="text-medium-emphasis">JobsToBeDone <v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("JobsToBeDone")'>Add JobsToBeDone +</v-btn></h3>
+            <h3 class="text-medium-emphasis">JobsToBeDone <v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("jobToBeDone")'>Add JobsToBeDone +</v-btn></h3>
             <v-row
               no-gutters
               align-content="start"
@@ -194,7 +194,7 @@
                 </v-card-actions>
               </v-card>
             </v-row>
-            <h3 class="text-medium-emphasis">Interviews <v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("intervie")'>Add Interviews +</v-btn></h3>
+            <h3 class="text-medium-emphasis">Interviews <v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("interview")'>Add Interviews +</v-btn></h3>
             <v-row
               no-gutters
               align-content="start"

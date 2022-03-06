@@ -8,6 +8,9 @@ function filterHelper(list,filter){
     Object.keys(item.data).forEach(k => {
       justTheData.push(item.data[k])
     });
+    Object.keys(item).forEach(k => {
+      if(k != "data") {justTheData.push(item[k])}
+    });
     let regex = new RegExp('(' + filter+ ')', 'i');
     return JSON.stringify({justTheData}).match(regex);
   })
