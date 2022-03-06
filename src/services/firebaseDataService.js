@@ -21,7 +21,7 @@ function removeDeletedAddNew(list,from,to){
 }
 
 function addInDefaults(value){
-  if (!store.state.user.uid) {throw 'user must be logged in to add product'}
+  if (!store.state.user.uid) {throw 'user must be logged in'}
   value.createdBy = store.state.user.uid;
   value.project = store.state.user.project;
   value.createDate = Date();
@@ -99,10 +99,99 @@ export class User{
   }
 
   static async updateUser(){
+  }
+}
 
+
+export class Comment {
+  constructor(value){
+    this.docID = value.docID; //String
+    this.docType = value.docType;  //String
+    this.comment = value.comment; //String
+    Object.assign(this,addInDefaults(this));
   }
 
+  static async getCommentByDocID(docType,docID){
+    const snapshot = await db.collection("comments")
+      .where("docType","==", docType)
+      .where("docID","==", docID)
+      .where("archived","==", false)
+      .where("project","==",store.state.user.project)
+      .get();
+    return snapshot.docs.map(doc => ({id:doc.id, data:doc.data()}));
+  }
 
+  async createComment(){
+    return await db.collection("comments").add(JSON.parse(JSON.stringify(this)));
+  }
+
+  //   new Comment({docID:'',docType:'',comment:value}).createComment()
+
+}
+
+export class Assumption {
+  constructor(value){
+    this.docID = value.docID; //String
+    this.docType = value.docType;  //String
+    this.comment = value.comment; //String
+  }
+
+  static async getAssumptionByDocID(docType,docID){
+    const snapshot = await db.collection("assumptions")
+      .where("docType","==", docType)
+      .where("docID","==", docID)
+      .where("archived","==", false)
+      .where("project","==",store.state.user.project)
+      .get();
+    return snapshot.docs.map(doc => ({id:doc.id, data:doc.data()}));
+  }
+
+  async createAssumption(){
+    return await db.collection("assumptions").add(JSON.parse(JSON.stringify(this)));
+  }
+
+}
+
+export class Change {
+  constructor(value){
+    this.docID = value.docID; //String
+    this.docType = value.docType;  //String
+    this.changeFrom = value.from;
+    this.changeTo = value.to;
+  }
+
+  static async getChangeByDocID(docType,docID){
+    const snapshot = await db.collection("documentChanges")
+      .where("docType","==", docType)
+      .where("docID","==", docID)
+      .where("archived","==", false)
+      .where("project","==",store.state.user.project)
+      .get();
+    return snapshot.docs.map(doc => ({id:doc.id, data:doc.data()}));
+  }
+
+  async createChange(){
+    return await db.collection("assumptions").add(JSON.parse(JSON.stringify(this)));
+  }
+}
+
+export class Draft {
+  constructor(value){
+    this.docID = value.docID; //String
+    this.docType = value.docType;  //String
+    this.docData = value.docData.stringify(); //String
+    Object.assign(this,addInDefaults(this));
+  }
+
+  static async getDraftByDocID(docType,docID){
+    const snapshot = await db.collection("documentDrafts")
+      .where("docType","==", docType)
+      .where("docID","==", docID)
+      .where("archived","==", false)
+      .where("project","==",store.state.user.project)
+      .get();
+    return snapshot.docs.map(doc => ({id:doc.id, data:doc.data()}));
+  }
 }
 
 export class Product {

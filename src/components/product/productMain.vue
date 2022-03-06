@@ -19,6 +19,11 @@
         overflow-x:hidden;
         ">
             <v-row>
+              <v-btn
+              v-if="[...search].length > 0"
+                @click='$store.commit("filter",""); this.search = "" ;' 
+                icon="mdi-minus">
+              </v-btn>
               <v-text-field
                 v-model="search"
                 @input="$store.commit('filter',search.trim())"
