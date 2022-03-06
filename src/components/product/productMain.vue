@@ -21,7 +21,7 @@
             <v-row>
               <v-btn
               v-if="[...search].length > 0"
-                @click='$store.commit("filter",""); this.search = "" ;' 
+                @click='$store.commit("filter",""); this.search = "" ;'
                 icon="mdi-minus">
               </v-btn>
               <v-text-field
@@ -207,7 +207,14 @@
           <h1><a href="javascript:void(0)"
             class="closebtn" @click="closeDetail(); ">&times;</a></h1>
             <h1 style="text-transform:uppercase">{{$store.state.selected.source}}</h1>
-            <div v-if='$store.state.selected.source === "product"'><productDetail :key='$store.state.selected.index' /></div>
+            <div v-if='$store.state.selected.source === "product"'>
+              <productDetail :key='$store.state.selected.index' />
+              <comment
+                v-if='$store.state.selected.index != null'
+                :doc-id='$store.state.selected.index'
+                :doc-type='$store.state.selected.source'
+                :key="$store.state.selected"/>
+            </div>
             <div v-else-if='$store.state.selected.source ==="feature"'><featureDetail :key='$store.state.selected.index'/></div>
             <div v-else-if='$store.state.selected.source ==="idea"'><ideaDetail :key='$store.state.selected.index'/></div>
             <div v-else-if='$store.state.selected.source ==="goal"'><goalDetail :key='$store.state.selected.index'/></div>
@@ -222,6 +229,7 @@ import featureDetail from "./featureDetail";
 import ideaDetail from "./ideaDetail";
 import goalDetail from "./goalDetail";
 import riskDetail from "./riskDetail";
+import comment from "../comment/comment";
 
 export default {
   name: 'product-panel',
@@ -230,7 +238,8 @@ export default {
     featureDetail,
     ideaDetail,
     goalDetail,
-    riskDetail
+    riskDetail,
+    comment
   },
   data() {
     return {

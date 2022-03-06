@@ -111,7 +111,7 @@ export class Comment {
     Object.assign(this,addInDefaults(this));
   }
 
-  static async getCommentByDocID(docType,docID){
+  static async getCommentsByDocID(docType,docID){
     const snapshot = await db.collection("comments")
       .where("docType","==", docType)
       .where("docID","==", docID)
@@ -123,6 +123,14 @@ export class Comment {
 
   async createComment(){
     return await db.collection("comments").add(JSON.parse(JSON.stringify(this)));
+  }
+
+  async updateComment(id,newComment){
+    return await db.collection("comments").doc(id).update({comment: newComment, updatedDate: Date()});
+  }
+
+  async deleteComment(id){
+    return await db.collection("comments").doc(id).update({archived: true});
   }
 
   //   new Comment({docID:'',docType:'',comment:value}).createComment()
