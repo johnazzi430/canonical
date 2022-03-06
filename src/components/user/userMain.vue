@@ -234,12 +234,54 @@
           <h1><a href="javascript:void(0)"
             class="closebtn" @click="closeDetail(); ">&times;</a></h1>
           <h1 style="text-transform:uppercase">{{$store.state.selected.source}}</h1>
-          <div v-if='$store.state.selected.source === "persona"'><personaDetail :key='$store.state.selected.index' /></div>
-          <div v-else-if='$store.state.selected.source ==="insight"'><insightDetail :key='$store.state.selected.index'/></div>
-          <div v-else-if='$store.state.selected.source ==="need"'><needDetail :key='$store.state.selected.index'/></div>
-          <div v-else-if='$store.state.selected.source ==="journey"'><journeyDetail :key='$store.state.selected.index'/></div>
-          <div v-else-if='$store.state.selected.source ==="jobToBeDone"'><jobToBeDoneDetail :key='$store.state.selected.index'/></div>
-          <div v-else-if='$store.state.selected.source ==="interview"'><interviewDetail :key='$store.state.selected.index'/></div>
+          <div v-if='$store.state.selected.source === "persona"'>
+            <personaDetail :key='$store.state.selected.index' />
+            <comment
+              v-if='$store.state.selected.index != null'
+              :doc-id='$store.state.selected.index'
+              :doc-type='$store.state.selected.source'
+              :key="$store.state.selected"/>
+          </div>
+          <div v-else-if='$store.state.selected.source ==="insight"'>
+            <insightDetail :key='$store.state.selected.index'/>
+            <comment
+              v-if='$store.state.selected.index != null'
+              :doc-id='$store.state.selected.index'
+              :doc-type='$store.state.selected.source'
+              :key="$store.state.selected"/>
+          </div>
+          <div v-else-if='$store.state.selected.source ==="need"'>
+            <needDetail :key='$store.state.selected.index'/>
+            <comment
+              v-if='$store.state.selected.index != null'
+              :doc-id='$store.state.selected.index'
+              :doc-type='$store.state.selected.source'
+              :key="$store.state.selected"/>
+          </div>
+          <div v-else-if='$store.state.selected.source ==="journey"'>
+            <journeyDetail :key='$store.state.selected.index'/>
+            <comment
+              v-if='$store.state.selected.index != null'
+              :doc-id='$store.state.selected.index'
+              :doc-type='$store.state.selected.source'
+              :key="$store.state.selected"/>
+          </div>
+          <div v-else-if='$store.state.selected.source ==="jobToBeDone"'>
+            <jobToBeDoneDetail :key='$store.state.selected.index'/>
+            <comment
+              v-if='$store.state.selected.index != null'
+              :doc-id='$store.state.selected.index'
+              :doc-type='$store.state.selected.source'
+              :key="$store.state.selected"/>
+          </div>
+          <div v-else-if='$store.state.selected.source ==="interview"'>
+            <interviewDetail :key='$store.state.selected.index'/>
+            <comment
+              v-if='$store.state.selected.index != null'
+              :doc-id='$store.state.selected.index'
+              :doc-type='$store.state.selected.source'
+              :key="$store.state.selected"/>
+          </div>
         </div>
       </v-layout>
 </template>
@@ -251,6 +293,7 @@ import needDetail from "./needDetail";
 import journeyDetail from "./journeyDetail";
 import jobToBeDoneDetail from "./jobToBeDoneDetail";
 import interviewDetail from "./interviewDetail";
+import comment from "../comment/comment";
 
 export default {
   name: 'persona-panel',
@@ -261,6 +304,7 @@ export default {
      journeyDetail,
      jobToBeDoneDetail,
      interviewDetail,
+     comment
   },
   data() {
     return {
@@ -290,12 +334,12 @@ export default {
   methods: {
     expandDetail(index,source) {
       this.$store.commit('selectItem',{index,source})
-      document.getElementById("right-sidepanel").style.width = "40%";
+      document.getElementById("right-sidepanel").style.width = "50%";
     },
 
     addItem(source) {
       this.$store.commit('selectItem',{index:null, source})
-      document.getElementById("right-sidepanel").style.width = "40%";
+      document.getElementById("right-sidepanel").style.width = "50%";
     },
 
     closeDetail() {
@@ -389,7 +433,7 @@ export default {
   background-color: #FFFFFF; /* Black*/
   overflow-x: hidden; /* Disable horizontal scroll */
   padding-top: 88px; /* Place content 60px from the top */
-  padding-right: 24px;
+  padding-right: 48px;
   padding-left: 24px;
   padding-bottom: 88px;
   transition: 0.4s; /* 0.5 second transition effect to slide in the sidepanel */

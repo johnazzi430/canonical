@@ -215,10 +215,38 @@
                 :doc-type='$store.state.selected.source'
                 :key="$store.state.selected"/>
             </div>
-            <div v-else-if='$store.state.selected.source ==="feature"'><featureDetail :key='$store.state.selected.index'/></div>
-            <div v-else-if='$store.state.selected.source ==="idea"'><ideaDetail :key='$store.state.selected.index'/></div>
-            <div v-else-if='$store.state.selected.source ==="goal"'><goalDetail :key='$store.state.selected.index'/></div>
-            <div v-else-if='$store.state.selected.source ==="risk"'><riskDetail :key='$store.state.selected.index'/></div>
+            <div v-else-if='$store.state.selected.source ==="feature"'>
+              <featureDetail :key='$store.state.selected.index'/>
+              <comment
+                v-if='$store.state.selected.index != null'
+                :doc-id='$store.state.selected.index'
+                :doc-type='$store.state.selected.source'
+                :key="$store.state.selected"/>
+            </div>
+            <div v-else-if='$store.state.selected.source ==="idea"'>
+              <ideaDetail :key='$store.state.selected.index'/>
+              <comment
+                v-if='$store.state.selected.index != null'
+                :doc-id='$store.state.selected.index'
+                :doc-type='$store.state.selected.source'
+                :key="$store.state.selected"/>
+            </div>
+            <div v-else-if='$store.state.selected.source ==="goal"'>
+              <goalDetail :key='$store.state.selected.index'/>
+              <comment
+                v-if='$store.state.selected.index != null'
+                :doc-id='$store.state.selected.index'
+                :doc-type='$store.state.selected.source'
+                :key="$store.state.selected"/>
+            </div>
+            <div v-else-if='$store.state.selected.source ==="risk"'>
+              <riskDetail :key='$store.state.selected.index'/>
+              <comment
+                v-if='$store.state.selected.index != null'
+                :doc-id='$store.state.selected.index'
+                :doc-type='$store.state.selected.source'
+                :key="$store.state.selected"/>
+            </div>
         </div>
       </v-layout>
 </template>
@@ -271,12 +299,12 @@ export default {
   methods: {
     expandDetail(index,source) {
       this.$store.commit('selectItem',{index,source})
-      document.getElementById("right-sidepanel").style.width = "40%";
+      document.getElementById("right-sidepanel").style.width = "50%";
     },
 
     addItem(source) {
       this.$store.commit('selectItem',{index:null, source})
-      document.getElementById("right-sidepanel").style.width = "40%";
+      document.getElementById("right-sidepanel").style.width = "50%";
     },
 
     closeDetail() {
@@ -360,7 +388,7 @@ export default {
   background-color: #FFFFFF; /* Black*/
   overflow-x: hidden; /* Disable horizontal scroll */
   padding-top: 88px; /* Place content 60px from the top */
-  padding-right: 24px;
+  padding-right: 48px;
   padding-left: 24px;
   padding-bottom: 88px;
   transition: 0.4s; /* 0.5 second transition effect to slide in the sidepanel */

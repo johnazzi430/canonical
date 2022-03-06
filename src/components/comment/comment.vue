@@ -1,23 +1,24 @@
 <template>
   <div class="">
-    <div
+    <hr>
+    <v-card
+      class="comment-card"
       v-for="commentItem in comments"
       :key="commentItem">
-      <div class="">{{commentItem.data.createdBy}} on {{commentItem.data.createDate}}</div>
-      <div class="">  {{commentItem.data.comment}}</div>
-
-    </div>
-
+      <v-list-item-subtitle class="">{{commentItem.creator.displayName}} on {{commentItem.data.createDate}}</v-list-item-subtitle>
+      <v-card-text class="">{{commentItem.data.comment}}</v-card-text>
+    </v-card>
+    <hr>
     <v-form
       ref="form"
       v-model="valid"
       lazy-validation
+      v-if="$store.getters.isUserLoggedIn"
     >
       <v-textarea
         v-model="newComment"
         :counter="250"
         :rules="[rules.required,rules.counter]"
-        label="Description"
         required
       ></v-textarea>
 
@@ -58,6 +59,7 @@ export default {
     }),
     async mounted(){
       this.comments = await Comment.getCommentsByDocID(this.docType,this.docId)
+      this.comments = this.comments.reverse()
     },
     methods: {
       async addComment () {
@@ -92,3 +94,12 @@ export default {
     },
   }
 </script>
+
+<style scoped>
+
+.comment-card{
+  margin:4px;
+  padding:4px;
+}
+
+</style>
