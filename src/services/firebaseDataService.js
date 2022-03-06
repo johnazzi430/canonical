@@ -74,7 +74,7 @@ export class User{
 
   static async login(form){
     const auth = getAuth();
-    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION);
+    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
     const userCredential = await signInWithEmailAndPassword(auth, form.email, form.password)
       .then((result) => {return result})
       .catch((err) => {throw err; });
@@ -85,7 +85,7 @@ export class User{
 
   static async loginWithGoogle(){
     const auth = getAuth();
-    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION);
+    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
     const provider = new GoogleAuthProvider();
     const userCredential = await signInWithPopup(auth, provider)
       .then((result) => {return result})
