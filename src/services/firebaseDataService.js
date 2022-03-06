@@ -2,6 +2,7 @@ import firebase from "../firebase";
 import 'firebase/compat/firestore';
 import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut  } from "firebase/auth";
 import store from "../store";
+import _ from 'lodash';
 
 const db = firebase.firestore();
 
@@ -24,24 +25,21 @@ function addInDefaults(value){
   if (!store.state.user.uid) {throw 'user must be logged in'}
   value.createdBy = store.state.user.uid;
   value.project = store.state.user.project;
-  value.createDate = Date();
-  value.updatedDate = Date();
+  value.createDate = Date.now();
+  value.updatedDate = Date.now();
   value.archived = false;
   return value
 }
 
 function getDifference(o1,o2){
+  // compare two objects and return changes
   var diff = {
     set: [],
     unset: []
   };
-  console.log(o1)
-  console.log(o2)
-  if (JSON.stringify(o1) === JSON.stringify(o2)) {return}
 
   for (const k in o1) {
-    console.log(k)
-    if (Object.prototype.hasOwnProperty.call(o1,k) && JSON.stringify(o1[k]) != JSON.stringify(o2[k])){
+    if (Object.prototype.hasOwnProperty.call(o1,k) && !_.isEqual(o1[k],o2[k])){
       const set = {}
       const unset = {}
       set[k] = o2[k]
@@ -196,7 +194,6 @@ export class Change {
   constructor(value){
     this.docID = value.docID; //String
     this.docType = value.docType;  //String
-    this.set = value.set; // Object
   }
 
   static async getChangeByDocID(docType,docID){
@@ -209,14 +206,16 @@ export class Change {
     return snapshot.docs.map(doc => ({id:doc.id, data:doc.data()}));
   }
 
-  async createChange(){
+  async createChange(set){
     const currentSnapshot = await db.collection(`${this.docType}`).doc(this.docID).get()
     const currentValues = currentSnapshot.data();
-    const changedFields = getDifference(currentValues,JSON.parse(JSON.stringify(this.set)))
+    const changedFields = getDifference(currentValues,JSON.parse(JSON.stringify(set)))
     addInDefaults(this)
-    console.log(changedFields)
-//    return await db.collection("documentChanges").add(JSON.parse(JSON.stringify(this)));
-    return
+    this.set = changedFields.set
+    this.unset = changedFields.unset
+
+    return await db.collection("documentChanges").add(JSON.parse(JSON.stringify(this)));
+    // return
   }
 }
 
@@ -316,14 +315,9 @@ export class Product {
   }
 
   static async updateProduct(id ,value) {
-    const changeObj = {
-      docID:id, //String
-      docType:'products',  //String
-      set: value
-    }
-    new Change(changeObj).createChange()
-    return
-//    return await db.collection("products").doc(id).update(value);
+    new Change({docID:id,docType:'products'}).createChange(value)
+    await db.collection("products").doc(id).update(value)
+    return await db.collection("products").doc(id).update({updatedDate:Date.now()});
   }
 
   static async updateProductField(id ,field, value) {
