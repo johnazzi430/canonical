@@ -1,6 +1,6 @@
 import firebase from "../firebase";
 import 'firebase/compat/firestore';
-import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut  } from "firebase/auth";
+import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "firebase/auth";
 import store from "../store";
 import _ from 'lodash';
 
@@ -58,8 +58,23 @@ export class User{
     return await db.collection("users").doc(id).get().then((doc) => ({ id:doc.id, ...doc.data()}));
   }
 
+  static async getUserAuth(){
+     await firebase.auth().onAuthStateChanged(async user => {
+      if (user) {
+        const userDetails = await db.collection("users").doc(user.uid).get().then((doc) => ({ id:doc.id, ...doc.data()}));
+        store.commit('login',userDetails)
+      } else {
+        console.log('user not logged in')
+        return null
+      }
+    });
+
+    return;
+  }
+
   static async login(form){
     const auth = getAuth();
+    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION);
     const userCredential = await signInWithEmailAndPassword(auth, form.email, form.password)
       .then((result) => {return result})
       .catch((err) => {throw err; });
@@ -70,6 +85,7 @@ export class User{
 
   static async loginWithGoogle(){
     const auth = getAuth();
+    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION);
     const provider = new GoogleAuthProvider();
     const userCredential = await signInWithPopup(auth, provider)
       .then((result) => {return result})

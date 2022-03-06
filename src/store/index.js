@@ -1,6 +1,6 @@
 import { createStore } from 'vuex'
 //import {product, persona} from '../services/firebaseDataService'
-import {Product,Feature,Idea,Goal,Risk,Persona,Insight,Need,Journey,JobToBeDone,Interview} from '../services/firebaseDataService'
+import {User, Product,Feature,Idea,Goal,Risk,Persona,Insight,Need,Journey,JobToBeDone,Interview} from '../services/firebaseDataService'
 
 function filterHelper(list,filter){
   return [...list].filter(function(item) {
@@ -92,6 +92,10 @@ const store = createStore({
     }
   },
   mutations: {
+
+    async enter(){
+      await User.getUserAuth()
+    },
 
     login(state,payload){
       state.user.loggedIn = true;

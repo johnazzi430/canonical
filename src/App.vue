@@ -77,6 +77,9 @@ export default {
   data: () => ({
     toggle_exclusive: 0,
   }),
+  beforeCreate() {
+    this.$store.commit('enter')
+  },
   methods: {
     logout(){
       User.logout()

@@ -92,7 +92,7 @@ export default {
           this.error = true;
           this.errorMessage = error;
         });
-//      this.$router.replace({ path: '/' })
+      this.$router.back()
     },
 
     clear(){
@@ -101,8 +101,7 @@ export default {
 
     async loginWithGoogle(){
       await User.loginWithGoogle()
-      //// TODO: fix this
-      this.$router.push('/product');
+      this.$router.back()
       return
     }
 
