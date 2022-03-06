@@ -22,11 +22,29 @@
         required
       ></v-textarea>
 
-      <v-text-field
-        v-model="product.data.version"
-        label="Version"
-        :disabled="!editing"
-      ></v-text-field>
+      <v-row>
+        <v-col cols="12" sm="4">
+          Version:
+        </v-col>
+        <v-col cols="12" sm="4">
+          <v-text-field
+            v-model="product.data.version.major"
+            :disabled="!editing"
+            label="Major"
+            single-line
+            type="number"
+          ></v-text-field>
+        </v-col>
+        <v-col cols="12" sm="4">
+          <v-text-field
+            v-model="product.data.version.minor"
+            :disabled="!editing"
+            label="Minor"
+            single-line
+            type="number"
+          ></v-text-field>
+        </v-col>
+      </v-row>
 
       <v-select
         v-model="product.data.lifesCycleStage"

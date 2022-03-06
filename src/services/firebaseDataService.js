@@ -30,15 +30,29 @@ function addInDefaults(value){
   return value
 }
 
-// function compareDifferences(obj1,obj2){
-//   var ret = {};
-//   for(var i in obj2) {
-//     if(!obj1.hasOwnProperty(i) || obj2[i] !== obj1[i]) {
-//       ret[i] = obj2[i];
-//     }
-//   }
-//   return ret;
-// };
+function getDifference(o1,o2){
+  var diff = {
+    set: [],
+    unset: []
+  };
+  console.log(o1)
+  console.log(o2)
+  if (JSON.stringify(o1) === JSON.stringify(o2)) {return}
+
+  for (const k in o1) {
+    console.log(k)
+    if (Object.prototype.hasOwnProperty.call(o1,k) && JSON.stringify(o1[k]) != JSON.stringify(o2[k])){
+      const set = {}
+      const unset = {}
+      set[k] = o2[k]
+      unset[k] = o1[k]
+      diff.set.push(set)
+      diff.unset.push(unset)
+    }
+  }
+   return diff;
+}
+
 
 // users
 export class User{
@@ -182,8 +196,7 @@ export class Change {
   constructor(value){
     this.docID = value.docID; //String
     this.docType = value.docType;  //String
-    this.changeFrom = value.from;
-    this.changeTo = value.to;
+    this.set = value.set; // Object
   }
 
   static async getChangeByDocID(docType,docID){
@@ -197,7 +210,13 @@ export class Change {
   }
 
   async createChange(){
-    return await db.collection("assumptions").add(JSON.parse(JSON.stringify(this)));
+    const currentSnapshot = await db.collection(`${this.docType}`).doc(this.docID).get()
+    const currentValues = currentSnapshot.data();
+    const changedFields = getDifference(currentValues,JSON.parse(JSON.stringify(this.set)))
+    addInDefaults(this)
+    console.log(changedFields)
+//    return await db.collection("documentChanges").add(JSON.parse(JSON.stringify(this)));
+    return
   }
 }
 
@@ -297,7 +316,14 @@ export class Product {
   }
 
   static async updateProduct(id ,value) {
-    return await db.collection("products").doc(id).update(value);
+    const changeObj = {
+      docID:id, //String
+      docType:'products',  //String
+      set: value
+    }
+    new Change(changeObj).createChange()
+    return
+//    return await db.collection("products").doc(id).update(value);
   }
 
   static async updateProductField(id ,field, value) {
