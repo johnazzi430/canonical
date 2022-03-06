@@ -30,6 +30,17 @@ function addInDefaults(value){
   return value
 }
 
+// function compareDifferences(obj1,obj2){
+//   var ret = {};
+//   for(var i in obj2) {
+//     if(!obj1.hasOwnProperty(i) || obj2[i] !== obj1[i]) {
+//       ret[i] = obj2[i];
+//     }
+//   }
+//   return ret;
+// };
+
+// users
 export class User{
   static async getUserData(id){
     return await db.collection("users").doc(id).get().then((doc) => ({ id:doc.id, ...doc.data()}));
@@ -103,6 +114,7 @@ export class User{
 }
 
 
+// universals
 export class Comment {
   constructor(value){
     this.docID = value.docID; //String
@@ -202,6 +214,27 @@ export class Draft {
   }
 }
 
+export class Approvals{
+  constructor({approver,approved = false, required = true}){
+    this.approver = approver; //String
+    this.approved = approved;  //Bool
+    this.required = required; //Bool
+  }
+}
+
+export class Approval {
+  constructor(value){
+    console.log(value)
+    this.docID = value.docID; //String
+    this.docType = value.docType;  //String
+    this.approvals = value.approvals.map(e => {
+      return new Approvals(e)
+    });
+     //String
+  }
+}
+
+// docs
 export class Product {
 
   // constructor({}){
@@ -230,6 +263,7 @@ export class Product {
       .where("archived","==", false)
       .where("project","==",store.state.user.project)
       .get();
+
     const products = await Promise.all(snapshot.docs.map(async(doc) => ({
       id:doc.id,
       data:doc.data(),
@@ -237,6 +271,7 @@ export class Product {
                 return querySnapshot.docs.map((doc) => ({ id:doc.id, ...doc.data()}));
                 })
     })));
+
     return await products
   }
 
