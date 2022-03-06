@@ -157,7 +157,9 @@ export class Assumption {
   constructor(value){
     this.docID = value.docID; //String
     this.docType = value.docType;  //String
-    this.comment = value.comment; //String
+    this.details = value.details; //String
+    this.score = value.score; //Int
+    this.closed = false; //Bool
   }
 
   static async getAssumptionByDocID(docType,docID){

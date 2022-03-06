@@ -2,12 +2,12 @@
   <div class="">
     <hr>
     <v-card
-      class="comment-card"
-      v-for="commentItem in comments"
-      :key="commentItem">
-      <v-list-item-subtitle class="">{{commentItem.creator.displayName}} on {{commentItem.data.createDate}}</v-list-item-subtitle>
-      <v-card-text class="">{{commentItem.data.comment}}</v-card-text>
-      <!-- //TODO: editing and deleting comments -->
+      class="assumption-card"
+      v-for="assumptionItem in assumptions"
+      :key="assumptionItem">
+      <v-list-item-subtitle class="">{{assumptionItem.creator.displayName}} on {{assumptionItem.data.createDate}}</v-list-item-subtitle>
+      <v-card-text class="">{{assumptionItem.data.assumption}}</v-card-text>
+      <!-- //TODO: editing and deleting assumptions -->
     </v-card>
     <hr>
     <v-form
@@ -17,8 +17,8 @@
       v-if="$store.getters.isUserLoggedIn"
     >
       <v-textarea
-        v-model="newComment"
-        :counter="250"
+        v-model="newAssumption"
+        :counter="50"
         :rules="[rules.required,rules.counter]"
         required
       ></v-textarea>
@@ -27,9 +27,9 @@
         <v-btn
           color="success"
           class="mr-4"
-          @click="addComment()"
+          @click="addAssumption()"
         >
-          Add Comment
+          Add Assumption
         </v-btn>
       </div>
     </v-form>
@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import {Comment} from "../../services/firebaseDataService";
+import {Assumption} from "../../services/firebaseDataService";
 
 export default {
     props: {
@@ -46,11 +46,11 @@ export default {
     },
     data: () => ({
       valid: true,
-      comments: [],
-      newComment: "",
+      assumptions: [],
+      newAssumption: "",
       rules:{
         required: value => !!value || 'Required.',
-        counter: value => value.length <= 250 || 'Max 250 characters',
+        counter: value => value.length <= 50 || 'Max 50 characters',
         url: value => {
           // eslint-disable-next-line
           const pattern = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/
@@ -59,29 +59,29 @@ export default {
       }
     }),
     async mounted(){
-      this.comments = await Comment.getCommentsByDocID(this.docType,this.docId)
-      this.comments = this.comments.reverse()
+      this.assumptions = await Assumption.getAssumptionsByDocID(this.docType,this.docId)
+      this.assumptions = this.assumptions.reverse()
     },
     methods: {
-      async addComment () {
+      async addAssumption () {
         await this.$refs.form.validate();
         if (this.valid ){
-          const commentPayload = {
+          const assumptionPayload = {
             docID: this.docId,
             docType: this.docType,
-            comment: this.newComment
+            assumption: this.newAssumption
           }
-          await new Comment(commentPayload).createComment()
-          this.comments = await Comment.getCommentsByDocID(this.docType,this.docId)
+          await new Assumption(assumptionPayload).createAssumption()
+          this.assumptions = await Assumption.getAssumptionsByDocID(this.docType,this.docId)
         }
       },
-      async editComment (id,updatedComment) {
+      async editAssumption (id,updatedAssumption) {
         await this.$refs.form.validate();
-        this.valid ? await Comment.updateComment(id,updatedComment) : console.log('not valid');
+        this.valid ? await Assumption.updateAssumption(id,updatedAssumption) : console.log('not valid');
         this.$refs.form.resetValidation();
       },
-      async deleteComment (id) {
-        Comment.deleteComment(id)
+      async deleteAssumption (id) {
+        Assumption.deleteAssumption(id)
         this.$refs.form.resetValidation();
       },
       resetForm () {
@@ -98,7 +98,7 @@ export default {
 
 <style scoped>
 
-.comment-card{
+.assumption-card{
   margin:4px;
   padding:4px;
 }
