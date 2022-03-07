@@ -68,7 +68,6 @@ export class User{
         return null
       }
     });
-
     return;
   }
 
@@ -369,17 +368,18 @@ export class Feature {
     }));
   }
 
-  static createFeature(value) {
+  static async createFeature(value) {
     value = addInDefaults(value)
     return db.collection("features").add(value);
   }
 
-  static updateFeature(id ,value) {
-    value = addInDefaults(value)
-    return db.collection("features").doc(id).update(value);
+  static async updateFeature(id ,value) {
+    new Change({docID:id,docType:'features'}).createChange(value)
+    await db.collection("features").doc(id).update(value)
+    return await db.collection("features").doc(id).update({updatedDate:Date.now()});
   }
 
-  static deleteFeature(id) {
+  static async deleteFeature(id) {
     return db.collection("features").doc(id).update({archived: true});
   }
 }
@@ -404,13 +404,14 @@ export class Idea {
     return db.collection("ideas").add(value);
   }
 
-  static updateIdea(id ,value) {
-    value = addInDefaults(value)
-    return db.collection("ideas").doc(id).update(value);
+  static async updateIdea(id ,value) {
+    new Change({docID:id,docType:'ideas'}).createChange(value)
+    await db.collection("ideas").doc(id).update(value)
+    return await db.collection("ideas").doc(id).update({updatedDate:Date.now()});
   }
 
   static deleteIdea(id) {
-    return db.collection("ideas").doc(id).delete();
+    return db.collection("ideas").doc(id).update({archived: true});
   }
 }
 
@@ -434,13 +435,14 @@ export class Goal {
     return db.collection("productGoals").add(value);
   }
 
-  static updateGoal(id ,value) {
-    value = addInDefaults(value)
-    return db.collection("productGoals").doc(id).update(value);
+  static async updateGoal(id ,value) {
+    new Change({docID:id,docType:'productGoals'}).createChange(value)
+    await db.collection("productGoals").doc(id).update(value)
+    return await db.collection("productGoals").doc(id).update({updatedDate:Date.now()});
   }
 
   static deleteGoal(id) {
-    return db.collection("productGoals").doc(id).delete();
+    return db.collection("productGoals").doc(id).update({archived: true});
   }
 }
 
@@ -465,13 +467,14 @@ export class Risk {
     return db.collection("productRisks").add(value);
   }
 
-  static updateRisk(id ,value) {
-    value = addInDefaults(value)
-    return db.collection("productRisks").doc(id).update(value);
+  static async updateRisk(id ,value) {
+    new Change({docID:id,docType:'productRisks'}).createChange(value)
+    await db.collection("productRisks").doc(id).update(value)
+    return await db.collection("productRisks").doc(id).update({updatedDate:Date.now()});
   }
 
-  static deleteRisk(id) {
-    return db.collection("productRisks").doc(id).delete();
+  static async deleteRisk(id) {
+    return db.collection("productRisks").doc(id).update({archived: true});
   }
 }
 
@@ -490,18 +493,19 @@ export class Persona {
     })));
     return personas
   }
-  static createPersona(value) {
+  static async createPersona(value) {
     value = addInDefaults(value)
     return db.collection("personas").add(value);
   }
 
-  static updatePersona(id,value) {
-    value = addInDefaults(value)
-    return db.collection("personas").doc(id).update(value);
+  static async updatePersona(id,value) {
+    new Change({docID:id,docType:'personas'}).createChange(value)
+    await db.collection("personas").doc(id).update(value)
+    return await db.collection("personas").doc(id).update({updatedDate:Date.now()});
   }
 
   static deletePersona(id) {
-    return db.collection("personas").doc(id).delete();
+    return db.collection("personas").doc(id).update({archived: true});
   }
 }
 
@@ -519,18 +523,19 @@ export class Need {
               personas:  joinPersonas .filter(e => e.needs.includes(doc.data().id)).map(e=> ({id:e.id}))
             }));
   }
-  static createNeed(value) {
+  static async createNeed(value) {
     value = addInDefaults(value)
     return db.collection("needs").add(value);
   }
 
-  static updateNeed(id,value) {
-    value = addInDefaults(value)
-    return db.collection("needs").doc(id).update(value);
+  static async updateNeed(id,value) {
+    new Change({docID:id,docType:'needs'}).createChange(value)
+    await db.collection("needs").doc(id).update(value)
+    return await db.collection("needs").doc(id).update({updatedDate:Date.now()});
   }
 
-  static deleteNeed(id) {
-    return db.collection("needs").doc(id).delete();
+  static async deleteNeed(id) {
+    return db.collection("needs").doc(id).update({archived: true});
   }
 }
 
@@ -549,18 +554,19 @@ export class Insight {
         }));
   }
 
-  static createInsight(value) {
+  static async createInsight(value) {
     value = addInDefaults(value)
     return db.collection("insights").add(value);
   }
 
-  static updateInsight(id,value) {
-    value = addInDefaults(value)
-    return db.collection("insights").doc(id).update(value);
+  static async updateInsight(id,value) {
+    new Change({docID:id,docType:'insights'}).createChange(value)
+    await db.collection("insights").doc(id).update(value)
+    return await db.collection("insights").doc(id).update({updatedDate:Date.now()});
   }
 
-  static deleteInsight(id) {
-    return db.collection("insights").doc(id).delete();
+  static async deleteInsight(id) {
+    return db.collection("insights").doc(id).update({archived: true});
   }
 }
 
@@ -579,18 +585,19 @@ export class Journey {
       }));
   }
 
-  static createJourney(value) {
+  static async createJourney(value) {
     value = addInDefaults(value)
     return db.collection("journeymaps").add(value);
   }
 
-  static updateJourney(id,value) {
-    value = addInDefaults(value)
-    return db.collection("journeymaps").doc(id).update(value);
+  static async updateJourney(id,value) {
+    new Change({docID:id,docType:'journeymaps'}).createChange(value)
+    await db.collection("journeymaps").doc(id).update(value)
+    return await db.collection("journeymaps").doc(id).update({updatedDate:Date.now()});
   }
 
   static deleteJourney(id) {
-    return db.collection("journeymaps").doc(id).delete();
+    return db.collection("journeymaps").doc(id).update({archived: true});
   }
 }
 
@@ -608,18 +615,19 @@ export class JobToBeDone {
           personas:  joinPersonas .filter(e => e.jobsToBeDone.includes(doc.data().id)).map(e=> ({id:e.id}))
         }));
   }
-  static createJobToBeDone(value) {
+  static async createJobToBeDone(value) {
     value = addInDefaults(value)
     return db.collection("jobsToBeDone").add(value);
   }
 
-  static updateJobToBeDone(id,value) {
-    value = addInDefaults(value)
-    return db.collection("jobsToBeDone").doc(id).update(value);
+  static async updateJobToBeDone(id,value) {
+    new Change({docID:id,docType:'jobsToBeDone'}).createChange(value)
+    await db.collection("jobsToBeDone").doc(id).update(value)
+    return await db.collection("jobsToBeDone").doc(id).update({updatedDate:Date.now()});
   }
 
-  static deleteJobToBeDone(id) {
-    return db.collection("jobsToBeDone").doc(id).delete();
+  static async deleteJobToBeDone(id) {
+    return db.collection("jobsToBeDone").doc(id).update({archived: true});
   }
 }
 
@@ -637,17 +645,18 @@ export class Interview {
             personas:  joinPersonas .filter(e => e.interviews.includes(doc.data().id)).map(e=> ({id:e.id}))
         }));
   }
-  static createInterview(value) {
+  static async createInterview(value) {
     value = addInDefaults(value)
     return db.collection("interviewFeedback").add(value);
   }
 
-  static updateInterview(id,value) {
-    value = addInDefaults(value)
-    return db.collection("interviewFeedback").doc(id).update(value);
+  static async updateInterview(id,value) {
+    new Change({docID:id,docType:'interviewFeedback'}).createChange(value)
+    await db.collection("interviewFeedback").doc(id).update(value)
+    return await db.collection("interviewFeedback").doc(id).update({updatedDate:Date.now()});
   }
 
-  static deleteInterview(id) {
-    return db.collection("interviewFeedback").doc(id).delete();
+  static async deleteInterview(id) {
+    return db.collection("interviewFeedback").doc(id).update({archived: true});
   }
 }

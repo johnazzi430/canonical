@@ -1,14 +1,11 @@
 <template>
   <div class="">
     <hr>
-    <v-card
+    <commentCard
       class="comment-card"
       v-for="commentItem in comments"
-      :key="commentItem">
-      <v-list-item-subtitle class="">{{commentItem.creator.displayName}} on {{commentItem.data.createDate}}</v-list-item-subtitle>
-      <v-card-text class="">{{commentItem.data.comment}}</v-card-text>
-      <!-- //TODO: editing and deleting comments -->
-    </v-card>
+      :key="commentItem"
+      :comment='commentItem'/>
     <hr>
     <v-form
       ref="form"
@@ -38,8 +35,12 @@
 
 <script>
 import {Comment} from "../../services/firebaseDataService";
+import commentCard from "./commentCard"
 
 export default {
+  components: {
+    commentCard
+  },
     props: {
       docId: String,
       docType: String
@@ -86,6 +87,9 @@ export default {
       },
       resetForm () {
         this.$refs.form.reset()
+      },
+      resetCommentEdit () {
+        this.$refs['commentItem'].reset()
       },
     },
     computed:{
