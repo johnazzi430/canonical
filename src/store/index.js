@@ -37,6 +37,7 @@ const store = createStore({
       journeys:[],
       jobsToBeDone:[],
       interviews:[],
+      users:[],
       loading:{
         personas:{
           loaded:false,
@@ -178,6 +179,10 @@ const store = createStore({
 
     async getInterviews (state) {
       state.interviews = await Interview.getAll()
+    },
+
+    async getUsers (state) {
+      state.users = await User.getUsersByProject()
     },
 
     selectItem (state, {index, source}) {

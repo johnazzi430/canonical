@@ -20,6 +20,10 @@
         ">
             <v-row>
               <v-btn
+                @click='expandDetail("ue7tZUlk1rW6dGavpNCK","product",draft=true)'
+                > openDraft
+              </v-btn>
+              <v-btn
               v-if="[...search].length > 0"
                 @click='$store.commit("filter",""); this.search = "" ;'
                 icon="mdi-minus">
@@ -30,7 +34,7 @@
                 variant="underlined"
               ></v-text-field>
             </v-row>
-            <h3 class="text-medium-emphasis">Products  <v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("product")'>Add product +</v-btn></h3>
+            <h3 class="text-medium-emphasis">Products  <v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("product"); draft=false'>Add product +</v-btn></h3>
             <v-row
               no-gutters
               align-content="start"
@@ -208,12 +212,15 @@
             class="closebtn" @click="closeDetail(); ">&times;</a></h1>
             <h1 style="text-transform:uppercase">{{$store.state.selected.source}}</h1>
             <div v-if='$store.state.selected.source === "product"'>
-              <productDetail :key='$store.state.selected.index' />
+              <productDetail
+              :draft='draft'
+              :id='$store.state.selected.index'
+              :key='$store.state.selected.index+draft'/>
               <comment
                 v-if='$store.state.selected.index != null'
                 :doc-id='$store.state.selected.index'
                 :doc-type='$store.state.selected.source'
-                :key="$store.state.selected"/>
+                :key="$store.state.selected.index+draft+'comment'"/>
             </div>
             <div v-else-if='$store.state.selected.source ==="feature"'>
               <featureDetail :key='$store.state.selected.index'/>
@@ -221,7 +228,7 @@
                 v-if='$store.state.selected.index != null'
                 :doc-id='$store.state.selected.index'
                 :doc-type='$store.state.selected.source'
-                :key="$store.state.selected"/>
+                :key="$store.state.selected.index+'comment'"/>
             </div>
             <div v-else-if='$store.state.selected.source ==="idea"'>
               <ideaDetail :key='$store.state.selected.index'/>
@@ -229,7 +236,7 @@
                 v-if='$store.state.selected.index != null'
                 :doc-id='$store.state.selected.index'
                 :doc-type='$store.state.selected.source'
-                :key="$store.state.selected"/>
+                :key="$store.state.selected.index+'comment'"/>
             </div>
             <div v-else-if='$store.state.selected.source ==="goal"'>
               <goalDetail :key='$store.state.selected.index'/>
@@ -237,7 +244,7 @@
                 v-if='$store.state.selected.index != null'
                 :doc-id='$store.state.selected.index'
                 :doc-type='$store.state.selected.source'
-                :key="$store.state.selected"/>
+                :key="$store.state.selected.index+'comment'"/>
             </div>
             <div v-else-if='$store.state.selected.source ==="risk"'>
               <riskDetail :key='$store.state.selected.index'/>
@@ -245,7 +252,7 @@
                 v-if='$store.state.selected.index != null'
                 :doc-id='$store.state.selected.index'
                 :doc-type='$store.state.selected.source'
-                :key="$store.state.selected"/>
+                :key="$store.state.selected.index+'comment'"/>
             </div>
         </div>
       </v-layout>
@@ -271,7 +278,8 @@ export default {
   },
   data() {
     return {
-      search:""
+      search:"",
+      draft: false
    }
   },
   async beforeMount() {
@@ -297,7 +305,13 @@ export default {
     }
   },
   methods: {
-    expandDetail(index,source) {
+    expandDetail(index,source,draft=false) {
+      this.$store.commit('selectItem',{index,source})
+      document.getElementById("right-sidepanel").style.width = "50%";
+      this.draft=draft
+    },
+
+    expandDraftDetail(index,source) {
       this.$store.commit('selectItem',{index,source})
       document.getElementById("right-sidepanel").style.width = "50%";
     },

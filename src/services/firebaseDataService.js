@@ -6,7 +6,20 @@ import _ from 'lodash';
 
 const db = firebase.firestore();
 
-function removeDeletedAddNew(list,from,to){
+export const collectionMap = {
+  product:'products',
+  user:'users',
+  comment:'comments',
+  approval:'approvals',
+  assumption:'assumptions',
+  draft:'documentDrafts',
+  change:'documentChanges',
+  persona:'personas',
+  goal:'productGoals',
+  risk:'productRisks'
+}
+
+export function removeDeletedAddNew(list,from,to){
   // this function removes values in the :list array that contain items in the :from array
   // then the function adds values to the :list array from the :to array
   for (var i = 0; i < from.length; i++) {
@@ -21,7 +34,7 @@ function removeDeletedAddNew(list,from,to){
   return list
 }
 
-function addInDefaults(value){
+export function addInDefaults(value){
   if (!store.state.user.uid) {throw 'user must be logged in'}
   value.createdBy = store.state.user.uid;
   value.project = store.state.user.project;
@@ -31,7 +44,7 @@ function addInDefaults(value){
   return value
 }
 
-function getDifference(o1,o2){
+export function getDifference(o1,o2){
   // compare two objects and return changes
   var diff = {
     set: [],
@@ -138,6 +151,11 @@ export class User{
 
   static async updateUser(){
   }
+
+  static async getUsersByProject(){
+    const snapshot =  await db.collection("users").where('project', '==' ,store.state.user.project).get()
+    return snapshot.docs.map(doc =>({ id:doc.id, ...doc.data()}))
+  }
 }
 
 
@@ -236,21 +254,30 @@ export class Change {
 
 export class Draft {
   constructor(value){
-    this.docID = value.docID; //String
-    this.docType = value.docType;  //String
-    this.docData = value.docData.stringify(); //String
+    this.parentID = value.parentID; //String
+    this.parentType = value.parentType;  //String
+    this.docData = value.docData; //Strin
+    this.parentVersion= value.parentVersion; //Object
     Object.assign(this,addInDefaults(this));
   }
 
-  static async getDraftByDocID(docType,docID){
-    const snapshot = await db.collection("documentDrafts")
-      .where("docType","==", docType)
-      .where("docID","==", docID)
-      .where("archived","==", false)
-      .where("project","==",store.state.user.project)
-      .get();
-    return snapshot.docs.map(doc => ({id:doc.id, data:doc.data()}));
+  static async getDraftById(id){
+    const snapshot = await db.collection("documentDrafts").doc(id).get();
+    return {id:snapshot.id, data:snapshot.data()};
   }
+
+  async createDraft(){
+    return await db.collection("documentDrafts").add(JSON.parse(JSON.stringify(this)));
+  }
+
+  static async updateDraft(id,data){
+    return await db.collection("documentDrafts").doc(id).update({
+        docData: data,
+        updatedDate: Date.now(),
+        updatedBy: store.state.user.uid,
+    });
+  }
+
 }
 
 export class Approvals{
@@ -314,6 +341,17 @@ export class Product {
     return await products
   }
 
+  static async getProductById(id) {
+    const snapshot = await db.collection("products").doc(id).get()
+    const products = {
+      id:snapshot.id,
+      data:snapshot.data(),
+      personas: await db.collection("linkProductPersona").where("productId","==", snapshot.id).get().then((querySnapshot) => {
+                return querySnapshot.docs.map((doc) => ({ id:doc.id, ...snapshot.data()}));
+                })
+    }
+    return await products
+  }
 
   static async createProduct(value) {
     value = addInDefaults(value)

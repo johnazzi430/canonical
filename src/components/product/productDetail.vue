@@ -1,5 +1,6 @@
 <template>
   <div class="">
+    <h1 style="color:red" v-if="draft === true">DRAFT</h1>
     <v-form
       ref="form"
       v-model="valid"
@@ -217,12 +218,18 @@
         >Edit
         </v-btn>
       </div>
-      <div v-if="selected.index != null && editing === true">
-        <v-btn
+      <div v-if="selected.index != null && editing === true && draft === false">
+        <!-- <v-btn
           color="success"
           class="mr-4"
           @click="updateProduct()"
-        >Confirm
+        >Update Main
+        </v-btn> -->
+        <v-btn
+          color="success"
+          class="mr-4"
+          @click="createDraft()"
+        >Create Draft
         </v-btn>
         <v-btn
           color="info"
@@ -237,17 +244,67 @@
         >Delete
         </v-btn>
       </div>
+      <div v-if="selected.index != null && editing === true && draft === true">
+        <!-- <v-btn
+          color="success"
+          class="mr-4"
+          @click="updateProduct()"
+        >Update Main
+        </v-btn> -->
+        <v-row class="detail-row">
+          Version change:
+          <v-radio-group v-model="draftChangeType">
+            <v-radio value='minor' label='minor'></v-radio>
+            <v-radio value='major' label='major'></v-radio>
+          </v-radio-group>
+          <div v-if="draftChangeType==='major'">New Version = {{product.data.version.major+1}}.{{product.data.version.minor}}</div>
+          <div v-else>New Version = {{product.data.version.major}}.{{product.data.version.minor+1}}</div>
+        </v-row>
+        <v-row class="detail-row">
+          <v-btn
+            color="success"
+            class="mr-4"
+            @click="updateDraft()"
+          >Update Draft
+          </v-btn>
+          <!-- <v-btn
+            color="success"
+            class="mr-4"
+            @click="updateProduct()"
+          >Update Product with Draft
+          </v-btn> -->
+
+          <approvalComponent :approvalParentDocId='id'/>
+        </v-row>
+      </div>
     </v-form>
   </div>
 </template>
 
 <script>
-import {Product} from "../../services/firebaseDataService";
+import {Product,Draft} from "../../services/firebaseDataService";
+import approvalComponent from "../approvals/approvalComponent";
 
 export default {
+  components: {
+    approvalComponent,
+  },
+    props: {
+        draft:{
+          default: false,
+          type: Boolean
+        },
+        id:{
+          default: null,
+          type:String
+        }
+    },
     data: () => ({
       editing: true,
       valid: true,
+      loading:true,
+      isDraft: false,
+      waitingForApproval:false,
       personaNeedMap:[],
       product:{
         id: null,
@@ -262,7 +319,10 @@ export default {
           updatedDate:"",
           githubLink:"",
           url:"",
-          version:"",
+          version:{
+            major:0,
+            minor:1
+          },
           lifesCycleStag: "POC",
           partners: "",
           customerEngagementModel:"",
@@ -274,6 +334,7 @@ export default {
           features: [],
         }
       },
+      draftChangeType:"minor",
       rules:{
         required: value => !!value || 'Required.',
         counter: value => value.length <= 20 || 'Max 20 characters',
@@ -287,19 +348,29 @@ export default {
           const pattern = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/
           return (pattern.test(value) || value.length == 0) || 'Invalid url.'
         }
-
       },
       lifesCycleStageOptions: ["POC","MVP","Growth","Scale","Monetization","Decline"],
       select: null,
       checkbox: false,
     }),
-    beforeMount(){
+    async beforeMount(){
       if (this.selected.index != null){
         this.$store.commit('getPersonas')
         this.$store.commit('getNeeds')
-        const selectedData = this.$store.state.products.find(doc => doc.id === this.selected.index)
-        this.editing = false;
-        this.product = JSON.parse(JSON.stringify(selectedData));
+        if (this.draft === false && this.id != null) {
+          const selectedData = await Product.getProductById(this.id)
+          this.product = JSON.parse(JSON.stringify(selectedData));
+          this.loading=false;
+        } else if (this.draft === true) {
+          const selectedData = await Draft.getDraftById(this.id)
+          this.product = {
+            id: this.id,
+            data: selectedData.data.docData,
+            product: []
+          }
+          this.isDraft = true;
+          this.loading=false;
+        }
       }
     },
     methods: {
@@ -311,9 +382,30 @@ export default {
           this.$store.commit('getProducts')
         }
       },
+      async createDraft(){
+        await this.$refs.form.validate();
+        if(!this.valid){console.warn('invalid'); return}
+        const draftData = {
+          parentID: this.product.id,
+          parentType:'products',
+          parentVersion:{
+            major: this.product.data.version.major,
+            minor: this.product.data.version.minor
+          },
+          docData:this.product
+        }
+        const draft = await new Draft(draftData).createDraft()
+        this.$store.commit('selectItem',{index:draft.id,source:'product'})
+      },
+      async updateDraft () {
+        await this.$refs.form.validate();
+        this.valid ? await Draft.updateDraft(this.id, this.product.data) : console.warn('not valid');
+        // this.$store.commit('getProducts')
+        this.$refs.form.resetValidation();
+      },
       async updateProduct () {
         await this.$refs.form.validate();
-        this.valid ? await Product.updateProduct(this.product.id, this.product.data) : console.log('not valid');
+        this.valid ? await Product.updateProduct(this.product.id, this.product.data) : console.warn('not valid');
         this.$store.commit('getProducts')
         this.$refs.form.resetValidation();
       },
@@ -337,7 +429,14 @@ export default {
         return this.$store.state.selected
       },
 
-      //Need to check if data fields change before validating in relational stuff 
+      //Need to check if data fields change before validating in relational stuff
     },
   }
 </script>
+
+<style scoped>
+
+.detail-row{
+  margin: 4px;
+}
+</style>
