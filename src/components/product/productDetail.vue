@@ -68,9 +68,34 @@
       ></v-text-field>
 
       <h4>User Segments</h4>
-      <v-chip class="ma-2" v-for="persona in product.personas" v-bind:key="persona">
-        {{persona.personaId}}
-      </v-chip>
+      <div>
+        <v-btn @click='personaNeedMap.push({persona: null,needs:[]})'>add row</v-btn>
+        <v-row v-for="(personaNeedItem, index) in personaNeedMap" v-bind:key='personaNeedItem'>
+          <v-col cols="12" sm="4">
+            <v-select
+              v-model="personaNeedItem.persona"
+              :items="$store.state.personas.map(d => d.data.name)"
+              attach
+              chips
+              label="User Segment"
+            ></v-select>
+          </v-col>
+          <v-col cols="12" sm="7">
+            <v-select
+              v-model="personaNeedItem.needs"
+              :items="$store.state.needs.map(d => d.data.name)"
+              attach
+              chips
+              label="Needs"
+              multiple
+            ></v-select>
+          </v-col>
+          <v-col cols="12" sm="1">
+            <v-btn @click='personaNeedMap.splice(index,1)'>-</v-btn>
+          </v-col>
+        </v-row>
+      </div>
+
 
       <h4>Features</h4>
       <v-select
@@ -223,12 +248,13 @@ export default {
     data: () => ({
       editing: true,
       valid: true,
+      personaNeedMap:[],
       product:{
         id: null,
         personas:[],
         data : {
           name:'',
-          description:'',
+          description:'Value Proposition:',
           archived : false,
           businessModel: "",
           createDate: null,
@@ -269,6 +295,8 @@ export default {
     }),
     beforeMount(){
       if (this.selected.index != null){
+        this.$store.commit('getPersonas')
+        this.$store.commit('getNeeds')
         const selectedData = this.$store.state.products.find(doc => doc.id === this.selected.index)
         this.editing = false;
         this.product = JSON.parse(JSON.stringify(selectedData));
@@ -307,7 +335,9 @@ export default {
 
       selected() {
         return this.$store.state.selected
-      }
+      },
+
+      //Need to check if data fields change before validating in relational stuff 
     },
   }
 </script>
