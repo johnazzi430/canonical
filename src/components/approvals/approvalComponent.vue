@@ -1,9 +1,8 @@
 <template>
-  <v-row justify="center">
+  <div>
     <v-dialog
       v-model="modal"
       persistent
-      max-width="290"
     >
       <template v-slot:activator="{ props }">
         <v-btn
@@ -14,26 +13,33 @@
           Request Approvals
         </v-btn>
       </template>
-      <v-card class ="approvals">
+      <v-card
+      style="width:500px"
+      class ="approvals">
         <v-card-title class="text-h5">
           Add approvals to you change
         </v-card-title>
 
         <div>
           <v-btn @click='approvers.push({id: null,required:true})'>add row</v-btn>
-          <v-row v-for="(approver, index) in approvers" v-bind:key='approver'>
-            <v-col cols="12" sm="8">
+          <v-row
+            style="height: 60px"
+            no-gutters
+            v-for="(approver, index) in approvers"
+            v-bind:key='approver'>
+            <v-col cols="12" sm="7">
               <v-select
+                single-line="true"
                 v-model="approver.id"
                 :items="$store.state.users.map(d => d.displayName)"
                 label="approver"
               ></v-select>
             </v-col>
-            <v-col cols="12" sm="2">
+            <v-col cols="12" sm="3">
               <v-switch label="required" color="primary" v-model="approver.required"/>
             </v-col>
             <v-col cols="12" sm="2">
-              <v-btn @click='approvers.splice(index,1)'>-</v-btn>
+              <v-btn @click='approvers.splice(index,1)' icon="mdi-minus"></v-btn>
             </v-col>
           </v-row>
         </div>
@@ -45,19 +51,19 @@
             text
             @click="modal = false"
           >
-            Disagree
+            Cancel
           </v-btn>
           <v-btn
             color="green darken-1"
             text
             @click="modal = false"
           >
-            Agree
+            Request
           </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
-  </v-row>
+  </div>
 </template>
 
 
@@ -99,12 +105,12 @@ export default {
 
 <style>
 
-.v-dialog{
+/* .v-dialog{
   max-width: 100vw !important;
-}
+} */
 
-.approvals{
+/* .approvals{
   width: 750px;
-}
+} */
 
 </style>

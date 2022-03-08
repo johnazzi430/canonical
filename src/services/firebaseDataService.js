@@ -254,6 +254,7 @@ export class Change {
 
 export class Draft {
   constructor(value){
+    this.draftName = value.draftName;
     this.parentID = value.parentID; //String
     this.parentType = value.parentType;  //String
     this.docData = value.docData; //Strin
@@ -264,6 +265,14 @@ export class Draft {
   static async getDraftById(id){
     const snapshot = await db.collection("documentDrafts").doc(id).get();
     return {id:snapshot.id, data:snapshot.data()};
+  }
+
+  static async getDraftByParentId(id){
+    const snapshot = await db.collection("documentDrafts")
+              .where("parentID","==",id)
+              .where("archived","==", false)
+              .get();
+    return snapshot.docs.map(doc =>({ id:doc.id, ...doc.data()}))
   }
 
   async createDraft(){

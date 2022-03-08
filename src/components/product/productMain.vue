@@ -19,19 +19,11 @@
         overflow-x:hidden;
         ">
             <v-row>
-              <v-btn
-                @click='expandDetail("ue7tZUlk1rW6dGavpNCK","product",draft=true)'
-                > openDraft
-              </v-btn>
-              <v-btn
-              v-if="[...search].length > 0"
-                @click='$store.commit("filter",""); this.search = "" ;'
-                icon="mdi-minus">
-              </v-btn>
               <v-text-field
                 v-model="search"
                 @input="$store.commit('filter',search.trim())"
                 variant="underlined"
+                clearable
               ></v-text-field>
             </v-row>
             <h3 class="text-medium-emphasis">Products  <v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("product"); draft=false'>Add product +</v-btn></h3>
@@ -213,6 +205,7 @@
             <h1 style="text-transform:uppercase">{{$store.state.selected.source}}</h1>
             <div v-if='$store.state.selected.source === "product"'>
               <productDetail
+              @selectDraft="onSelectDraft"
               :draft='draft'
               :id='$store.state.selected.index'
               :key='$store.state.selected.index+draft'/>
@@ -268,6 +261,7 @@ import comment from "../comment/comment";
 
 export default {
   name: 'product-panel',
+
   components: {
     productDetail,
     featureDetail,
@@ -329,6 +323,12 @@ export default {
     closeNav() {
       document.getElementById("right-sidepanel").style.width = "0px";
     },
+
+    onSelectDraft(event){
+      this.$store.commit('selectItem',{index:event.index,source:event.source})
+      document.getElementById("right-sidepanel").style.width = "50%";
+      this.draft=true
+    }
 
   },
   mounted () {}

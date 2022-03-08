@@ -71,9 +71,14 @@
       <h4>User Segments</h4>
       <div>
         <v-btn @click='personaNeedMap.push({persona: null,needs:[]})'>add row</v-btn>
-        <v-row v-for="(personaNeedItem, index) in personaNeedMap" v-bind:key='personaNeedItem'>
+        <v-row
+            style="height: 60px;"
+            no-gutters
+            v-for="(personaNeedItem, index) in personaNeedMap"
+            v-bind:key='personaNeedItem'>
           <v-col cols="12" sm="4">
             <v-select
+              dense
               v-model="personaNeedItem.persona"
               :items="$store.state.personas.map(d => d.data.name)"
               attach
@@ -81,8 +86,9 @@
               label="User Segment"
             ></v-select>
           </v-col>
-          <v-col cols="12" sm="7">
+          <v-col cols="12" sm="6">
             <v-select
+              dense
               v-model="personaNeedItem.needs"
               :items="$store.state.needs.map(d => d.data.name)"
               attach
@@ -91,12 +97,11 @@
               multiple
             ></v-select>
           </v-col>
-          <v-col cols="12" sm="1">
-            <v-btn @click='personaNeedMap.splice(index,1)'>-</v-btn>
+          <v-col cols="12" sm="2">
+            <v-btn @click='personaNeedMap.splice(index,1)' icon="mdi-minus"></v-btn>
           </v-col>
         </v-row>
       </div>
-
 
       <h4>Features</h4>
       <v-select
@@ -278,6 +283,23 @@
         </v-row>
       </div>
     </v-form>
+
+    <div v-if="draft===false">
+      <h4>Drafts:</h4>
+      <v-chip-group
+        active-class="primary--text"
+        column
+      >
+        <v-chip
+          v-for="draft in drafts"
+          :key="draft"
+          @click="$emit('selectDraft', {index:draft.id,source:'product',draft:true})"
+        >
+          {{draft.draftName}}
+        </v-chip>
+      </v-chip-group>
+    </div>
+
   </div>
 </template>
 
@@ -289,6 +311,7 @@ export default {
   components: {
     approvalComponent,
   },
+  emits: ["selectDraft"],
     props: {
         draft:{
           default: false,
@@ -335,6 +358,7 @@ export default {
         }
       },
       draftChangeType:"minor",
+      drafts:[],
       rules:{
         required: value => !!value || 'Required.',
         counter: value => value.length <= 20 || 'Max 20 characters',
@@ -357,6 +381,7 @@ export default {
       if (this.selected.index != null){
         this.$store.commit('getPersonas')
         this.$store.commit('getNeeds')
+        this.drafts = await Draft.getDraftByParentId(this.id)
         if (this.draft === false && this.id != null) {
           const selectedData = await Product.getProductById(this.id)
           this.product = JSON.parse(JSON.stringify(selectedData));
@@ -386,6 +411,7 @@ export default {
         await this.$refs.form.validate();
         if(!this.valid){console.warn('invalid'); return}
         const draftData = {
+          draftName: this.product.data.name + ' v:' +this.product.data.version.major +'.'+this.product.data.version.minor+ ' draft',
           parentID: this.product.id,
           parentType:'products',
           parentVersion:{
