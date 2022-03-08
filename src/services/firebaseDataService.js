@@ -262,6 +262,13 @@ export class Draft {
     Object.assign(this,addInDefaults(this));
   }
 
+  static async getAll(){
+    const snapshot = await db.collection("documentDrafts")
+              .where("archived","==", false)
+              .get();
+    return snapshot.docs.map(doc =>({ id:doc.id, ...doc.data()}))
+  }
+
   static async getDraftById(id){
     const snapshot = await db.collection("documentDrafts").doc(id).get();
     return {id:snapshot.id, data:snapshot.data()};
@@ -307,13 +314,35 @@ export class Approvals{
 
 export class Approval {
   constructor(value){
-    console.log(value)
+    Object.assign(this,addInDefaults(this));
     this.docID = value.docID; //String
     this.docType = value.docType;  //String
     this.approvals = value.approvals.map(e => {
       return new Approvals(e)
     });
-     //String
+  }
+
+  static async getAll(){
+    const snapshot = await db.collection("approvals")
+              .where("archived","==", false)
+              .get();
+    return snapshot.docs.map(doc =>({ id:doc.id, ...doc.data()}))
+  }
+
+  static async getApprovalByDoc(docID){
+    const snapshot = await db.collection("approvals")
+              .where("archived","==", false)
+              .where("docID","==", docID)
+              .get();
+    return snapshot.docs.map(doc =>({ id:doc.id, ...doc.data()}))
+  }
+
+  static async getApprovalByApprover(){
+    const snapshot = await db.collection("approvals")
+              .where("archived","==", false)
+              .whereField("approvals.approver",store.state.user.uid)
+              .get();
+    return snapshot.docs.map(doc =>({ id:doc.id, ...doc.data()}))
   }
 
   async createApprovalRecord(){

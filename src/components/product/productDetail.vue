@@ -1,6 +1,6 @@
 <template>
   <div class="">
-    <h1 style="color:red" v-if="draft === true">DRAFT</h1>
+    <h1 style="color:red" v-if="draft === true && reviewing === false">DRAFT</h1>
     <v-form
       ref="form"
       v-model="valid"
@@ -198,7 +198,7 @@
 
       <hr>
 
-      <div v-if="selected.index === null">
+      <div v-if="id === null && reviewing === false">
         <v-btn
           color="success"
           class="mr-4"
@@ -214,16 +214,16 @@
           Clear
         </v-btn>
       </div>
-      <div v-if="editing === false">
+      <div v-if="editing === false && reviewing === false">
         <v-btn
-          v-if="selected.index != null && $store.getters.isUserLoggedIn"
+          v-if="id != null && $store.getters.isUserLoggedIn"
           color="success"
           class="mr-4"
           @click="editing = true"
         >Edit
         </v-btn>
       </div>
-      <div v-if="selected.index != null && editing === true && draft === false">
+      <div v-if="id != null && editing === true && draft === false && reviewing === false">
         <!-- <v-btn
           color="success"
           class="mr-4"
@@ -249,7 +249,7 @@
         >Delete
         </v-btn>
       </div>
-      <div v-if="selected.index != null && editing === true && draft === true">
+      <div v-if="id != null && editing === true && draft === true && reviewing === false">
         <!-- <v-btn
           color="success"
           class="mr-4"
@@ -320,10 +320,14 @@ export default {
         id:{
           default: null,
           type:String
+        },
+        reviewing:{
+          default: false,
+          type: Boolean
         }
     },
     data: () => ({
-      editing: true,
+      editing: false,
       valid: true,
       loading:true,
       isDraft: false,
@@ -378,25 +382,8 @@ export default {
       checkbox: false,
     }),
     async beforeMount(){
-      if (this.selected.index != null){
-        this.$store.commit('getPersonas')
-        this.$store.commit('getNeeds')
-        this.drafts = await Draft.getDraftByParentId(this.id)
-        if (this.draft === false && this.id != null) {
-          const selectedData = await Product.getProductById(this.id)
-          this.product = JSON.parse(JSON.stringify(selectedData));
-          this.loading=false;
-        } else if (this.draft === true) {
-          const selectedData = await Draft.getDraftById(this.id)
-          this.product = {
-            id: this.id,
-            data: selectedData.data.docData,
-            product: []
-          }
-          this.isDraft = true;
-          this.loading=false;
-        }
-      }
+      this.$store.commit('getPersonas')
+      this.$store.commit('getNeeds')
     },
     methods: {
       async addProduct () {
@@ -447,7 +434,6 @@ export default {
     },
     computed:{
       featureOptions(){
-//        return [{id:'test',name:'test'}]
         return this.$store.state.features.map(doc => (doc.data.name));
       },
 
@@ -457,6 +443,28 @@ export default {
 
       //Need to check if data fields change before validating in relational stuff
     },
+    watch:{
+      id: {
+        immediate: true,
+        async handler(){
+          if (this.draft === false && this.id != null) {
+            const selectedData = await Product.getProductById(this.id)
+            this.product = JSON.parse(JSON.stringify(selectedData));
+            this.drafts = await Draft.getDraftByParentId(this.id)
+            this.loading=false;
+          } else if (this.draft === true) {
+            const selectedData = await Draft.getDraftById(this.id)
+            this.product = {
+              id: this.id,
+              data: selectedData.data.docData,
+              product: []
+            }
+            this.isDraft = true;
+            this.loading=false;
+          }
+        }
+      }
+    }
   }
 </script>
 

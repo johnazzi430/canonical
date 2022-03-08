@@ -4,6 +4,7 @@ import Login from '../components/Login'
 import Register from '../components/Register'
 import Product from '../components/product/productMain'
 import User from '../components/user/userMain'
+import Draft from '../components/draft/draftView'
 
 const routes = [
   {
@@ -15,6 +16,11 @@ const routes = [
     path: '/product',
     name: 'Product',
     component: Product
+  },
+  {
+    path: '/draft',
+    name: 'draft',
+    component: Draft
   },
   {
     path: '/user',

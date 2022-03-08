@@ -1,6 +1,6 @@
 import { createStore } from 'vuex'
 //import {product, persona} from '../services/firebaseDataService'
-import {User, Product,Feature,Idea,Goal,Risk,Persona,Insight,Need,Journey,JobToBeDone,Interview} from '../services/firebaseDataService'
+import {User,Product,Feature,Idea,Goal,Risk,Persona,Insight,Need,Journey,JobToBeDone,Interview,Draft,Approval} from '../services/firebaseDataService'
 
 function filterHelper(list,filter){
   return [...list].filter(function(item) {
@@ -38,6 +38,8 @@ const store = createStore({
       jobsToBeDone:[],
       interviews:[],
       users:[],
+      approvals:[],
+      drafts:[],
       loading:{
         personas:{
           loaded:false,
@@ -183,6 +185,14 @@ const store = createStore({
 
     async getUsers (state) {
       state.users = await User.getUsersByProject()
+    },
+
+    async getApprovals(state){
+      state.approvals = await Approval.getAll()
+    },
+
+    async getDrafts(state){
+      state.drafts  = await Draft.getAll()
     },
 
     selectItem (state, {index, source}) {
