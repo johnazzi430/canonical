@@ -72,30 +72,25 @@
       <div>
         <v-btn @click='personaNeedMap.push({persona: null,needs:[]})'>add row</v-btn>
         <v-row
-            style="height: 60px;"
             no-gutters
             v-for="(personaNeedItem, index) in personaNeedMap"
             v-bind:key='personaNeedItem'>
           <v-col cols="12" sm="4">
-            <v-select
-              dense
+            <h4>Users</h4>
+            <VueMultiselect
               v-model="personaNeedItem.persona"
-              :items="$store.state.personas.map(d => d.data.name)"
-              attach
-              chips
-              label="User Segment"
-            ></v-select>
+              :options="$store.state.personas.map(doc => ({ id:doc.id, name:doc.data.name}))"
+              track-by="id"
+              label="name"></VueMultiselect>
           </v-col>
           <v-col cols="12" sm="6">
-            <v-select
-              dense
+            <h4>Who Need To</h4>
+            <VueMultiselect
               v-model="personaNeedItem.needs"
-              :items="$store.state.needs.map(d => d.data.name)"
-              attach
-              chips
-              label="Needs"
-              multiple
-            ></v-select>
+              :options="$store.state.needs.map(doc => ({ id:doc.id, name:doc.data.name}))"
+              :multiple='true'
+              track-by="id"
+              label="name"></VueMultiselect>
           </v-col>
           <v-col cols="12" sm="2">
             <v-btn @click='personaNeedMap.splice(index,1)' icon="mdi-minus"></v-btn>
@@ -103,14 +98,16 @@
         </v-row>
       </div>
 
+      <br>
       <h4>Features</h4>
-      <v-select
-            v-model="product.data.features"
-            :items="featureOptions"
-            label="Select"
-            single-line
-            multiple>
-      </v-select>
+      <VueMultiselect
+        v-model="features"
+        :options="featureOptions.map(doc => ({ id:doc.id, name:doc.data.name}))"
+        :multiple="true"
+        track-by="id"
+        label="name"></VueMultiselect>
+
+      <br>
 
       <v-expansion-panels>
         <v-expansion-panel>
@@ -306,10 +303,13 @@
 <script>
 import {Product,Draft} from "../../services/firebaseDataService";
 import approvalComponent from "../approvals/approvalComponent";
+import VueMultiselect from 'vue-multiselect';
+import _ from 'lodash';
 
 export default {
   components: {
     approvalComponent,
+    VueMultiselect,
   },
   emits: ["selectDraft"],
     props: {
@@ -359,8 +359,10 @@ export default {
           threats:"",
           opportunities:'',
           features: [],
+          personaNeedMap: []
         }
       },
+      features:[],
       draftChangeType:"minor",
       drafts:[],
       rules:{
@@ -389,7 +391,9 @@ export default {
       async addProduct () {
         await this.$refs.form.validate();
         if (this.valid ){
-          await Product.createProduct(this.product.data)
+          const newProduct = await Product.createProduct(this.product.data)
+          if (this.featuresChanged) {await Product.updateProductField(newProduct.id,'features',this.features)}
+          if (this.personaNeedMapChanged){await Product.updateProductField(newProduct.id,'personaNeedMap',this.personaNeedMap)}
           this.$store.commit('closeDetail')
           this.$store.commit('getProducts')
         }
@@ -419,6 +423,8 @@ export default {
       async updateProduct () {
         await this.$refs.form.validate();
         this.valid ? await Product.updateProduct(this.product.id, this.product.data) : console.warn('not valid');
+        if (this.featuresChanged && this.valid) {await Product.updateProductField(this.product.id,'features',this.features)}
+        if (this.personaNeedMapChanged && this.valid){ await Product.updateProductField(this.product.id,'personaNeedMap',this.personaNeedMap)}
         this.$store.commit('getProducts')
         this.$refs.form.resetValidation();
       },
@@ -434,12 +440,20 @@ export default {
     },
     computed:{
       featureOptions(){
-        return this.$store.state.features.map(doc => (doc.data.name));
+        return this.$store.state.features;
       },
 
       selected() {
         return this.$store.state.selected
       },
+
+      featuresChanged(){
+        return !_.isEqual(this.features , this.product.data.features)
+      },
+
+      personaNeedMapChanged(){
+        return !_.isEqual(this.personaNeedMap , typeof this.product.data.personaNeedMap != 'undefined' ? this.product.data.personaNeedMap : [])
+      }
 
       //Need to check if data fields change before validating in relational stuff
     },
@@ -461,9 +475,19 @@ export default {
             }
             this.isDraft = true;
             this.loading=false;
+          } else {
+            this.editing = true
           }
         }
-      }
+      },
+
+      'product.data.features'(){
+        this.features = this.product.data.features
+      },
+
+      'product.data.personaNeedMap'(){
+        this.personaNeedMap = typeof this.product.data.personaNeedMap != 'undefined' ? this.product.data.personaNeedMap : []
+      },
     }
   }
 </script>

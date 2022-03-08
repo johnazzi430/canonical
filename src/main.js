@@ -7,6 +7,8 @@ import 'vuetify/dist/vuetify.min.css'
 import store from './store/index';
 import VueGtag from "vue-gtag";
 
+import 'vue-multiselect/dist/vue-multiselect.css';
+
 loadFonts()
 
 createApp(App)

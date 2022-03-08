@@ -19,11 +19,15 @@
         overflow-x:hidden;
         ">
             <v-row>
+              <v-btn
+                @click="search = ''; $store.commit('filter','')"
+                v-if="search.length > 0"
+                icon="mdi-close"/>
               <v-text-field
+                style="width:500px"
                 v-model="search"
                 @input="$store.commit('filter',search.trim())"
                 variant="underlined"
-                clearable
               ></v-text-field>
             </v-row>
             <h3 class="text-medium-emphasis">Products  <v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("product"); draft=false'>Add product +</v-btn></h3>
@@ -203,7 +207,7 @@
           <h1><a href="javascript:void(0)"
             class="closebtn" @click="closeDetail(); ">&times;</a></h1>
             <h1 style="text-transform:uppercase">{{$store.state.selected.source}}</h1>
-            <div v-if='$store.state.selected.source === "product"'>
+            <div class="panel-content" v-if='$store.state.selected.source === "product"'>
               <productDetail
               @selectDraft="onSelectDraft"
               :draft='draft'
@@ -215,7 +219,7 @@
                 :doc-type='$store.state.selected.source'
                 :key="$store.state.selected.index+draft+'comment'"/>
             </div>
-            <div v-else-if='$store.state.selected.source ==="feature"'>
+            <div class="panel-content" v-else-if='$store.state.selected.source ==="feature"'>
               <featureDetail :key='$store.state.selected.index'/>
               <comment
                 v-if='$store.state.selected.index != null'
@@ -223,7 +227,7 @@
                 :doc-type='$store.state.selected.source'
                 :key="$store.state.selected.index+'comment'"/>
             </div>
-            <div v-else-if='$store.state.selected.source ==="idea"'>
+            <div class="panel-content" v-else-if='$store.state.selected.source ==="idea"'>
               <ideaDetail :key='$store.state.selected.index'/>
               <comment
                 v-if='$store.state.selected.index != null'
@@ -231,7 +235,7 @@
                 :doc-type='$store.state.selected.source'
                 :key="$store.state.selected.index+'comment'"/>
             </div>
-            <div v-else-if='$store.state.selected.source ==="goal"'>
+            <div class="panel-content" v-else-if='$store.state.selected.source ==="goal"'>
               <goalDetail :key='$store.state.selected.index'/>
               <comment
                 v-if='$store.state.selected.index != null'
@@ -239,7 +243,7 @@
                 :doc-type='$store.state.selected.source'
                 :key="$store.state.selected.index+'comment'"/>
             </div>
-            <div v-else-if='$store.state.selected.source ==="risk"'>
+            <div class="panel-content" v-else-if='$store.state.selected.source ==="risk"'>
               <riskDetail :key='$store.state.selected.index'/>
               <comment
                 v-if='$store.state.selected.index != null'
@@ -398,7 +402,7 @@ export default {
   position: fixed; /* Stay in place */
   top: 0 ;
   z-index: 1; /* Stay on top */
-  right: -48px;
+  right: -88px;
   background-color: #FFFFFF; /* Black*/
   overflow-x: hidden; /* Disable horizontal scroll */
   padding-top: 88px; /* Place content 60px from the top */
@@ -407,6 +411,10 @@ export default {
   padding-bottom: 88px;
   transition: 0.4s; /* 0.5 second transition effect to slide in the sidepanel */
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.panel-content{
+  padding-right: 24px;
 }
 
 </style>

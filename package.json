@@ -18,6 +18,7 @@
     "vue": "^3.2.13",
     "vue-analytics": "^5.22.1",
     "vue-gtag": "^2.0.1",
+    "vue-multiselect": "^3.0.0-alpha.2",
     "vue-router": "^4.0.13",
     "vuefire": "^2.2.5",
     "vuetify": "npm:@vuetify/nightly@next",

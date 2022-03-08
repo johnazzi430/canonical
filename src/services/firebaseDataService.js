@@ -426,7 +426,9 @@ export class Product {
   }
 
   static async updateProductField(id ,field, value) {
-    return await db.collection("products").doc(id).update({$field:value});
+    var dict = {}
+    dict[field] = value
+    return await db.collection("products").doc(id).update(dict);
   }
 
   static async updateProductRel(id ,field, from, to) {
@@ -453,8 +455,7 @@ export class Feature {
     return snapshot.docs.map(doc => ({
       id:doc.id,
       data:doc.data(),
-                                                          //// TODO: remove name here and replace with id
-      products: joinProducts.filter(e => e.features.includes(doc.data().name)).map(e=> ({id:e.id}))
+      products: joinProducts.filter(e => e.features.includes(doc.id)).map(e=> ({id:e.id}))
     }));
   }
 
