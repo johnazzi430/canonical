@@ -108,7 +108,33 @@
         label="name"></VueMultiselect>
 
       <br>
+      <h4>Ideas</h4>
+      <VueMultiselect
+        v-model="ideas"
+        :options="$store.state.ideas.map(doc => ({ id:doc.id, name:doc.data.idea}))"
+        :multiple="true"
+        track-by="id"
+        label="name"></VueMultiselect>
 
+      <br>
+      <h4>Goals</h4>
+      <VueMultiselect
+        v-model="goals"
+        :options="$store.state.goals.map(doc => ({ id:doc.id, name:doc.data.name}))"
+        :multiple="true"
+        track-by="id"
+        label="name"></VueMultiselect>
+
+      <br>
+      <h4>Risks</h4>
+      <VueMultiselect
+          v-model="risks"
+          :options="$store.state.risks.map(doc => ({ id:doc.id, name:doc.data.name}))"
+          :multiple="true"
+          track-by="id"
+          label="name"></VueMultiselect>
+
+      <br>
       <v-expansion-panels>
         <v-expansion-panel>
           <v-expansion-panel-title>
@@ -359,10 +385,16 @@ export default {
           threats:"",
           opportunities:'',
           features: [],
-          personaNeedMap: []
+          personaNeedMap: [],
+          ideas:[],
+          goals:[],
+          risks:[],
         }
       },
       features:[],
+      ideas:[],
+      goals:[],
+      risks:[],
       draftChangeType:"minor",
       drafts:[],
       rules:{
@@ -388,12 +420,20 @@ export default {
       this.$store.commit('getNeeds')
     },
     methods: {
+
+      async modifyRelationalFields(id){
+        if (this.featuresChanged) {await Product.updateProductField(id,'features',this.features)}
+        if (this.personaNeedMapChanged ){ await Product.updateProductField(id,'personaNeedMap',this.personaNeedMap)}
+        if (this.ideasChanged ){ await Product.updateProductField(id,'ideas',this.ideas)}
+        if (this.goalsChanged ){ await Product.updateProductField(id,'goals',this.goals)}
+        if (this.risksChanged ){ await Product.updateProductField(id,'risks',this.risks)}
+      },
+
       async addProduct () {
         await this.$refs.form.validate();
         if (this.valid ){
           const newProduct = await Product.createProduct(this.product.data)
-          if (this.featuresChanged) {await Product.updateProductField(newProduct.id,'features',this.features)}
-          if (this.personaNeedMapChanged){await Product.updateProductField(newProduct.id,'personaNeedMap',this.personaNeedMap)}
+          await this.modifyRelationalFields(newProduct.id)
           this.$store.commit('closeDetail')
           this.$store.commit('getProducts')
         }
@@ -423,8 +463,7 @@ export default {
       async updateProduct () {
         await this.$refs.form.validate();
         this.valid ? await Product.updateProduct(this.product.id, this.product.data) : console.warn('not valid');
-        if (this.featuresChanged && this.valid) {await Product.updateProductField(this.product.id,'features',this.features)}
-        if (this.personaNeedMapChanged && this.valid){ await Product.updateProductField(this.product.id,'personaNeedMap',this.personaNeedMap)}
+        await this.modifyRelationalFields(this.product.id)
         this.$store.commit('getProducts')
         this.$refs.form.resetValidation();
       },
@@ -434,6 +473,7 @@ export default {
         this.$store.commit('getProducts')
         this.$refs.form.resetValidation();
       },
+
       resetForm () {
         this.$refs.form.reset()
       },
@@ -453,7 +493,19 @@ export default {
 
       personaNeedMapChanged(){
         return !_.isEqual(this.personaNeedMap , typeof this.product.data.personaNeedMap != 'undefined' ? this.product.data.personaNeedMap : [])
-      }
+      },
+
+      ideasChanged(){
+        return !_.isEqual(this.ideas , typeof this.product.data.ideas != 'undefined' ? this.product.data.ideas : [])
+      },
+
+      goalsChanged(){
+        return !_.isEqual(this.goals , typeof this.product.data.goals != 'undefined' ? this.product.data.goals : [])
+      },
+
+      risksChanged(){
+        return !_.isEqual(this.risks , typeof this.product.data.risks != 'undefined' ? this.product.data.risks : [])
+      },
 
       //Need to check if data fields change before validating in relational stuff
     },
@@ -487,6 +539,18 @@ export default {
 
       'product.data.personaNeedMap'(){
         this.personaNeedMap = typeof this.product.data.personaNeedMap != 'undefined' ? this.product.data.personaNeedMap : []
+      },
+
+      'product.data.ideas'(){
+        this.ideas = typeof this.product.data.ideas != 'undefined' ? this.product.data.ideas : []
+      },
+
+      'product.data.goals'(){
+        this.goals = typeof this.product.data.goals != 'undefined' ? this.product.data.goals : []
+      },
+
+      'product.data.risks'(){
+        this.risks = typeof this.product.data.risks != 'undefined' ? this.product.data.risks : []
       },
     }
   }
