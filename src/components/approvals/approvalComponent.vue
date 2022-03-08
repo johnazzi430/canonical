@@ -21,7 +21,7 @@
         </v-card-title>
 
         <div>
-          <v-btn @click='approvers.push({id: null,required:true})'>add row</v-btn>
+          <v-btn @click='approvers.push({approver: null,required:true})'>add row</v-btn>
           <v-row
             style="height: 60px"
             no-gutters
@@ -29,8 +29,7 @@
             v-bind:key='approver'>
             <v-col cols="12" sm="7">
               <v-select
-                single-line="true"
-                v-model="approver.id"
+                v-model="approver.approver"
                 :items="$store.state.users.map(d => d.displayName)"
                 label="approver"
               ></v-select>
@@ -56,7 +55,7 @@
           <v-btn
             color="green darken-1"
             text
-            @click="modal = false"
+            @click="createApprovalRecord"
           >
             Request
           </v-btn>
@@ -69,7 +68,7 @@
 
 
 <script type="text/javascript">
-import {Approval} from "../../services/firebaseDataService";
+import {Approval,Draft} from "../../services/firebaseDataService";
 
 export default {
   props: {
@@ -84,7 +83,8 @@ export default {
   },
   data: () => ({
     modal: false,
-    approvers:[]
+    approvers:[],
+    valid: false
   }),
   async beforeMount(){
     this.$store.commit('getUsers')
@@ -94,7 +94,17 @@ export default {
 
     },
     async createApprovalRecord () {
-        await new Approval().createApproval()
+      //// TODO:  check if valid
+      //
+      //create Approval Record
+      const approvalDoc = await new Approval({
+            docID:this.approvalParentDocId,
+            docType:'product',
+            approvals:this.approvers
+          })
+          .createApprovalRecord()
+      //UpdateDraft
+      await Draft.updateDraftApproval(this.approvalParentDocId, approvalDoc)
     },
     async closeApprovalModal () {
 

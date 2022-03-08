@@ -287,6 +287,14 @@ export class Draft {
     });
   }
 
+  static async updateDraftApproval(id,data){
+    return await db.collection("documentDrafts").doc(id).update({
+        approval: data,
+        updatedDate: Date.now(),
+        updatedBy: store.state.user.uid,
+    });
+  }
+
 }
 
 export class Approvals{
@@ -307,7 +315,13 @@ export class Approval {
     });
      //String
   }
+
+  async createApprovalRecord(){
+    return await db.collection("approvals").add(JSON.parse(JSON.stringify(this)));
+  }
+
 }
+
 
 // docs
 export class Product {
