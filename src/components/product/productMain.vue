@@ -58,7 +58,7 @@
                   <v-btn
                     variant="text"
                     color="orange"
-                    v-on:click='expandDetail(product.id,"product")'
+                    v-on:click.stop='expandDetail(product.id,"product")'
                   >
                     Details
                   </v-btn>
@@ -84,6 +84,7 @@
               height="150"
               elevation="3"
               variant ="contained-text"
+              @click="search=feature.id , $store.commit('filter',search.trim()) "
               >
                 <v-card-header>{{feature.data.name}}</v-card-header>
                 <v-card-text>{{feature.data.description}}</v-card-text>
@@ -91,7 +92,7 @@
                   <v-btn
                   variant="text"
                   color="orange"
-                    v-on:click='expandDetail(feature.id,"feature")'
+                    v-on:click.stop='expandDetail(feature.id,"feature")'
                   >
                     Details
                   </v-btn>
@@ -117,6 +118,7 @@
               height="150"
               elevation="3"
               variant ="contained-text"
+              @click="search=idea.id , $store.commit('filter',search.trim()) "
               >
                 <v-card-header>{{idea.data.idea}}</v-card-header>
                 <v-card-text>{{idea.data.description}}</v-card-text>
@@ -126,7 +128,7 @@
                   variant="text"
                   color="orange"
                     text
-                    v-on:click='expandDetail(idea.id,"idea")'
+                    v-on:click.stop='expandDetail(idea.id,"idea")'
                   >
                     Details
                   </v-btn>
@@ -152,6 +154,7 @@
               height="150"
               elevation="3"
               variant ="contained-text"
+              @click="search=goal.id , $store.commit('filter',search.trim()) "
               >
                 <v-card-header>{{goal.data.name}}{{goal.data.description}}</v-card-header>
                 <v-card-text>{{goal.data.description}}</v-card-text>
@@ -160,7 +163,7 @@
                   <v-btn
                   variant="text"
                   color="orange"
-                    v-on:click='expandDetail(goal.id,"goal")'
+                    v-on:click.stop='expandDetail(goal.id,"goal")'
                   >
                     Details
                   </v-btn>
@@ -187,6 +190,7 @@
               height="150"
               elevation="3"
               variant ="contained-text"
+              @click="search=risk.id , $store.commit('filter',search.trim()) "
               >
                 <v-card-header>{{risk.data.name}}</v-card-header>
                 <v-card-text>{{risk.data.description}}</v-card-text>
@@ -195,7 +199,7 @@
                   <v-btn
                   variant="text"
                   color="orange"
-                    v-on:click='expandDetail(risk.id,"risk")'
+                    v-on:click.stop='expandDetail(risk.id,"risk")'
                   >
                     Details
                   </v-btn>

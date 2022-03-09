@@ -57,7 +57,7 @@
                   <v-btn
                     variant="text"
                     color="blue"
-                    v-on:click='expandDetail(persona.id,"persona")'
+                    v-on:click.stop='expandDetail(persona.id,"persona")'
                   >
                     Details
                   </v-btn>
@@ -92,7 +92,7 @@
                   <v-btn
                     variant="text"
                     color="blue"
-                    v-on:click='expandDetail(need.id,"need")'
+                    v-on:click.stop='expandDetail(need.id,"need")'
                   >
                     Details
                   </v-btn>
@@ -127,7 +127,7 @@
                   <v-btn
                     variant="text"
                     color="blue"
-                    v-on:click='expandDetail(insight.id,"insight")'
+                    v-on:click.stop='expandDetail(insight.id,"insight")'
                   >
                     Details
                   </v-btn>
@@ -162,7 +162,7 @@
                   <v-btn
                     variant="text"
                     color="blue"
-                    v-on:click='expandDetail(journey.id,"journey")'
+                    v-on:click.stop='expandDetail(journey.id,"journey")'
                   >
                     Details
                   </v-btn>
@@ -197,7 +197,7 @@
                   <v-btn
                     variant="text"
                     color="blue"
-                    v-on:click='expandDetail(jobToBeDone.id,"jobToBeDone")'
+                    v-on:click.stop='expandDetail(jobToBeDone.id,"jobToBeDone")'
                   >
                     Button
                   </v-btn>
@@ -233,7 +233,7 @@
                     variant="outlined"
                     rounded
                     text
-                    v-on:click='expandDetail(interview.id,"interview")'
+                    v-on:click.stop='expandDetail(interview.id,"interview")'
                   >
                     Button
                   </v-btn>

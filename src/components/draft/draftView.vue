@@ -1,7 +1,7 @@
 <template id="">
       <v-container>
         <v-row  style="height:100px">
-          <v-btn @click="draftSelected = !draftSelected">ToggleView
+          <v-btn v-if="draftSelected===true" @click="draftSelected = !draftSelected">Return
           </v-btn>
           <h1>Changes</h1>
         </v-row>
@@ -46,35 +46,36 @@
             <v-row class="header">
             </v-row>
             <v-row class="changes">
-              <div style="width:75%">
-                <v-col cols="12" sm="6">
-                  <v-card outlined tile>
-                    <v-card-title>
-                      Current Version
-                    </v-card-title>
-                    <productDetail
-                    :draft='false'
-                    :reviewing = 'true'
-                    :key='draftSelectedValues.parentID'
-                    :id='draftSelectedValues.parentID'/>
-                  </v-card>
-                </v-col>
-                <v-col cols="12" sm="6">
-                  <v-card outlined tile>
-                    <v-card-title>
-                      Proposed Draft
-                    </v-card-title>
-                    <productDetail
-                    :draft='true'
-                    :reviewing = 'true'
-                    :key='draftSelectedValues.draftID'
-                    :id='draftSelectedValues.draftID'/>
-                  </v-card>
-                </v-col>
-              </div>
-
-              <div style="width:25%" v-if="draftSelectedValues.approvals != null">
-                <v-container>
+              <v-col cols="12" sm="8">
+                <v-row>
+                  <v-col cols="12" sm="6">
+                    <v-card outlined tile>
+                      <v-card-title>
+                        Current Version
+                      </v-card-title>
+                      <productDetail
+                      :draft='false'
+                      :reviewing = 'true'
+                      :key='draftSelectedValues.parentID'
+                      :id='draftSelectedValues.parentID'/>
+                    </v-card>
+                  </v-col>
+                  <v-col cols="12" sm="6">
+                    <v-card outlined tile>
+                      <v-card-title>
+                        Proposed Draft
+                      </v-card-title>
+                      <productDetail
+                      :draft='true'
+                      :reviewing = 'true'
+                      :key='draftSelectedValues.draftID'
+                      :id='draftSelectedValues.draftID'/>
+                    </v-card>
+                  </v-col>
+                </v-row>
+              </v-col>
+              <v-col cols="12" sm="4" v-if="draftSelectedValues.approvals">
+                <v-container v-if="draftSelectedValues.approvals.length > 0 ">
                   <h2>approvals</h2>
                   <v-list density="compact"
                     v-for="item in draftSelectedValues.approvals[0].approvals"
@@ -100,8 +101,17 @@
                       </v-list-item-avatar>
                     </v-list-item>
                   </v-list>
+                  <approvalComponent :approvalParentDocId='draftSelectedValues.draftID'/>
                 </v-container>
-              </div>
+                <v-container>
+                  <h2>comments</h2>
+                  <comment
+                    v-if='draftSelectedValues.draftID != ""'
+                    :doc-id='draftSelectedValues.draftID'
+                    :doc-type='draftSelectedValues.parentType'
+                    :key="draftSelectedValues.draftID"/>
+                </v-container>
+              </v-col>
             </v-row>
             <v-row class="comments">
             </v-row>
@@ -117,12 +127,15 @@ import {Approval} from "../../services/firebaseDataService";
 // import ideaDetail from "../product/ideaDetail";
 // import goalDetail from "../product/goalDetail";
 // import riskDetail from "../product/riskDetail";
-// import comment from "../comment/comment";
+import comment from "../comment/comment";
+import approvalComponent from "../approvals/approvalComponent";
 
 export default {
   name: 'draft-panel',
 
   components: {
+    comment,
+    approvalComponent,
     productDetail,
     // featureDetail,
     // ideaDetail,
@@ -136,7 +149,8 @@ export default {
       draftSelectedValues:{
         draftID:'',
         parentID:'',
-        approvals:null
+        approvals:null,
+        parentType:''
       },
       approvalHeaders:[
         {text: 'Approval', value: 'id' },
@@ -163,8 +177,9 @@ export default {
     async openDraftCompare(draft){
       this.draftSelectedValues.draftID = draft.id
       this.draftSelectedValues.parentID = draft.parentID
+      this.draftSelectedValues.parentType = draft.parentType
       this.draftSelected = true
-      this.draftSelectedValues.approvals = await Approval.getApprovalByDoc(draft.id)
+      this.draftSelectedValues.approvals = await Approval.getByDoc(draft.id)
       return
     }
   },

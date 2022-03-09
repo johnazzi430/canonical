@@ -269,12 +269,12 @@ export class Draft {
     return snapshot.docs.map(doc =>({ id:doc.id, ...doc.data()}))
   }
 
-  static async getDraftById(id){
+  static async getDocById(id){
     const snapshot = await db.collection("documentDrafts").doc(id).get();
     return {id:snapshot.id, data:snapshot.data()};
   }
 
-  static async getDraftByParentId(id){
+  static async getDocByParentId(id){
     const snapshot = await db.collection("documentDrafts")
               .where("parentID","==",id)
               .where("archived","==", false)
@@ -282,19 +282,20 @@ export class Draft {
     return snapshot.docs.map(doc =>({ id:doc.id, ...doc.data()}))
   }
 
-  async createDraft(){
+  async create(){
     return await db.collection("documentDrafts").add(JSON.parse(JSON.stringify(this)));
   }
 
-  static async updateDraft(id,data){
+  static async updateDoc(id,data,draftName){
     return await db.collection("documentDrafts").doc(id).update({
-        docData: data,
+        draftName:draftName,
+        docData: data.data,
         updatedDate: Date.now(),
         updatedBy: store.state.user.uid,
     });
   }
 
-  static async updateDraftApproval(id,data){
+  static async updateDocApproval(id,data){
     return await db.collection("documentDrafts").doc(id).update({
         approval: data,
         updatedDate: Date.now(),
@@ -329,7 +330,7 @@ export class Approval {
     return snapshot.docs.map(doc =>({ id:doc.id, ...doc.data()}))
   }
 
-  static async getApprovalByDoc(docID){
+  static async getByDoc(docID){
     const snapshot = await db.collection("approvals")
               .where("archived","==", false)
               .where("docID","==", docID)
@@ -337,7 +338,7 @@ export class Approval {
     return snapshot.docs.map(doc =>({ id:doc.id, ...doc.data()}))
   }
 
-  static async getApprovalByApprover(){
+  static async getByApprover(){
     const snapshot = await db.collection("approvals")
               .where("archived","==", false)
               .whereField("approvals.approver",store.state.user.uid)
@@ -345,7 +346,7 @@ export class Approval {
     return snapshot.docs.map(doc =>({ id:doc.id, ...doc.data()}))
   }
 
-  async createApprovalRecord(){
+  async createlRecord(){
     return await db.collection("approvals").add(JSON.parse(JSON.stringify(this)));
   }
 
@@ -390,7 +391,7 @@ export class Product {
     return await products
   }
 
-  static async getProductById(id) {
+  static async getDocById(id) {
     const snapshot = await db.collection("products").doc(id).get()
     const products = {
       id:snapshot.id,
@@ -399,7 +400,7 @@ export class Product {
     return await products
   }
 
-  static async createProduct(value) {
+  static async create(value) {
     value = addInDefaults(value)
     return await db.collection("products").add(value);
 //    const { id } = await db.collection("products").add(value)
@@ -413,13 +414,13 @@ export class Product {
     // batch.commit()
   }
 
-  static async updateProduct(id ,value) {
+  static async updateDoc(id ,value) {
     new Change({docID:id,docType:'products'}).createChange(value)
     await db.collection("products").doc(id).update(value)
     return await db.collection("products").doc(id).update({updatedDate:Date.now()});
   }
 
-  static async updateProductField(id ,field, value) {
+  static async updateDocField(id ,field, value) {
     var dict = {}
     dict[field] = value
     return await db.collection("products").doc(id).update(dict);
@@ -433,7 +434,7 @@ export class Product {
     return await db.collection("products").doc(id).update(dict);
   }
 
-  static async deleteProduct(id) {
+  static async deleteDoc(id) {
     return await db.collection("products").doc(id).update({archived: true});
   }
 }

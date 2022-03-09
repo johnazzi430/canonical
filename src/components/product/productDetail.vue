@@ -7,6 +7,16 @@
       lazy-validation
     >
       <v-text-field
+        v-if="draft === true && reviewing === false"
+        v-model="draftName"
+        :counter="20"
+        :rules="[rules.required,rules.counter]"
+        label="Draft Name"
+        required
+        :disabled="!editing"
+      ></v-text-field>
+
+      <v-text-field
         v-model="product.data.name"
         :counter="20"
         :rules="[rules.required,rules.counter]"
@@ -23,7 +33,7 @@
         required
       ></v-textarea>
 
-      <v-row>
+      <!-- <v-row>
         <v-col cols="12" sm="4">
           Version:
         </v-col>
@@ -45,7 +55,7 @@
             type="number"
           ></v-text-field>
         </v-col>
-      </v-row>
+      </v-row> -->
 
       <v-select
         v-model="product.data.lifesCycleStage"
@@ -259,6 +269,12 @@
           @click="createDraft()"
         >Create Draft
         </v-btn>
+        <v-text-field
+          v-model="draftName"
+          :counter="20"
+          label="Draft Name"
+          required
+        />
         <v-btn
           color="info"
           class="mr-4"
@@ -361,7 +377,6 @@ export default {
       personaNeedMap:[],
       product:{
         id: null,
-        personas:[],
         data : {
           name:'',
           description:'Value Proposition:',
@@ -397,6 +412,7 @@ export default {
       risks:[],
       draftChangeType:"minor",
       drafts:[],
+      draftName:"",
       rules:{
         required: value => !!value || 'Required.',
         counter: value => value.length <= 20 || 'Max 20 characters',
@@ -422,17 +438,17 @@ export default {
     methods: {
 
       async modifyRelationalFields(id){
-        if (this.featuresChanged) {await Product.updateProductField(id,'features',this.features)}
-        if (this.personaNeedMapChanged ){ await Product.updateProductField(id,'personaNeedMap',this.personaNeedMap)}
-        if (this.ideasChanged ){ await Product.updateProductField(id,'ideas',this.ideas)}
-        if (this.goalsChanged ){ await Product.updateProductField(id,'goals',this.goals)}
-        if (this.risksChanged ){ await Product.updateProductField(id,'risks',this.risks)}
+        if (this.featuresChanged) {await Product.updateDocField(id,'features',this.features)}
+        if (this.personaNeedMapChanged ){ await Product.updateDocField(id,'personaNeedMap',this.personaNeedMap)}
+        if (this.ideasChanged ){ await Product.updateDocField(id,'ideas',this.ideas)}
+        if (this.goalsChanged ){ await Product.updateDocField(id,'goals',this.goals)}
+        if (this.risksChanged ){ await Product.updateDocField(id,'risks',this.risks)}
       },
 
       async addProduct () {
         await this.$refs.form.validate();
         if (this.valid ){
-          const newProduct = await Product.createProduct(this.product.data)
+          const newProduct = await Product.create(this.product.data)
           await this.modifyRelationalFields(newProduct.id)
           this.$store.commit('closeDetail')
           this.$store.commit('getProducts')
@@ -442,33 +458,41 @@ export default {
         await this.$refs.form.validate();
         if(!this.valid){console.warn('invalid'); return}
         const draftData = {
-          draftName: this.product.data.name + ' v:' +this.product.data.version.major +'.'+this.product.data.version.minor+ ' draft',
+          draftName: this.draftName != '' ? this.draftName : this.product.data.name + ' v:' +this.product.data.version.major +'.'+this.product.data.version.minor+ ' draft',
           parentID: this.product.id,
           parentType:'products',
           parentVersion:{
             major: this.product.data.version.major,
             minor: this.product.data.version.minor
           },
-          docData:this.product
+          docData:{
+              ...this.product.data,
+              personaNeedMap:this.personaNeedMap,
+              features:this.features,
+              ideas:this.ideas,
+              goals:this.goals,
+              risks:this.risks,
+          }
         }
-        const draft = await new Draft(draftData).createDraft()
+        const draft = await new Draft(draftData).create()
+        this.$emit('selectDraft', {index:draft.id,source:'product',draft:true})
         this.$store.commit('selectItem',{index:draft.id,source:'product'})
       },
       async updateDraft () {
         await this.$refs.form.validate();
-        this.valid ? await Draft.updateDraft(this.id, this.product.data) : console.warn('not valid');
+        this.valid ? await Draft.updateDoc(this.id, this.product,this.draftName) : console.warn('not valid');
         // this.$store.commit('getProducts')
         this.$refs.form.resetValidation();
       },
       async updateProduct () {
         await this.$refs.form.validate();
-        this.valid ? await Product.updateProduct(this.product.id, this.product.data) : console.warn('not valid');
+        this.valid ? await Product.updateDoc(this.product.id, this.product.data) : console.warn('not valid');
         await this.modifyRelationalFields(this.product.id)
         this.$store.commit('getProducts')
         this.$refs.form.resetValidation();
       },
       async deleteProduct () {
-        await Product.deleteProduct(this.selected.index)
+        await Product.deleteDoc(this.selected.index)
         this.$store.commit('closeDetail')
         this.$store.commit('getProducts')
         this.$refs.form.resetValidation();
@@ -514,17 +538,25 @@ export default {
         immediate: true,
         async handler(){
           if (this.draft === false && this.id != null) {
-            const selectedData = await Product.getProductById(this.id)
+            const selectedData = await Product.getDocById(this.id)
             this.product = JSON.parse(JSON.stringify(selectedData));
-            this.drafts = await Draft.getDraftByParentId(this.id)
+            this.drafts = await Draft.getDocByParentId(this.id)
             this.loading=false;
           } else if (this.draft === true) {
-            const selectedData = await Draft.getDraftById(this.id)
+            const selectedData = await Draft.getDocById(this.id)
             this.product = {
               id: this.id,
               data: selectedData.data.docData,
-              product: []
             }
+            this.draftData = {
+              parentID: selectedData.data.parentID,
+              parentType:'products',
+              parentVersion:{
+                major: selectedData.data.parentVersion.major,
+                minor: selectedData.data.parentVersion.minor
+              },
+            }
+            this.draftName = selectedData.data.draftName,
             this.isDraft = true;
             this.loading=false;
           } else {
@@ -551,6 +583,10 @@ export default {
 
       'product.data.risks'(){
         this.risks = typeof this.product.data.risks != 'undefined' ? this.product.data.risks : []
+      },
+
+      'product.draftName'(){
+        this.draftName = typeof this.product.draftName != 'undefined' ? this.product.draftName : ""
       },
     }
   }
