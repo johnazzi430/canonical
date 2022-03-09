@@ -217,43 +217,84 @@
               :draft='draft'
               :id='$store.state.selected.index'
               :key='$store.state.selected.index+draft'/>
+              <h3>Comments</h3>
               <comment
                 v-if='$store.state.selected.index != null'
                 :doc-id='$store.state.selected.index'
                 :doc-type='$store.state.selected.source'
                 :key="$store.state.selected.index+draft+'comment'"/>
+              <h3>Changes</h3>
+              <change
+                v-if='$store.state.selected.index != null'
+                :doc-id='$store.state.selected.index'
+                :doc-type='"products"'
+                :key="$store.state.selected.index+'change'"
+                  />
             </div>
             <div class="panel-content" v-else-if='$store.state.selected.source ==="feature"'>
               <featureDetail :key='$store.state.selected.index'/>
+              <h3>Comments</h3>
               <comment
                 v-if='$store.state.selected.index != null'
                 :doc-id='$store.state.selected.index'
                 :doc-type='$store.state.selected.source'
                 :key="$store.state.selected.index+'comment'"/>
+              <h3>Changes</h3>
+              <change
+                v-if='$store.state.selected.index != null'
+                :doc-id='$store.state.selected.index'
+                :doc-type='"features"'
+                :key="$store.state.selected.index+'change'"
+                />
             </div>
             <div class="panel-content" v-else-if='$store.state.selected.source ==="idea"'>
               <ideaDetail :key='$store.state.selected.index'/>
+              <h3>Comments</h3>
               <comment
                 v-if='$store.state.selected.index != null'
                 :doc-id='$store.state.selected.index'
                 :doc-type='$store.state.selected.source'
                 :key="$store.state.selected.index+'comment'"/>
+              <h3>Changes</h3>
+              <change
+                  v-if='$store.state.selected.index != null'
+                  :doc-id='$store.state.selected.index'
+                  :doc-type='"ideas"'
+                  :key="$store.state.selected.index+'change'"
+                    />
+              />
             </div>
             <div class="panel-content" v-else-if='$store.state.selected.source ==="goal"'>
               <goalDetail :key='$store.state.selected.index'/>
+              <h3>Comments</h3>
               <comment
                 v-if='$store.state.selected.index != null'
                 :doc-id='$store.state.selected.index'
                 :doc-type='$store.state.selected.source'
                 :key="$store.state.selected.index+'comment'"/>
+              <h3>Changes</h3>
+              <change
+                    v-if='$store.state.selected.index != null'
+                    :doc-id='$store.state.selected.index'
+                    :doc-type='"productGoals"'
+                    :key="$store.state.selected.index+'change'"
+                      />
             </div>
             <div class="panel-content" v-else-if='$store.state.selected.source ==="risk"'>
               <riskDetail :key='$store.state.selected.index'/>
+              <h3>Comments</h3>
               <comment
                 v-if='$store.state.selected.index != null'
                 :doc-id='$store.state.selected.index'
                 :doc-type='$store.state.selected.source'
                 :key="$store.state.selected.index+'comment'"/>
+              <h3>Changes</h3>
+              <change
+                    v-if='$store.state.selected.index != null'
+                    :doc-id='$store.state.selected.index'
+                    :doc-type='"productRisks"'
+                    :key="$store.state.selected.index+'change'"
+                        />
             </div>
         </div>
       </v-layout>
@@ -266,6 +307,7 @@ import ideaDetail from "./ideaDetail";
 import goalDetail from "./goalDetail";
 import riskDetail from "./riskDetail";
 import comment from "../comment/comment";
+import change from '../changes/changeComponent'
 
 export default {
   name: 'product-panel',
@@ -276,7 +318,8 @@ export default {
     ideaDetail,
     goalDetail,
     riskDetail,
-    comment
+    comment,
+    change
   },
   data() {
     return {
@@ -294,7 +337,7 @@ export default {
     this.$store.commit('getRisks')
   },
   mounted(){
-    if(this.$store.state.selected.index != null){document.getElementById("right-sidepanel").style.width = "50%";}
+    if(this.$store.state.selected.index != null){document.getElementById("right-sidepanel").style.width = "60%";}
   },
   watch:{
     closeDetail_(){
@@ -319,19 +362,19 @@ export default {
   methods: {
     expandDetail(index,source,draft=false) {
       this.$store.commit('selectItem',{index,source})
-      document.getElementById("right-sidepanel").style.width = "50%";
+      document.getElementById("right-sidepanel").style.width = "60%";
       this.draft=draft
       this.$router.push('/product/'+source+'/' + index )
     },
 
     expandDraftDetail(index,source) {
       this.$store.commit('selectItem',{index,source})
-      document.getElementById("right-sidepanel").style.width = "50%";
+      document.getElementById("right-sidepanel").style.width = "60%";
     },
 
     addItem(source) {
       this.$store.commit('selectItem',{index:null, source})
-      document.getElementById("right-sidepanel").style.width = "50%";
+      document.getElementById("right-sidepanel").style.width = "60%";
     },
 
     closeDetail() {
@@ -345,7 +388,7 @@ export default {
 
     onSelectDraft(event){
       this.$store.commit('selectItem',{index:event.index,source:event.source})
-      document.getElementById("right-sidepanel").style.width = "50%";
+      document.getElementById("right-sidepanel").style.width = "60%";
       this.draft=true
     }
 

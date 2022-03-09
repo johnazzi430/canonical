@@ -247,43 +247,83 @@
           <h1 style="text-transform:uppercase">{{$store.state.selected.source}}</h1>
           <div v-if='$store.state.selected.source === "persona"'>
             <personaDetail :key='$store.state.selected.index' />
+            <h3>Comments</h3>
             <comment
               v-if='$store.state.selected.index != null'
               :doc-id='$store.state.selected.index'
               :doc-type='$store.state.selected.source'
               :key="$store.state.selected"/>
+            <h3>Changes</h3>
+            <change
+                v-if='$store.state.selected.index != null'
+                :doc-id='$store.state.selected.index'
+                :doc-type='"personas"'
+                :key="$store.state.selected.index+'change'"
+                  />
           </div>
           <div v-else-if='$store.state.selected.source ==="insight"'>
             <insightDetail :key='$store.state.selected.index'/>
+            <h3>Comments</h3>
             <comment
               v-if='$store.state.selected.index != null'
               :doc-id='$store.state.selected.index'
               :doc-type='$store.state.selected.source'
               :key="$store.state.selected"/>
+            <h3>Changes</h3>
+            <change
+                  v-if='$store.state.selected.index != null'
+                  :doc-id='$store.state.selected.index'
+                  :doc-type='"insights"'
+                  :key="$store.state.selected.index+'change'"
+                    />
           </div>
           <div v-else-if='$store.state.selected.source ==="need"'>
             <needDetail :key='$store.state.selected.index'/>
+            <h3>Comments</h3>
             <comment
               v-if='$store.state.selected.index != null'
               :doc-id='$store.state.selected.index'
               :doc-type='$store.state.selected.source'
               :key="$store.state.selected"/>
+              <h3>Changes</h3>
+              <change
+                  v-if='$store.state.selected.index != null'
+                  :doc-id='$store.state.selected.index'
+                  :doc-type='"needs"'
+                  :key="$store.state.selected.index+'change'"
+                    />
           </div>
           <div v-else-if='$store.state.selected.source ==="journey"'>
             <journeyDetail :key='$store.state.selected.index'/>
+            <h3>Comments</h3>
             <comment
               v-if='$store.state.selected.index != null'
               :doc-id='$store.state.selected.index'
               :doc-type='$store.state.selected.source'
               :key="$store.state.selected"/>
+            <h3>Changes</h3>
+            <change
+                  v-if='$store.state.selected.index != null'
+                  :doc-id='$store.state.selected.index'
+                  :doc-type='"journeys"'
+                  :key="$store.state.selected.index+'change'"
+                    />
           </div>
           <div v-else-if='$store.state.selected.source ==="jobToBeDone"'>
             <jobToBeDoneDetail :key='$store.state.selected.index'/>
+            <h3>Comments</h3>
             <comment
               v-if='$store.state.selected.index != null'
               :doc-id='$store.state.selected.index'
               :doc-type='$store.state.selected.source'
               :key="$store.state.selected"/>
+            <h3>Changes</h3>
+            <change
+                  v-if='$store.state.selected.index != null'
+                  :doc-id='$store.state.selected.index'
+                  :doc-type='"jobsToBeDone"'
+                  :key="$store.state.selected.index+'change'"
+                    />
           </div>
           <div v-else-if='$store.state.selected.source ==="interview"'>
             <interviewDetail :key='$store.state.selected.index'/>
@@ -292,6 +332,13 @@
               :doc-id='$store.state.selected.index'
               :doc-type='$store.state.selected.source'
               :key="$store.state.selected"/>
+            <h3>Changes</h3>
+            <change
+                  v-if='$store.state.selected.index != null'
+                  :doc-id='$store.state.selected.index'
+                  :doc-type='"interviews"'
+                  :key="$store.state.selected.index+'change'"
+                    />
           </div>
         </div>
       </v-layout>
@@ -305,6 +352,7 @@ import journeyDetail from "./journeyDetail";
 import jobToBeDoneDetail from "./jobToBeDoneDetail";
 import interviewDetail from "./interviewDetail";
 import comment from "../comment/comment";
+import change from '../changes/changeComponent'
 
 export default {
   name: 'persona-panel',
@@ -315,7 +363,8 @@ export default {
      journeyDetail,
      jobToBeDoneDetail,
      interviewDetail,
-     comment
+     comment,
+    change
   },
   data() {
     return {
