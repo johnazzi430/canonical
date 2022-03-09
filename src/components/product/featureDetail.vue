@@ -178,15 +178,21 @@ export default {
     methods: {
       async addFeature () {
         await this.$refs.form.validate();
-        if (this.valid ){
-          await Feature.createFeature(this.feature.data)
-          this.$store.commit('getFeatures')
-          this.$store.commit('closeDetail')
+        if (!this.valid ){
+          this.$store.commit('alert',{type:'error',message:'Invalid',autoClear:true})
+          return
         }
+        await Feature.createFeature(this.feature.data)
+        this.$store.commit('getFeatures')
+        this.$store.commit('closeDetail')
       },
       async updateFeature () {
         await this.$refs.form.validate();
-        this.valid ? await Feature.updateFeature(this.feature.id,this.feature.data) : console.log('not valid');
+        if(!this.valid){
+          this.$store.commit('alert',{type:'error',message:'Invalid',autoClear:true})
+          return
+        }
+        await Feature.updateDoc(this.feature.id,this.feature.data)
         this.$store.commit('getFeatures')
         this.$refs.form.resetValidation();
       },
@@ -196,7 +202,7 @@ export default {
         return;
       },
       async deleteFeature () {
-        Feature.deleteFeature(this.selected.index)
+        Feature.deleteDoc(this.selected.index)
         this.$store.commit('closeDetail')
         this.$store.commit('getFeatures')
         this.$refs.form.resetValidation();

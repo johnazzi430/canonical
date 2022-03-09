@@ -65,6 +65,18 @@
 
       </v-app-bar>
       <router-view/>
+      <div class="alert-bar">
+        <v-alert
+          v-for="alert in alerts.filter(a => a.show === true)"
+          :key="alert"
+          border="start"
+          closable
+          close-label="Close Alert"
+          :type="alert.type"
+          :title="alert.message + ' ' + new Date(alert.time).toISOString()"
+        />
+      </div>
+
     </v-main>
   </v-app>
 </template>
@@ -76,6 +88,7 @@ export default {
   name: 'App',
   data: () => ({
     toggle_exclusive: 0,
+    alerts:[]
   }),
   beforeCreate() {
     this.$store.commit('enter')
@@ -83,6 +96,19 @@ export default {
   methods: {
     logout(){
       User.logout()
+    }
+  },
+  watch:{
+    alerts_:{
+      handler(){
+        this.alerts = this.alerts_
+      },
+      deep: true,
+    }
+  },
+  computed:{
+    alerts_(){
+      return this.$store.state.globalAlerts
     }
   }
 }
@@ -102,6 +128,13 @@ export default {
 
 .v-avatar{
   margin:4px;
+}
+
+.alert-bar{
+  bottom: 0px;
+  position: fixed;
+  width:100%;
+  z-index:1000;
 }
 
 /* width */

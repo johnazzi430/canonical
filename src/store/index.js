@@ -117,13 +117,17 @@ const store = createStore({
     },
 
     alert(state,payload){
+      //   $store.commit('alert',{type:'info',message:'HI!',autoClear:true})
       const alert = {
         time: Date.now(),
-        show: false,
+        show: true,
         type: payload.type,
-        message: payload.message
+        message: payload.message,
       }
-      this.globalAlerts.push(alert)
+      //setTimeout((...state) => {
+      const index = state.globalAlerts.length
+      if(payload.autoClear === true ){setTimeout(() => {state.globalAlerts[index].show = false;}, 2000)}
+      state.globalAlerts.push(alert)
     },
 
     filter(state,payload){
