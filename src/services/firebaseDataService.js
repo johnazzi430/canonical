@@ -450,12 +450,15 @@ export class Feature {
         .where("archived","==", false)
         .where("project","==",store.state.user.project)
         .get();
-    const products = await db.collection("products").where("features","!=", []).get();
+    const products = await db.collection("products")
+                .where("archived","==", false)
+                // .where("features","!=", [])
+                .get();
     const joinProducts = products.docs.map(doc => ({id:doc.id, features:doc.data().features}) );
     return snapshot.docs.map(doc => ({
       id:doc.id,
       data:doc.data(),
-      products: joinProducts.filter(e => e.features.includes(doc.id)).map(e=> ({id:e.id}))
+      products: joinProducts.filter(e => e.features.filter(f => f.id === doc.id).length > 0 ).map(e=> ({id:e.id}))
     }));
   }
 
@@ -481,12 +484,14 @@ export class Idea {
             .where("archived","==", false)
             .where("project","==",store.state.user.project)
             .get();
-    const products = await db.collection("products").where("ideas","!=", []).get();
+    const products = await db.collection("products")
+            .where("ideas","!=", [])
+            .get();
     const joinProducts = products.docs.map(doc => ({id:doc.id, ideas:doc.data().ideas}) );
     return snapshot.docs.map(doc => ({
       id:doc.id,
       data:doc.data(),
-      products: joinProducts.filter(e => e.ideas.includes(doc.data().id)).map(e=> ({id:e.id}))
+      products: joinProducts.filter(e => e.ideas.filter(f => f.id === doc.id).length > 0 ).map(e=> ({id:e.id}))
     }));
   }
 
@@ -513,11 +518,11 @@ export class Goal {
             .where("project","==",store.state.user.project)
             .get();
     const products = await db.collection("products").where("productGoals","!=", []).get();
-    const joinProducts = products.docs.map(doc => ({id:doc.id, goals:doc.data().productGoals}) );
+    const joinProducts = products.docs.map(doc => ({id:doc.id, goals:doc.data().goals}) );
     return snapshot.docs.map(doc => ({
       id:doc.id,
       data:doc.data(),
-      products: joinProducts.filter(e => e.goals.includes(doc.data().id)).map(e=> ({id:e.id}))
+      products: joinProducts.filter(e => e.goals.filter(f => f.id === doc.id).length > 0 ).map(e=> ({id:e.id}))
     }));
   }
 
@@ -544,12 +549,12 @@ export class Risk {
             .where("archived","==", false)
             .where("project","==",store.state.user.project)
             .get();
-    const products = await db.collection("products").where("productRisks","!=", []).get();
-    const joinProducts = products.docs.map(doc => ({id:doc.id, risks:doc.data().productRisks}) );
+    const products = await db.collection("products").where("risks","!=", []).get();
+    const joinProducts = products.docs.map(doc => ({id:doc.id, goals:doc.data().risks}) );
     return snapshot.docs.map(doc => ({
       id:doc.id,
       data:doc.data(),
-      products: joinProducts.filter(e => e.risks.includes(doc.id)).map(e=> ({id:e.id}))
+      products: joinProducts.filter(e => e.risks.filter(f => f.id === doc.id).length > 0 ).map(e=> ({id:e.id}))
     }));
   }
 
