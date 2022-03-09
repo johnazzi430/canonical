@@ -19,14 +19,19 @@
           overflow-x:hidden;
           ">
           <v-row>
+            <v-btn
+              @click="search = ''; $store.commit('filter','')"
+              v-if="search.length > 0"
+              icon="mdi-close"/>
             <v-text-field
+              style="width:500px"
               v-model="search"
               @input="$store.commit('filter',search.trim())"
               variant="underlined"
             ></v-text-field>
           </v-row>
-            <h3 class="text-medium-emphasis">Personas <v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("persona")'>Add Persona +</v-btn></h3>
-            <v-row
+          <h3 class="text-medium-emphasis">Personas <v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("persona")'>Add Persona +</v-btn></h3>
+          <v-row
               no-gutters
               align-content="start"
               style="height: 200px;
@@ -44,6 +49,7 @@
               height="200"
               elevation="3"
               variant ="contained-text"
+              @click="search=persona.id , $store.commit('filter',search.trim()) "
               >
                 <v-card-header>{{persona.data.name}}</v-card-header>
                 <v-card-text>{{persona.data.description}}</v-card-text>
@@ -52,40 +58,6 @@
                     variant="text"
                     color="blue"
                     v-on:click='expandDetail(persona.id,"persona")'
-                  >
-                    Details
-                  </v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-row>
-            <h3 class="text-medium-emphasis">Insights <v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("insight")'>Add Insights +</v-btn></h3>
-            <v-row
-              align-content="start"
-              no-gutters
-              style="height: 150px;
-                    overflow-x:scroll;
-                    white-space: nowrap;
-                    display: flex;
-                    flex-wrap: wrap;
-                    flex-direction: column;
-                    overflow-x: auto;">
-              <v-card
-              v-for="insight in $store.getters.filteredInsights"
-              v-bind:key="insight"
-              :class="insight.data.vector"
-              class="rounded-0 insightCard"
-              width="300"
-              height="150"
-              elevation="3"
-              variant ="contained-text"
-              >
-                <v-card-header>{{insight.data.name}}</v-card-header>
-                <v-card-text>{{insight.data.description}}</v-card-text>
-                <v-card-actions>
-                  <v-btn
-                    variant="text"
-                    color="blue"
-                    v-on:click='expandDetail(insight.id,"insight")'
                   >
                     Details
                   </v-btn>
@@ -112,6 +84,7 @@
               height="150"
               elevation="3"
               variant ="contained-text"
+              @click="search=need.id , $store.commit('filter',search.trim()) "
               :ripple = 'true'>
               <v-card-header>{{need.data.name}}</v-card-header>
               <v-card-text>{{need.data.description}}</v-card-text>
@@ -120,6 +93,41 @@
                     variant="text"
                     color="blue"
                     v-on:click='expandDetail(need.id,"need")'
+                  >
+                    Details
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-row>
+            <h3 class="text-medium-emphasis">Insights <v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("insight")'>Add Insights +</v-btn></h3>
+            <v-row
+              align-content="start"
+              no-gutters
+              style="height: 150px;
+                    overflow-x:scroll;
+                    white-space: nowrap;
+                    display: flex;
+                    flex-wrap: wrap;
+                    flex-direction: column;
+                    overflow-x: auto;">
+              <v-card
+              v-for="insight in $store.getters.filteredInsights"
+              v-bind:key="insight"
+              :class="insight.data.vector"
+              class="rounded-0 insightCard"
+              width="300"
+              height="150"
+              elevation="3"
+              variant ="contained-text"
+              @click="search=insight.id , $store.commit('filter',search.trim()) "
+              >
+                <v-card-header>{{insight.data.name}}</v-card-header>
+                <v-card-text>{{insight.data.description}}</v-card-text>
+                <v-card-actions>
+                  <v-btn
+                    variant="text"
+                    color="blue"
+                    v-on:click='expandDetail(insight.id,"insight")'
                   >
                     Details
                   </v-btn>
@@ -145,6 +153,7 @@
               height="150"
               elevation="3"
               variant ="contained-text"
+              @click="search=journey.id , $store.commit('filter',search.trim()) "
               >
                 <v-card-header>{{journey.data.name}}</v-card-header>
                 <v-card-text>{{journey.data.description}}</v-card-text>
@@ -179,6 +188,7 @@
               height="150"
               elevation="3"
               variant ="contained-text"
+              @click="search=jobToBeDone.id , $store.commit('filter',search.trim()) "
               >
                 <v-card-header>{{jobToBeDone.data.name}}</v-card-header>
                 <v-card-text>{{jobToBeDone.data.description}}</v-card-text>
@@ -213,8 +223,9 @@
               height="130"
               elevation="3"
               variant ="contained-text"
+              @click="search=interview.id , $store.commit('filter',search.trim()) "
               >
-                <v-card-header>{{interview.data.name}}</v-card-header>
+                <v-card-header>{{interview.data.interviewee}}</v-card-header>
                 <v-card-text>{{interview.data.description}}</v-card-text>
 
                 <v-card-actions>
