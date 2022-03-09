@@ -229,7 +229,7 @@ export class Change {
     this.docType = value.docType;  //String
   }
 
-  static async getChangeByDocID(docType,docID){
+  static async getByDocID(docType,docID){
     const snapshot = await db.collection("documentChanges")
       .where("docType","==", docType)
       .where("docID","==", docID)
@@ -239,7 +239,7 @@ export class Change {
     return snapshot.docs.map(doc => ({id:doc.id, data:doc.data()}));
   }
 
-  async createChange(set){
+  async create(set){
     const currentSnapshot = await db.collection(`${this.docType}`).doc(this.docID).get()
     const currentValues = currentSnapshot.data();
     const changedFields = getDifference(currentValues,JSON.parse(JSON.stringify(set)))
@@ -287,12 +287,14 @@ export class Draft {
   }
 
   static async updateDoc(id,data,draftName){
-    return await db.collection("documentDrafts").doc(id).update({
+    const request = {
         draftName:draftName,
         docData: data.data,
         updatedDate: Date.now(),
         updatedBy: store.state.user.uid,
-    });
+    }
+    new Change({docID:id,docType:'documentDrafts'}).create(request)
+    return await db.collection("documentDrafts").doc(id).update(request);
   }
 
   static async updateDocApproval(id,data){
@@ -415,7 +417,7 @@ export class Product {
   }
 
   static async updateDoc(id ,value) {
-    new Change({docID:id,docType:'products'}).createChange(value)
+    new Change({docID:id,docType:'products'}).create(value)
     await db.collection("products").doc(id).update(value)
     return await db.collection("products").doc(id).update({updatedDate:Date.now()});
   }
@@ -463,7 +465,7 @@ export class Feature {
   }
 
   static async updateFeature(id ,value) {
-    new Change({docID:id,docType:'features'}).createChange(value)
+    new Change({docID:id,docType:'features'}).create(value)
     await db.collection("features").doc(id).update(value)
     return await db.collection("features").doc(id).update({updatedDate:Date.now()});
   }
@@ -496,7 +498,7 @@ export class Idea {
   }
 
   static async updateIdea(id ,value) {
-    new Change({docID:id,docType:'ideas'}).createChange(value)
+    new Change({docID:id,docType:'ideas'}).create(value)
     await db.collection("ideas").doc(id).update(value)
     return await db.collection("ideas").doc(id).update({updatedDate:Date.now()});
   }
@@ -527,7 +529,7 @@ export class Goal {
   }
 
   static async updateGoal(id ,value) {
-    new Change({docID:id,docType:'productGoals'}).createChange(value)
+    new Change({docID:id,docType:'productGoals'}).create(value)
     await db.collection("productGoals").doc(id).update(value)
     return await db.collection("productGoals").doc(id).update({updatedDate:Date.now()});
   }
@@ -559,7 +561,7 @@ export class Risk {
   }
 
   static async updateRisk(id ,value) {
-    new Change({docID:id,docType:'productRisks'}).createChange(value)
+    new Change({docID:id,docType:'productRisks'}).create(value)
     await db.collection("productRisks").doc(id).update(value)
     return await db.collection("productRisks").doc(id).update({updatedDate:Date.now()});
   }
@@ -602,7 +604,7 @@ export class Persona {
   }
 
   static async updatePersona(id,value) {
-    new Change({docID:id,docType:'personas'}).createChange(value)
+    new Change({docID:id,docType:'personas'}).create(value)
     await db.collection("personas").doc(id).update(value)
     return await db.collection("personas").doc(id).update({updatedDate:Date.now()});
   }
@@ -649,7 +651,7 @@ export class Need {
   }
 
   static async updateNeed(id,value) {
-    new Change({docID:id,docType:'needs'}).createChange(value)
+    new Change({docID:id,docType:'needs'}).create(value)
     await db.collection("needs").doc(id).update(value)
     return await db.collection("needs").doc(id).update({updatedDate:Date.now()});
   }
@@ -680,7 +682,7 @@ export class Insight {
   }
 
   static async updateInsight(id,value) {
-    new Change({docID:id,docType:'insights'}).createChange(value)
+    new Change({docID:id,docType:'insights'}).create(value)
     await db.collection("insights").doc(id).update(value)
     return await db.collection("insights").doc(id).update({updatedDate:Date.now()});
   }
@@ -711,7 +713,7 @@ export class Journey {
   }
 
   static async updateJourney(id,value) {
-    new Change({docID:id,docType:'journeymaps'}).createChange(value)
+    new Change({docID:id,docType:'journeymaps'}).create(value)
     await db.collection("journeymaps").doc(id).update(value)
     return await db.collection("journeymaps").doc(id).update({updatedDate:Date.now()});
   }
@@ -741,7 +743,7 @@ export class JobToBeDone {
   }
 
   static async updateJobToBeDone(id,value) {
-    new Change({docID:id,docType:'jobsToBeDone'}).createChange(value)
+    new Change({docID:id,docType:'jobsToBeDone'}).create(value)
     await db.collection("jobsToBeDone").doc(id).update(value)
     return await db.collection("jobsToBeDone").doc(id).update({updatedDate:Date.now()});
   }
@@ -771,7 +773,7 @@ export class Interview {
   }
 
   static async updateInterview(id,value) {
-    new Change({docID:id,docType:'interviewFeedback'}).createChange(value)
+    new Change({docID:id,docType:'interviewFeedback'}).create(value)
     await db.collection("interviewFeedback").doc(id).update(value)
     return await db.collection("interviewFeedback").doc(id).update({updatedDate:Date.now()});
   }
