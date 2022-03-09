@@ -101,6 +101,8 @@
                       </v-list-item-avatar>
                     </v-list-item>
                   </v-list>
+                </v-container>
+                <v-container>
                   <approvalComponent :approvalParentDocId='draftSelectedValues.draftID'/>
                 </v-container>
                 <v-container>
