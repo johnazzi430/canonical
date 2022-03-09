@@ -168,9 +168,9 @@ export default {
       select: null,
       checkbox: false,
     }),
-    beforeMount(){
+    async beforeMount(){
       if (this.selected.index != null){
-        const selectedData = this.$store.state.features.find(doc => doc.id === this.selected.index)
+        const selectedData = await Feature.getDocById(this.selected.index)
         if(typeof selectedData.data === 'undefined'){
           this.$store.commit('alert',{type:'error',message:`${this.id} not found`})
           return

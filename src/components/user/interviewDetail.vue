@@ -102,9 +102,9 @@ export default {
       select: null,
       checkbox: false,
     }),
-    beforeMount(){
+    async beforeMount(){
       if (this.selected.index != null){
-        const selectedData = this.$store.state.interviews.find(doc => doc.id === this.selected.index)
+        const selectedData = await Interview.getDocById(this.selected.index)
         if(typeof selectedData.data === 'undefined'){
           this.$store.commit('alert',{type:'error',message:`${this.id} not found`})
           return
@@ -117,19 +117,19 @@ export default {
       async addInterview () {
         await this.$refs.form.validate();
         if (this.valid ){
-          await Interview.createInterview(this.interview.data)
+          await Interview.create(this.interview.data)
           this.$store.commit('getInterviews')
           this.$store.commit('closeDetail')
         }
       },
       async updateInterview () {
         await this.$refs.form.validate();
-        this.valid ? await Interview.updateInterview(this.intervew.id,this.interview.data) : console.log('not valid');
+        this.valid ? await Interview.updateDoc(this.intervew.id,this.interview.data) : console.log('not valid');
         this.$store.commit('getInterviews')
         this.$refs.form.resetValidation();
       },
       async deleteInterview () {
-        Interview.deleteInterview(this.selected.index)
+        Interview.deleteDoc(this.selected.index)
         this.$store.commit('closeDetail')
         this.$store.commit('getInterviews')
         this.$refs.form.resetValidation();

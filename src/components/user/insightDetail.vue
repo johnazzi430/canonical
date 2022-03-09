@@ -126,9 +126,9 @@ export default {
       select: null,
       checkbox: false,
     }),
-    beforeMount(){
+    async beforeMount(){
       if (this.selected.index != null){
-        const selectedData = this.$store.state.insights.find(doc => doc.id === this.selected.index)
+        const selectedData = await Insight.getDocById(this.selected.index)
         if(typeof selectedData.data === 'undefined'){
           this.$store.commit('alert',{type:'error',message:`${this.id} not found`})
           return
@@ -141,19 +141,19 @@ export default {
       async addInsight () {
         await this.$refs.form.validate();
         if (this.valid ){
-          await Insight.createInsight(this.insight.data)
+          await Insight.createDoc(this.insight.data)
           this.$store.commit('getInsights')
           this.$store.commit('closeDetail')
         }
       },
       async updateInsight () {
         await this.$refs.form.validate();
-        this.valid ? await Insight.updateInsight(this.insight.id,this.insight.data)  : console.log('not valid');
+        this.valid ? await Insight.updateDoc(this.insight.id,this.insight.data)  : console.log('not valid');
         this.$store.commit('getInsights')
         this.$refs.form.resetValidation();
       },
       async deleteInsight () {
-        Insight.deleteInsight(this.selected.index)
+        Insight.deleteDoc(this.selected.index)
         this.$store.commit('closeDetail')
         this.$store.commit('getInsights')
         this.$refs.form.resetValidation();

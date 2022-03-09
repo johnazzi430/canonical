@@ -461,6 +461,12 @@ export class Feature {
     }));
   }
 
+  static async getDocById(id) {
+    const snapshot = await db.collection("features").doc(id).get()
+    return {id:snapshot.id, data:snapshot.data()}
+  }
+
+
   static async createDoc(value) {
     value = addInDefaults(value)
     return db.collection("features").add(value)
@@ -496,20 +502,24 @@ export class Idea {
     }));
   }
 
-  static createIdea(value) {
+  static async getDocById(id) {
+    const snapshot = await db.collection("ideas").doc(id).get()
+    return {id:snapshot.id, data:snapshot.data()}
+  }
+
+  static create(value) {
     value = addInDefaults(value)
     return db.collection("ideas").add(value)
             .then(store.commit('alert',{type:'info',message:`ideas created`,autoClear:true}));
-
   }
 
-  static async updateIdea(id ,value) {
+  static async updateDoc(id ,value) {
     await new Change({docID:id,docType:'ideas'}).create(value)
     await db.collection("ideas").doc(id).update(value)
     return await db.collection("ideas").doc(id).update({updatedDate:Date.now()});
   }
 
-  static deleteIdea(id) {
+  static deleteDoc(id) {
     return db.collection("ideas").doc(id).update({archived: true})
               .then(store.commit('alert',{type:'info',message:`ideas archived`,autoClear:true}));
 
@@ -531,19 +541,24 @@ export class Goal {
     }));
   }
 
-  static createGoal(value) {
+  static async getDocById(id) {
+    const snapshot = await db.collection("productGoals").doc(id).get()
+    return {id:snapshot.id, data:snapshot.data()}
+  }
+
+  static create(value) {
     value = addInDefaults(value)
     return db.collection("productGoals").add(value)
             .then(store.commit('alert',{type:'info',message:`goal created`,autoClear:true}));
   }
 
-  static async updateGoal(id ,value) {
+  static async updateDoc(id ,value) {
     await new Change({docID:id,docType:'productGoals'}).create(value)
     await db.collection("productGoals").doc(id).update(value)
     return await db.collection("productGoals").doc(id).update({updatedDate:Date.now()});
   }
 
-  static deleteGoal(id) {
+  static deleteDoc(id) {
     return db.collection("productGoals").doc(id).update({archived: true})
                 .then(store.commit('alert',{type:'info',message:`goal archived`,autoClear:true}));
   }
@@ -565,19 +580,24 @@ export class Risk {
     }));
   }
 
-  static createRisk(value) {
+  static async getDocById(id) {
+    const snapshot = await db.collection("productRisks").doc(id).get()
+    return {id:snapshot.id, data:snapshot.data()}
+  }
+
+  static create(value) {
     value = addInDefaults(value)
     return db.collection("productRisks").add(value)
           .then(store.commit('alert',{type:'info',message:`risk created`,autoClear:true}));
   }
 
-  static async updateRisk(id ,value) {
+  static async updateDoc(id ,value) {
     await new Change({docID:id,docType:'productRisks'}).create(value)
     await db.collection("productRisks").doc(id).update(value)
     return await db.collection("productRisks").doc(id).update({updatedDate:Date.now()});
   }
 
-  static async deleteRisk(id) {
+  static async deleteDoc(id) {
     return db.collection("productRisks").doc(id).update({archived: true})
         .then(store.commit('alert',{type:'info',message:`risk archived`,autoClear:true}));
   }
@@ -601,22 +621,18 @@ export class Persona {
     return personas
   }
 
-  static async getProductById(id) {
+  static async getDocById(id) {
     const snapshot = await db.collection("personas").doc(id).get()
-    const products = {
-      id:snapshot.id,
-      data:snapshot.data()
-    }
-    return await products
+    return {id:snapshot.id, data:snapshot.data()}
   }
 
-  static async createPersona(value) {
+  static async create(value) {
     value = addInDefaults(value)
     return db.collection("personas").add(value)
           .then(store.commit('alert',{type:'info',message:`created`,autoClear:true}));
   }
 
-  static async updatePersona(id,value) {
+  static async updateDoc(id,value) {
     await new Change({docID:id,docType:'personas'}).create(value)
     await db.collection("personas").doc(id).update(value)
     return await db.collection("personas").doc(id).update({updatedDate:Date.now()});
@@ -636,7 +652,7 @@ export class Persona {
     return await db.collection("products").doc(id).update(dict);
   }
 
-  static deletePersona(id) {
+  static deleteDoc(id) {
     return db.collection("personas").doc(id).update({archived: true})
       .then(store.commit('alert',{type:'info',message:`archived`,autoClear:true}));
   }
@@ -659,19 +675,25 @@ export class Need {
               personas: joinPersonas.filter(e => e.needs.filter(f => f.id === doc.id).length > 0 ).map(e=> ({id:e.id}))
             }));
   }
-  static async createNeed(value) {
+
+  static async getDocById(id) {
+    const snapshot = await db.collection("needs").doc(id).get()
+    return {id:snapshot.id, data:snapshot.data()}
+  }
+
+  static async create(value) {
     value = addInDefaults(value)
     return db.collection("needs").add(value)
       .then(store.commit('alert',{type:'info',message:`created`,autoClear:true}));
   }
 
-  static async updateNeed(id,value) {
+  static async updateDoc(id,value) {
     await new Change({docID:id,docType:'needs'}).create(value)
     await db.collection("needs").doc(id).update(value)
     return await db.collection("needs").doc(id).update({updatedDate:Date.now()});
   }
 
-  static async deleteNeed(id) {
+  static async deleteDoc(id) {
     return db.collection("needs").doc(id).update({archived: true})
       .then(store.commit('alert',{type:'info',message:`archived`,autoClear:true}));
   }
@@ -692,19 +714,24 @@ export class Insight {
         }));
   }
 
-  static async createInsight(value) {
+  static async getDocById(id) {
+    const snapshot = await db.collection("insights").doc(id).get()
+    return {id:snapshot.id, data:snapshot.data()}
+  }
+
+  static async create(value) {
     value = addInDefaults(value)
     return db.collection("insights").add(value)
       .then(store.commit('alert',{type:'info',message:`created`,autoClear:true}));
   }
 
-  static async updateInsight(id,value) {
+  static async updateDoc(id,value) {
     await new Change({docID:id,docType:'insights'}).create(value)
     await db.collection("insights").doc(id).update(value)
     return await db.collection("insights").doc(id).update({updatedDate:Date.now()});
   }
 
-  static async deleteInsight(id) {
+  static async deleteDoc(id) {
     return db.collection("insights").doc(id).update({archived: true})
       .then(store.commit('alert',{type:'info',message:`archived`,autoClear:true}));
   }
@@ -725,19 +752,24 @@ export class Journey {
       }));
   }
 
-  static async createJourney(value) {
+  static async getDocById(id) {
+    const snapshot = await db.collection("journeymaps").doc(id).get()
+    return {id:snapshot.id, data:snapshot.data()}
+  }
+
+  static async create(value) {
     value = addInDefaults(value)
     return db.collection("journeymaps").add(value)
       .then(store.commit('alert',{type:'info',message:`created`,autoClear:true}));
   }
 
-  static async updateJourney(id,value) {
+  static async updateDoc(id,value) {
     await new Change({docID:id,docType:'journeymaps'}).create(value)
     await db.collection("journeymaps").doc(id).update(value)
     return await db.collection("journeymaps").doc(id).update({updatedDate:Date.now()});
   }
 
-  static deleteJourney(id) {
+  static deleteDoc(id) {
     return db.collection("journeymaps").doc(id).update({archived: true})
       .then(store.commit('alert',{type:'info',message:`archived`,autoClear:true}));
   }
@@ -757,19 +789,25 @@ export class JobToBeDone {
           personas:  joinPersonas.filter(e => e.jobsToBeDone.filter(f => f.id === doc.id).length > 0 ).map(e=> ({id:e.id}))
         }));
   }
-  static async createJobToBeDone(value) {
+
+  static async getDocById(id) {
+    const snapshot = await db.collection("jobsToBeDone").doc(id).get()
+    return {id:snapshot.id, data:snapshot.data()}
+  }
+
+  static async create(value) {
     value = addInDefaults(value)
     return db.collection("jobsToBeDone").add(value)
       .then(store.commit('alert',{type:'info',message:`created`,autoClear:true}));
   }
 
-  static async updateJobToBeDone(id,value) {
+  static async updateDoc(id,value) {
     await new Change({docID:id,docType:'jobsToBeDone'}).create(value)
     await db.collection("jobsToBeDone").doc(id).update(value)
     return await db.collection("jobsToBeDone").doc(id).update({updatedDate:Date.now()});
   }
 
-  static async deleteJobToBeDone(id) {
+  static async deleteDoc(id) {
     return db.collection("jobsToBeDone").doc(id).update({archived: true})
       .then(store.commit('alert',{type:'info',message:`archived`,autoClear:true}));
   }
@@ -789,19 +827,25 @@ export class Interview {
             personas:  joinPersonas.filter(e => e.interviews.filter(f => f.id === doc.id).length > 0 ).map(e=> ({id:e.id}))
         }));
   }
-  static async createInterview(value) {
+
+  static async getDocById(id) {
+    const snapshot = await db.collection("interview").doc(id).get()
+    return {id:snapshot.id, data:snapshot.data()}
+  }
+
+  static async create(value) {
     value = addInDefaults(value)
     return db.collection("interviewFeedback").add(value)
       .then(store.commit('alert',{type:'info',message:`created`,autoClear:true}));
   }
 
-  static async updateInterview(id,value) {
+  static async updateDoc(id,value) {
     await new Change({docID:id,docType:'interviewFeedback'}).create(value)
     await db.collection("interviewFeedback").doc(id).update(value)
     return await db.collection("interviewFeedback").doc(id).update({updatedDate:Date.now()});
   }
 
-  static async deleteInterview(id) {
+  static async deleteDoc(id) {
     return db.collection("interviewFeedback").doc(id).update({archived: true})
       .then(store.commit('alert',{type:'info',message:`archived`,autoClear:true}));
   }

@@ -321,6 +321,7 @@ export default {
       this.$store.commit('selectItem',{index,source})
       document.getElementById("right-sidepanel").style.width = "50%";
       this.draft=draft
+      this.$router.push('/product/'+source+'/' + index )
     },
 
     expandDraftDetail(index,source) {

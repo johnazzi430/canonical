@@ -101,10 +101,10 @@ export default {
       select: null,
       checkbox: false,
     }),
-    beforeMount(){
-      if (this.selected.index != null){
-        const selectedData = this.$store.state.jobsToBeDone.find(doc => doc.id === this.selected.index)
-        if(typeof selectedData.data === 'undefined'){
+    async beforeMount(){
+        if (this.selected.index != null){
+          const selectedData = await JobToBeDone.getDocById(this.selected.index)
+          if(typeof selectedData.data === 'undefined'){
           this.$store.commit('alert',{type:'error',message:`${this.id} not found`})
           return
         }
@@ -116,19 +116,19 @@ export default {
       async addJobToBeDone () {
         await this.$refs.form.validate();
         if (this.valid ){
-          await JobToBeDone.createJobToBeDone(this.jobToBeDone.data)
+          await JobToBeDone.create(this.jobToBeDone.data)
           this.$store.commit('getJobToBeDones')
           this.$store.commit('closeDetail')
         }
       },
       async updateJobToBeDone () {
         await this.$refs.form.validate();
-        this.valid ? await JobToBeDone.updateJobToBeDone(this.jobToBeDone.id,this.jobToBeDone.data) : console.log('not valid');
+        this.valid ? await JobToBeDone.updateDoc(this.jobToBeDone.id,this.jobToBeDone.data) : console.log('not valid');
         this.$store.commit('getJobToBeDones')
         this.$refs.form.resetValidation();
       },
       async deleteJobToBeDone () {
-        JobToBeDone.deleteJobToBeDone(this.selected.index)
+        JobToBeDone.deleteDoc(this.selected.index)
         this.$store.commit('closeDetail')
         this.$store.commit('getJobToBeDones')
         this.$refs.form.resetValidation();

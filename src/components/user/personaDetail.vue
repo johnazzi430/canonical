@@ -191,9 +191,9 @@ export default {
       select: null,
       checkbox: false,
     }),
-    beforeMount(){
+    async beforeMount(){
       if (this.selected.index != null){
-        const selectedData = this.$store.state.personas.find(doc => doc.id === this.selected.index)
+        const selectedData = await Persona.getDocById(this.selected.index)
         if(typeof selectedData.data === 'undefined'){
           this.$store.commit('alert',{type:'error',message:`${this.id} not found`})
           return
@@ -214,7 +214,7 @@ export default {
       async addPersona () {
         await this.$refs.form.validate();
         if (this.valid ){
-          var newPersona = await Persona.createPersona(this.persona.data)
+          var newPersona = await Persona.create(this.persona.data)
           await this.updateRel(newPersona.id)
           this.$store.commit('getPersonas')
           this.$store.commit('closeDetail')
@@ -223,7 +223,7 @@ export default {
       async updatePersona () {
         await this.$refs.form.validate();
         if(this.valid){
-          await Persona.updatePersona(this.persona.id,this.persona.data)
+          await Persona.updateDoc(this.persona.id,this.persona.data)
         } else {
           console.log('not valid');
           return
@@ -233,7 +233,7 @@ export default {
         this.$refs.form.resetValidation();
       },
       async deletePersona () {
-        Persona.deletePersona(this.selected.index)
+        Persona.deleteDoc(this.selected.index)
         this.$store.commit('closeDetail')
         this.$store.commit('getPersonas')
         this.$refs.form.resetValidation();

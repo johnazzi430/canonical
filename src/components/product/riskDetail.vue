@@ -113,9 +113,9 @@ export default {
       select: null,
       checkbox: false,
     }),
-    beforeMount(){
+    async beforeMount(){
       if (this.selected.index != null){
-        const selectedData = this.$store.state.risks.find(doc => doc.id === this.selected.index)
+        const selectedData = await Risk.getDocById(this.selected.index)
         if(typeof selectedData.data === 'undefined'){
           this.$store.commit('alert',{type:'error',message:`${this.id} not found`})
           return

@@ -92,11 +92,6 @@ export default {
         this.$refs['commentItem'].reset()
       },
     },
-    computed:{
-      selected() {
-        return this.$store.state.selected
-      }
-    },
   }
 </script>
 

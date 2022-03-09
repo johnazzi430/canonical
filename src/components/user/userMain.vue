@@ -356,6 +356,7 @@ export default {
     expandDetail(index,source) {
       this.$store.commit('selectItem',{index,source})
       document.getElementById("right-sidepanel").style.width = "50%";
+      this.$router.push('/user/'+source+'/' + index )
     },
 
     addItem(source) {

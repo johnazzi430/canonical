@@ -113,9 +113,9 @@ export default {
       select: null,
       checkbox: false,
     }),
-    beforeMount(){
+    async beforeMount(){
       if (this.selected.index != null){
-        const selectedData = this.$store.state.needs.find(doc => doc.id === this.selected.index)
+        const selectedData = await Need.getDocById(this.selected.index)
         if(typeof selectedData.data === 'undefined'){
           this.$store.commit('alert',{type:'error',message:`${this.id} not found`})
           return
@@ -128,19 +128,19 @@ export default {
       async addNeed () {
         await this.$refs.form.validate();
         if (this.valid ){
-          await Need.createNeed(this.need.data)
+          await Need.create(this.need.data)
           this.$store.commit('getNeeds')
           this.$store.commit('closeDetail')
         }
       },
       async updateNeed () {
         await this.$refs.form.validate();
-        this.valid ? await Need.updateNeed(this.need.id,this.need.data) : console.log('not valid');
+        this.valid ? await Need.updateDoc(this.need.id,this.need.data) : console.log('not valid');
         this.$store.commit('getNeeds')
         this.$refs.form.resetValidation();
       },
       async deleteNeed () {
-        Need.deleteNeed(this.selected.index)
+        Need.deleteDoc(this.selected.index)
         this.$store.commit('closeDetail')
         this.$store.commit('getNeeds')
         this.$refs.form.resetValidation();

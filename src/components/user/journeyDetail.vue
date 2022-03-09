@@ -109,9 +109,9 @@ export default {
       select: null,
       checkbox: false,
     }),
-    beforeMount(){
+    async beforeMount(){
       if (this.selected.index != null){
-        const selectedData = this.$store.state.journeys.find(doc => doc.id === this.selected.index)
+        const selectedData = await Journey.getDocById(this.selected.index)
         if(typeof selectedData.data === 'undefined'){
           this.$store.commit('alert',{type:'error',message:`${this.id} not found`})
           return
@@ -124,14 +124,14 @@ export default {
       async addJourney () {
         await this.$refs.form.validate();
         if (this.valid ){
-          await Journey.createJourney(this.journey.data)
+          await Journey.create(this.journey.data)
           this.$store.commit('getJourneys')
           this.$store.commit('closeDetail')
         }
       },
       async updateJourney () {
         await this.$refs.form.validate();
-        this.valid ? await Journey.updateJourney(this.journey.id,this.journey.data) : console.log('not valid');
+        this.valid ? await Journey.updateDoc(this.journey.id,this.journey.data) : console.log('not valid');
         this.$store.commit('getJourneys')
         this.$refs.form.resetValidation();
       },
@@ -139,7 +139,7 @@ export default {
         Journey.deleteJourney(this.selected.index)
         this.$store.commit('closeDetail')
         this.$store.commit('getJourneys')
-        this.$refs.form.resetValidation();
+        this.$refs.form.resetDoc();
       },
       resetForm () {
         this.$refs.form.reset()

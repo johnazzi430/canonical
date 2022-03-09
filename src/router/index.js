@@ -29,11 +29,12 @@ const routes = [
     name: 'User',
     component: User,
     children:[
-        { path: 'product/:id', component: User},
-        { path: 'feature/:id', component: User},
-        { path: 'idea/:id', component: User},
-        { path: 'goal/:id', component: User},
-        { path: 'risk/:id', component: User},
+        { path: 'persona/:id', component: User},
+        { path: 'need/:id', component: User},
+        { path: 'insight/:id', component: User},
+        { path: 'journey/:id', component: User},
+        { path: 'jobToBeDone/:id', component: User},
+        { path: 'interview/:id', component: User},
       ]
   },
   {
