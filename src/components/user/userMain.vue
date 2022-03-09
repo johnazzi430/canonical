@@ -332,9 +332,19 @@ export default {
     this.$store.commit('getJobsToBeDone')
     this.$store.commit('getInterviews')
   },
+  mounted(){
+    if(this.$store.state.selected.index != null){document.getElementById("right-sidepanel").style.width = "50%";}
+  },
   watch:{
     closeDetail_(){
       document.getElementById("right-sidepanel").style.width = "0px";
+    },
+
+    $route:{
+      immediate:true,
+      handler(){
+        this.$store.commit('selectItem',{index:this.$route.params.id,source:this.$route.path.split("/")[2]})
+      }
     }
   },
   computed: {
@@ -362,8 +372,7 @@ export default {
       document.getElementById("right-sidepanel").style.width = "0px";
     },
 
-  },
-  mounted () {}
+  }
 }
 
 </script>

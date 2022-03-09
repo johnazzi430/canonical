@@ -539,9 +539,14 @@ export default {
         async handler(){
           if (this.draft === false && this.id != null) {
             const selectedData = await Product.getDocById(this.id)
+            console.log(selectedData)
+            if(typeof selectedData.data === 'undefined'){
+              this.$store.commit('alert',{type:'error',message:`${this.id} not found`})
+              return
+            }
             this.product = JSON.parse(JSON.stringify(selectedData));
             this.drafts = await Draft.getDocByParentId(this.id)
-            this.loading=false;
+            this.loading = false;
           } else if (this.draft === true) {
             const selectedData = await Draft.getDocById(this.id)
             this.product = {

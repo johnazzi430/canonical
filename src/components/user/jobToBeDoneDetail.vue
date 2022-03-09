@@ -104,6 +104,10 @@ export default {
     beforeMount(){
       if (this.selected.index != null){
         const selectedData = this.$store.state.jobsToBeDone.find(doc => doc.id === this.selected.index)
+        if(typeof selectedData.data === 'undefined'){
+          this.$store.commit('alert',{type:'error',message:`${this.id} not found`})
+          return
+        }
         this.editing = false;
         this.jobToBeDone = JSON.parse(JSON.stringify(selectedData));
       }
