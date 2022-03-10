@@ -128,20 +128,20 @@ export default {
       async addRisk () {
         await this.$refs.form.validate();
         if (this.valid ){
-          await Risk.createRisk(this.risk.data)
+          await Risk.create(this.risk.data)
           this.$store.commit('getRisks')
           this.$store.commit('closeDetail')
         }
       },
       async updateRisk () {
         await this.$refs.form.validate();
-        this.valid ? await Risk.updateRisk(this.risk.id,this.risk.data)  : console.log('not valid');
+        this.valid ? await Risk.updateDoc(this.risk.id,this.risk.data)  : console.log('not valid');
         this.editing = false;
         this.$store.commit('getRisks')
         this.$refs.form.resetValidation();
       },
       async deleteRisk () {
-        Risk.deleteRisk(this.selected.index)
+        Risk.deleteDoc(this.selected.index)
         this.$store.commit('closeDetail')
         this.$store.commit('getRisks')
         this.$refs.form.resetValidation();

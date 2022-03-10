@@ -1,12 +1,10 @@
 <template>
   <div class="">
-    <hr>
     <commentCard
       class="comment-card"
       v-for="commentItem in comments"
       :key="commentItem"
       :comment='commentItem'/>
-    <hr>
     <v-form
       ref="form"
       v-model="valid"
@@ -18,6 +16,8 @@
         :counter="250"
         :rules="[rules.required,rules.counter]"
         required
+        rows="3"
+        density="compact"
       ></v-textarea>
 
       <div>
@@ -100,6 +100,7 @@ export default {
 .comment-card{
   margin:4px;
   padding:4px;
+  border:1px lightgrey solid;
 }
 
 </style>

@@ -128,19 +128,19 @@ export default {
       async addIdea () {
         await this.$refs.form.validate();
         if (this.valid ){
-          await Idea.createIdea(this.idea.data);
+          await Idea.create(this.idea.data);
           this.$store.commit('getIdeas')
           this.$store.commit('closeDetail')
         }
       },
       async updateIdea () {
         await this.$refs.form.validate();
-        this.valid ? await Idea.updateIdea(this.idea.id,this.idea.data) : console.log('not valid');
+        this.valid ? await Idea.updateDoc(this.idea.id,this.idea.data) : console.log('not valid');
         this.$store.commit('getIdeas')
         this.$refs.form.resetValidation();
       },
       async deleteIdea () {
-        await Idea.deleteIdea(this.selected.index)
+        await Idea.deleteDoc(this.selected.index)
         this.$store.commit('closeDetail')
         this.$store.commit('getIdeas')
         this.$refs.form.resetValidation();

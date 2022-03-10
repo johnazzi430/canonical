@@ -123,19 +123,19 @@ export default {
       async addGoal () {
         await this.$refs.form.validate();
         if (this.valid ){
-          await Goal.createGoal(this.goal.data);
+          await Goal.create(this.goal.data);
           this.$store.commit('getGoals');
           this.$store.commit('closeDetail');
         }
       },
       async updateGoal () {
         await this.$refs.form.validate();
-        this.valid ? await Goal.updateGoal(this.goal.id,this.goal.data) : console.log('not valid');
+        this.valid ? await Goal.updateDoc(this.goal.id,this.goal.data) : console.log('not valid');
         this.$store.commit('getGoals')
         this.$refs.form.resetValidation();
       },
       async deleteGoal () {
-        await Goal.deleteGoal(this.selected.index)
+        await Goal.deleteDoc(this.selected.index)
         this.$store.commit('closeDetail')
         this.$store.commit('getGoals')
         this.$refs.form.resetValidation();

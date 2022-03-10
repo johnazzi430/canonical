@@ -206,12 +206,14 @@ export class Assumption {
   constructor(value){
     this.docID = value.docID; //String
     this.docType = value.docType;  //String
-    this.details = value.details; //String
-    this.score = value.score; //Int
+    this.name = value.assumption.name; //String
+    this.details = value.assumption.details;
+    this.score = value.assumption.score; //Int
     this.closed = false; //Bool
+    Object.assign(this,addInDefaults(this));
   }
 
-  static async getAssumptionByDocID(docType,docID){
+  static async getByDocID(docType,docID){
     const snapshot = await db.collection("assumptions")
       .where("docType","==", docType)
       .where("docID","==", docID)
@@ -221,8 +223,9 @@ export class Assumption {
     return snapshot.docs.map(doc => ({id:doc.id, data:doc.data()}));
   }
 
-  async createAssumption(){
-    return await db.collection("assumptions").add(JSON.parse(JSON.stringify(this)));
+  async create(){
+    return await db.collection("assumptions").add(JSON.parse(JSON.stringify(this)))
+                .then(store.commit('alert',{type:'info',message:`assumption created`,autoClear:true}))
   }
 
 }

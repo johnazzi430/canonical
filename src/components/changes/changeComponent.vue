@@ -41,14 +41,8 @@ import {Change} from "../../services/firebaseDataService";
 
 export default {
     props: {
-      docId:{
-        default: 'EakKa9WbvhGbIzb0A25Y',
-        type: String
-      },
-      docType:{
-        default: 'features',
-        type: String
-      },
+      docId:{type: String},
+      docType:{type: String},
     },
     data: () => ({
       changes: [],

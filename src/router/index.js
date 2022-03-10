@@ -17,7 +17,11 @@ const routes = [
     name: 'Product',
     component: Product,
     children:[
-        { path: 'product/:id', component: Product},
+        {
+          path: 'product/:id',
+          component: Product,
+          props: (route) => ({ draft: route.query.draft })
+      },
         { path: 'feature/:id', component: Product},
         { path: 'idea/:id', component: Product},
         { path: 'goal/:id', component: Product},

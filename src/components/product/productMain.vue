@@ -223,6 +223,13 @@
                 :doc-id='$store.state.selected.index'
                 :doc-type='$store.state.selected.source'
                 :key="$store.state.selected.index+draft+'comment'"/>
+              <h3>Assumptions</h3>
+              <assumption
+                  v-if='$store.state.selected.index != null'
+                  :doc-id='$store.state.selected.index'
+                  :doc-type='"products"'
+                  :key="$store.state.selected.index+'change'"
+                    />
               <h3>Changes</h3>
               <change
                 v-if='$store.state.selected.index != null'
@@ -239,6 +246,13 @@
                 :doc-id='$store.state.selected.index'
                 :doc-type='$store.state.selected.source'
                 :key="$store.state.selected.index+'comment'"/>
+              <h3>Assumptions</h3>
+              <assumption
+                    v-if='$store.state.selected.index != null'
+                    :doc-id='$store.state.selected.index'
+                    :doc-type='"features"'
+                    :key="$store.state.selected.index+'Assumptions'"
+                      />
               <h3>Changes</h3>
               <change
                 v-if='$store.state.selected.index != null'
@@ -254,7 +268,14 @@
                 v-if='$store.state.selected.index != null'
                 :doc-id='$store.state.selected.index'
                 :doc-type='$store.state.selected.source'
-                :key="$store.state.selected.index+'comment'"/>
+                :key="$store.state.selected.index+'Assumptions'"/>
+              <h3>Assumptions</h3>
+              <assumption
+                      v-if='$store.state.selected.index != null'
+                      :doc-id='$store.state.selected.index'
+                      :doc-type='"ideas"'
+                      :key="$store.state.selected.index+'change'"
+                        />
               <h3>Changes</h3>
               <change
                   v-if='$store.state.selected.index != null'
@@ -262,7 +283,6 @@
                   :doc-type='"ideas"'
                   :key="$store.state.selected.index+'change'"
                     />
-              />
             </div>
             <div class="panel-content" v-else-if='$store.state.selected.source ==="goal"'>
               <goalDetail :key='$store.state.selected.index'/>
@@ -271,7 +291,14 @@
                 v-if='$store.state.selected.index != null'
                 :doc-id='$store.state.selected.index'
                 :doc-type='$store.state.selected.source'
-                :key="$store.state.selected.index+'comment'"/>
+                :key="$store.state.selected.index+'goals'"/>
+              <h3>Assumptions</h3>
+              <assumption
+                      v-if='$store.state.selected.index != null'
+                      :doc-id='$store.state.selected.index'
+                      :doc-type='"productGoals"'
+                      :key="$store.state.selected.index+'assumptions'"
+                        />
               <h3>Changes</h3>
               <change
                     v-if='$store.state.selected.index != null'
@@ -288,6 +315,13 @@
                 :doc-id='$store.state.selected.index'
                 :doc-type='$store.state.selected.source'
                 :key="$store.state.selected.index+'comment'"/>
+              <h3>Assumptions</h3>
+              <assumption
+                      v-if='$store.state.selected.index != null'
+                      :doc-id='$store.state.selected.index'
+                      :doc-type='"productRisks"'
+                      :key="$store.state.selected.index+'Assumptions'"
+                        />
               <h3>Changes</h3>
               <change
                     v-if='$store.state.selected.index != null'
@@ -308,6 +342,7 @@ import goalDetail from "./goalDetail";
 import riskDetail from "./riskDetail";
 import comment from "../comment/comment";
 import change from '../changes/changeComponent'
+import assumption from '../assumptions/assumptionComponent'
 
 export default {
   name: 'product-panel',
@@ -319,7 +354,8 @@ export default {
     goalDetail,
     riskDetail,
     comment,
-    change
+    change,
+    assumption
   },
   data() {
     return {
@@ -348,6 +384,7 @@ export default {
       immediate:true,
       handler(){
         this.$store.commit('selectItem',{index:this.$route.params.id,source:this.$route.path.split("/")[2]})
+        if(this.$route.query.draft == 'true'){ this.draft=true } else {this.draft=false}
       }
     }
   },
@@ -443,6 +480,8 @@ export default {
 
 .v-card-text{
   white-space: normal !important;
+  word-break: break-word;
+  -moz-white-space: pre-wrap;
   height:4em;
   overflow-y: hidden;
   text-overflow: ellipsis;

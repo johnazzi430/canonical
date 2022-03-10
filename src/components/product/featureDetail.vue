@@ -186,7 +186,7 @@ export default {
           this.$store.commit('alert',{type:'error',message:'Invalid',autoClear:true})
           return
         }
-        await Feature.createFeature(this.feature.data)
+        await Feature.create(this.feature.data)
         this.$store.commit('getFeatures')
         this.$store.commit('closeDetail')
       },
