@@ -1,6 +1,11 @@
 <template>
   <div class="">
-    <h1 style="color:red" v-if="draft === true && reviewing === false">DRAFT</h1>
+    <h1 style="color:red" v-if="draft === true && reviewing === false">
+      DRAFT
+      <v-btn @click="$router.push({path:'/draft/'+product.id})" >
+        Open Draft Compare
+      </v-btn>
+    </h1>
     <v-form
       ref="form"
       v-model="valid"

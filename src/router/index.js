@@ -45,7 +45,7 @@ const routes = [
     path: '/draft',
     name: 'draft',
     component: Draft,
-    children:[{ path: 'draft/:id', component: Draft}]
+    children:[{ path: ':id', component: Draft}]
   },
   {
     path: '/about',

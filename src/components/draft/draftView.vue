@@ -77,7 +77,7 @@
               <v-col cols="12" sm="4" v-if="draftSelectedValues.approvals">
                 <v-container v-if="draftSelectedValues.approvals.length > 0 ">
                   <v-btn @click="$router.push({
-                      path:'/product/'+draftSelectedValues.parentType.slice(0, -1)+'/' + draftSelectedValues.draftID, 
+                      path:'/product/'+draftSelectedValues.parentType.slice(0, -1)+'/' + draftSelectedValues.draftID,
                       query:{draft:true}} )">Update Draft</v-btn>
                   <h2>approvals</h2>
                   <v-list density="compact"
@@ -175,6 +175,13 @@ export default {
     ]
   },
   watch:{
+    $route:{
+      immediate:true,
+      handler(){
+      //   this.draftSelected= true
+      //   this.draftSelectedValues = this.$route.params.id
+       }
+    }
   },
   computed: {
   },
