@@ -6,11 +6,20 @@
     >
       <template v-slot:activator="{ props }">
         <v-btn
+          v-if="!loggedInUserIsApprover"
           color="primary"
           dark
           v-bind="props"
         >
           Request Approvals
+        </v-btn>
+        <v-btn
+          v-else
+          color="primary"
+          dark
+          v-bind="props"
+        >
+          Approve
         </v-btn>
       </template>
       <v-card
@@ -28,17 +37,28 @@
             v-for="(approver, index) in approvers"
             v-bind:key='approver'>
             <v-col cols="12" sm="7">
-              <v-select
+              <VueMultiselect
                 v-model="approver.approver"
-                :items="$store.state.users.map(d => d.displayName)"
-                label="approver"
-              ></v-select>
+                :options="$store.state.users.map(doc => ({ id:doc.id, displayName:doc.displayName}))"
+                track-by="id"
+                label="displayName"></VueMultiselect>
             </v-col>
             <v-col cols="12" sm="3">
-              <v-switch label="required" color="primary" v-model="approver.required"/>
+              <v-switch
+                label="required"
+                color="primary"
+                :disabled="loggedInUserIsApprover"
+                v-model="approver.required"/>
             </v-col>
-            <v-col cols="12" sm="2">
+            <v-col cols="12" sm="2" v-if="!loggedInUserIsApprover">
               <v-btn @click='approvers.splice(index,1)' icon="mdi-minus"></v-btn>
+            </v-col>
+            <v-col cols="12" sm="2" v-else>
+              <v-btn
+                v-if="approvers.splice(index,1).id === $store.state.users.uid"
+                @click='approvers.splice(index,1)'
+                >approve
+              </v-btn>
             </v-col>
           </v-row>
         </div>
@@ -68,9 +88,14 @@
 
 
 <script type="text/javascript">
-import {Approval,Draft} from "../../services/firebaseDataService";
+//import {Approval,Draft} from "../../services/firebaseDataService";
+import {Approval} from "../../services/firebaseDataService";
+import VueMultiselect from 'vue-multiselect';
 
 export default {
+  components: {
+    VueMultiselect,
+  },
   props: {
         approvalParentDocId:{
           default: "",
@@ -82,17 +107,26 @@ export default {
         },
   },
   data: () => ({
+    approvalExists: false,
+    loggedInUserIsApprover: false,
     modal: false,
+    valid: false,
     approvers:[],
-    valid: false
+    approval: undefined
   }),
   async beforeMount(){
     this.$store.commit('getUsers')
+    const approvalRec = await Approval.getByDoc(this.approvalParentDocId)
+    if (approvalRec != undefined){
+      this.approvalExists = true
+      this.approval = approvalRec
+      this.approvers = approvalRec.approvals
+      if(approvalRec.approvals.filter(i => i.approver.id === this.$store.state.user.uid).length > 0 ) {
+        this.loggedInUserIsApprover = true
+      }
+    }
   },
   methods:{
-    async getApprovals () {
-
-    },
     async createApprovalRecord () {
       //// TODO:  check if valid
       //
@@ -102,9 +136,13 @@ export default {
             docType:'product',
             approvals:this.approvers
           })
-          .createApprovalRecord()
+          .create()
+      console.log(approvalDoc)
       //UpdateDraft
-      await Draft.updateDraftApproval(this.approvalParentDocId, approvalDoc)
+      // await Draft.updateDraftApproval(this.approvalParentDocId, approvalDoc)
+    },
+    async modifyApproverRecords () {
+      //// TODO:  check if valid
     },
     async closeApprovalModal () {
 

@@ -259,6 +259,72 @@ export class Change {
   }
 }
 
+export class Approvals{
+  constructor({approver,approved = false, required = true}){
+    this.approver = approver; //String
+    this.approved = approved;  //Bool
+    this.required = required; //Bool
+  }
+}
+
+export class Approval {
+  constructor(value){
+    Object.assign(this,addInDefaults(this));
+    this.docID = value.docID; //String
+    this.docType = value.docType;  //String
+    this.approvals = value.approvals.map(e => {
+      return new Approvals(e)
+    });
+  }
+
+  async create(){
+    return await db.collection("approvals").add(JSON.parse(JSON.stringify(this)))
+            .then(store.commit('alert',{type:'info',message:`approvals requested`,autoClear:true}))
+  }
+
+  static async getAll(){
+    const snapshot = await db.collection("approvals")
+              .where("archived","==", false)
+              .get();
+    return snapshot.docs.map(doc =>({ id:doc.id, ...doc.data()}))
+  }
+
+  static async getByDoc(docID){
+    const snapshot = await db.collection("approvals")
+              .where("archived","==", false)
+              .where("docID","==", docID)
+              .get();
+    return snapshot.docs.map(doc =>({ id:doc.id, ...doc.data()}))[0]
+  }
+
+  static async getByApprover(){
+    const snapshot = await db.collection("approvals")
+              .where("archived","==", false)
+              .whereField("approvals.approver",store.state.user.uid)
+              .get();
+    return snapshot.docs.map(doc =>({ id:doc.id, ...doc.data()}))
+  }
+
+  // static async recordApproval(payload){
+  //   // payload form check = {
+  //   //   docID: String,
+  //   //   approver: String
+  //   // }
+  //   const snapshot = await db.collection("approvals")
+  //             .where("archived","==", false)
+  //             .where("docID","==", payload.docID)
+  //             .get();
+  //   // const approvals =
+  //   // request = {
+  //   //   approvals:
+  //   // }
+  //   return await db.collection("documentDrafts").doc(id).update(request)
+  //         .then(store.commit('alert',{type:'info',message:`approvals requested`,autoClear:true}));
+  // }
+
+
+}
+
 export class Draft {
   constructor(value){
     this.draftName = value.draftName;
@@ -278,7 +344,8 @@ export class Draft {
 
   static async getDocById(id){
     const snapshot = await db.collection("documentDrafts").doc(id).get();
-    return {id:snapshot.id, data:snapshot.data()};
+    const approvals = await Approval.getByDoc(snapshot.id)
+    return {id:snapshot.id, data:snapshot.data(), approvals:approvals };
   }
 
   static async getDocByParentId(id){
@@ -311,54 +378,6 @@ export class Draft {
         updatedDate: Date.now(),
         updatedBy: store.state.user.uid,
     }).then(store.commit('alert',{type:'info',message:`approvals requested`,autoClear:true}));
-  }
-
-}
-
-export class Approvals{
-  constructor({approver,approved = false, required = true}){
-    this.approver = approver; //String
-    this.approved = approved;  //Bool
-    this.required = required; //Bool
-  }
-}
-
-export class Approval {
-  constructor(value){
-    Object.assign(this,addInDefaults(this));
-    this.docID = value.docID; //String
-    this.docType = value.docType;  //String
-    this.approvals = value.approvals.map(e => {
-      return new Approvals(e)
-    });
-  }
-
-  static async getAll(){
-    const snapshot = await db.collection("approvals")
-              .where("archived","==", false)
-              .get();
-    return snapshot.docs.map(doc =>({ id:doc.id, ...doc.data()}))
-  }
-
-  static async getByDoc(docID){
-    const snapshot = await db.collection("approvals")
-              .where("archived","==", false)
-              .where("docID","==", docID)
-              .get();
-    return snapshot.docs.map(doc =>({ id:doc.id, ...doc.data()}))
-  }
-
-  static async getByApprover(){
-    const snapshot = await db.collection("approvals")
-              .where("archived","==", false)
-              .whereField("approvals.approver",store.state.user.uid)
-              .get();
-    return snapshot.docs.map(doc =>({ id:doc.id, ...doc.data()}))
-  }
-
-  async createlRecord(){
-    return await db.collection("approvals").add(JSON.parse(JSON.stringify(this)))
-            .then(store.commit('alert',{type:'info',message:`approvals requested`,autoClear:true}))
   }
 
 }

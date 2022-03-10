@@ -74,14 +74,14 @@
                   </v-col>
                 </v-row>
               </v-col>
-              <v-col cols="12" sm="4" v-if="draftSelectedValues.approvals">
-                <v-container v-if="draftSelectedValues.approvals.length > 0 ">
+              <v-col cols="12" sm="4">
+                <v-container v-if="draftSelectedValues.approvals">
                   <v-btn @click="$router.push({
                       path:'/product/'+draftSelectedValues.parentType.slice(0, -1)+'/' + draftSelectedValues.draftID,
                       query:{draft:true}} )">Update Draft</v-btn>
                   <h2>approvals</h2>
                   <v-list density="compact"
-                    v-for="item in draftSelectedValues.approvals[0].approvals"
+                    v-for="item in draftSelectedValues.approvals.approvals"
                     :key="item"
                     >
                     <v-list-item>
@@ -91,11 +91,11 @@
                             color="black">
                           <span
                             class="white--text text-h5">
-                            {{item.approver[0].toUpperCase()}}</span>
+                            {{item.approver.displayName[0].toUpperCase()}}</span>
                           </v-avatar>
                       </v-list-item-avatar>
                       <v-list-item-title>
-                        {{item.approver}}
+                        {{item.approver.displayName}}
                       </v-list-item-title>
                       <v-list-item-avatar right>
                         <v-checkbox
