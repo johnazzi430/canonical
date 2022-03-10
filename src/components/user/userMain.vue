@@ -245,108 +245,71 @@
           <h1 class="panel-content" style="text-transform:uppercase">
             {{$store.state.selected.source}}
             <v-btn
-            icon
-            variant="text"
-            href="javascript:void(0)"
-            class="closebtn panel-content"
-            @click="closeDetail(); ">
+              style="{right:0;position:absolute}"
+              icon
+              variant="text"
+              class="closebtn"
+              @click="closeDetail(); ">
               <v-icon>mdi-close</v-icon>
             </v-btn>
+            <v-btn
+              style="{right:0;position:absolute}"
+              v-if="!detailExpandedLarge"
+              icon
+              variant="text"
+              @click='expandDetailLarge()'>
+              <v-icon>mdi-arrow-right-drop-circle-outline</v-icon>
+            </v-btn>
+            <v-btn
+              style="{right:0;position:absolute}"
+              v-else
+              icon
+              variant="text"
+              @click='expandDetailSmall()'>
+              <v-icon>mdi-arrow-left-drop-circle-outline</v-icon>
+            </v-btn>
           </h1>
-          <div class="panel-content" v-if='$store.state.selected.source === "persona"'>
-            <personaDetail :key='$store.state.selected.index' />
-            <h3>Comments</h3>
-            <comment
-              v-if='$store.state.selected.index != null'
-              :doc-id='$store.state.selected.index'
-              :doc-type='$store.state.selected.source'
-              :key="$store.state.selected"/>
-            <h3>Changes</h3>
-            <change
+          <div class="flex-container">
+            <div class="panel-content" v-if='$store.state.selected.source === "persona"'>
+              <personaDetail :key='$store.state.selected.index' />
+            </div>
+            <div class="panel-content" v-else-if='$store.state.selected.source ==="insight"'>
+              <insightDetail :key='$store.state.selected.index'/>
+            </div>
+            <div class="panel-content" v-else-if='$store.state.selected.source ==="need"'>
+              <needDetail :key='$store.state.selected.index'/>
+            </div>
+            <div class="panel-content" v-else-if='$store.state.selected.source ==="journey"'>
+              <journeyDetail :key='$store.state.selected.index'/>
+            </div>
+            <div class="panel-content" v-else-if='$store.state.selected.source ==="jobToBeDone"'>
+              <jobToBeDoneDetail :key='$store.state.selected.index'/>
+            </div>
+            <div class="panel-content" v-else-if='$store.state.selected.source ==="interview"'>
+              <interviewDetail :key='$store.state.selected.index'/>
+            </div>
+            <div class="panel-content" v-if='$store.state.selected.index !== null'>
+              <h3>Comments</h3>
+              <comment
                 v-if='$store.state.selected.index != null'
                 :doc-id='$store.state.selected.index'
-                :doc-type='"personas"'
-                :key="$store.state.selected.index+'change'"
-                  />
-          </div>
-          <div class="panel-content" v-else-if='$store.state.selected.source ==="insight"'>
-            <insightDetail :key='$store.state.selected.index'/>
-            <h3>Comments</h3>
-            <comment
-              v-if='$store.state.selected.index != null'
-              :doc-id='$store.state.selected.index'
-              :doc-type='$store.state.selected.source'
-              :key="$store.state.selected"/>
-            <h3>Changes</h3>
-            <change
+                :doc-type='$store.state.selected.source'
+                :key="$store.state.selected.index+draft+'comment'"/>
+              <h3>Assumptions</h3>
+              <assumption
                   v-if='$store.state.selected.index != null'
                   :doc-id='$store.state.selected.index'
-                  :doc-type='"insights"'
+                  :doc-type='"products"'
                   :key="$store.state.selected.index+'change'"
                     />
-          </div>
-          <div class="panel-content" v-else-if='$store.state.selected.source ==="need"'>
-            <needDetail :key='$store.state.selected.index'/>
-            <h3>Comments</h3>
-            <comment
-              v-if='$store.state.selected.index != null'
-              :doc-id='$store.state.selected.index'
-              :doc-type='$store.state.selected.source'
-              :key="$store.state.selected"/>
               <h3>Changes</h3>
               <change
-                  v-if='$store.state.selected.index != null'
-                  :doc-id='$store.state.selected.index'
-                  :doc-type='"needs"'
-                  :key="$store.state.selected.index+'change'"
-                    />
-          </div>
-          <div class="panel-content" v-else-if='$store.state.selected.source ==="journey"'>
-            <journeyDetail :key='$store.state.selected.index'/>
-            <h3>Comments</h3>
-            <comment
-              v-if='$store.state.selected.index != null'
-              :doc-id='$store.state.selected.index'
-              :doc-type='$store.state.selected.source'
-              :key="$store.state.selected"/>
-            <h3>Changes</h3>
-            <change
-                  v-if='$store.state.selected.index != null'
-                  :doc-id='$store.state.selected.index'
-                  :doc-type='"journeys"'
-                  :key="$store.state.selected.index+'change'"
-                    />
-          </div>
-          <div class="panel-content" v-else-if='$store.state.selected.source ==="jobToBeDone"'>
-            <jobToBeDoneDetail :key='$store.state.selected.index'/>
-            <h3>Comments</h3>
-            <comment
-              v-if='$store.state.selected.index != null'
-              :doc-id='$store.state.selected.index'
-              :doc-type='$store.state.selected.source'
-              :key="$store.state.selected"/>
-            <h3>Changes</h3>
-            <change
-                  v-if='$store.state.selected.index != null'
-                  :doc-id='$store.state.selected.index'
-                  :doc-type='"jobsToBeDone"'
-                  :key="$store.state.selected.index+'change'"
-                    />
-          </div>
-          <div class="panel-content" v-else-if='$store.state.selected.source ==="interview"'>
-            <interviewDetail :key='$store.state.selected.index'/>
-            <comment
-              v-if='$store.state.selected.index != null'
-              :doc-id='$store.state.selected.index'
-              :doc-type='$store.state.selected.source'
-              :key="$store.state.selected"/>
-            <h3>Changes</h3>
-            <change
-                  v-if='$store.state.selected.index != null'
-                  :doc-id='$store.state.selected.index'
-                  :doc-type='"interviews"'
-                  :key="$store.state.selected.index+'change'"
-                    />
+                v-if='$store.state.selected.index != null'
+                :doc-id='$store.state.selected.index'
+                :doc-type='"products"'
+                :key="$store.state.selected.index+'change'"
+                  />
+            </div>
           </div>
         </div>
       </v-layout>
@@ -376,7 +339,9 @@ export default {
   },
   data() {
     return {
-      search:""
+      search:"",
+      draft: false,
+      detailExpandedLarge:false,
    }
   },
   async beforeMount() {
@@ -430,12 +395,28 @@ export default {
       document.getElementById("right-sidepanel").style.width = "0px";
     },
 
+    onSelectDraft(event){
+      this.$store.commit('selectItem',{index:event.index,source:event.source})
+      document.getElementById("right-sidepanel").style.width = "400px";
+      this.draft=true
+    },
+
+    expandDetailLarge(){
+            document.getElementById("right-sidepanel").style.width = "850px";
+            this.detailExpandedLarge = true;
+    },
+
+    expandDetailSmall(){
+      document.getElementById("right-sidepanel").style.width = "400px";
+      this.detailExpandedLarge = false;
+    }
+
   }
 }
 
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 
 .v-card{
   margin: 4px;
@@ -506,7 +487,7 @@ export default {
   width: 0; /* 0 width - change this with JavaScript */
   position: fixed; /* Stay in place */
   top: 0 ;
-  z-index: 905;/* Stay on top */
+  z-index: 905; /* Stay on top */
   right: -0px;
   background-color: #FFFFFF; /* Black*/
   overflow-x: hidden; /* Disable horizontal scroll */
@@ -517,7 +498,17 @@ export default {
   transition: 0.4s; /* 0.5 second transition effect to slide in the sidepanel */
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 
+  &.expanded-large{
+    width: 800px;
+  }
+
+  .flex-container{
+    display: flex;
+    flex-wrap: wrap;
+  }
+
   .panel-content{
+    width: 384px;
     margin: 16px;
   }
 }

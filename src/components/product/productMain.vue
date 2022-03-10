@@ -212,24 +212,27 @@
             <h1 class="panel-content" style="text-transform:uppercase">
               {{$store.state.selected.source}}
               <v-btn
-              icon
-              variant="text"
-              class="closebtn"
-              @click="closeDetail(); ">
+                style="{right:0;position:absolute}"
+                icon
+                variant="text"
+                class="closebtn"
+                @click="closeDetail(); ">
                 <v-icon>mdi-close</v-icon>
               </v-btn>
               <v-btn
-              v-if="!detailExpandedLarge"
-              icon
-              variant="text"
-              @click='expandDetailLarge()'>
+                style="{right:0;position:absolute}"
+                v-if="!detailExpandedLarge"
+                icon
+                variant="text"
+                @click='expandDetailLarge()'>
                 <v-icon>mdi-arrow-right-drop-circle-outline</v-icon>
               </v-btn>
               <v-btn
-              v-else
-              icon
-              variant="text"
-              @click='expandDetailsmall()'>
+                style="{right:0;position:absolute}"
+                v-else
+                icon
+                variant="text"
+                @click='expandDetailSmall()'>
                 <v-icon>mdi-arrow-left-drop-circle-outline</v-icon>
               </v-btn>
             </h1>
@@ -381,7 +384,7 @@ export default {
             this.detailExpandedLarge = true;
     },
 
-    expandDetailsmall(){
+    expandDetailSmall(){
       document.getElementById("right-sidepanel").style.width = "400px";
       this.detailExpandedLarge = false;
     }
