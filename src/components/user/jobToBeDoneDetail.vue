@@ -117,20 +117,20 @@ export default {
         await this.$refs.form.validate();
         if (this.valid ){
           await JobToBeDone.create(this.jobToBeDone.data)
-          this.$store.commit('getJobToBeDones')
+          this.$store.commit('getJobsToBeDone')
           this.$store.commit('closeDetail')
         }
       },
       async updateJobToBeDone () {
         await this.$refs.form.validate();
         this.valid ? await JobToBeDone.updateDoc(this.jobToBeDone.id,this.jobToBeDone.data) : console.log('not valid');
-        this.$store.commit('getJobToBeDones')
+        this.$store.commit('getJobsToBeDone')
         this.$refs.form.resetValidation();
       },
       async deleteJobToBeDone () {
         JobToBeDone.deleteDoc(this.selected.index)
         this.$store.commit('closeDetail')
-        this.$store.commit('getJobToBeDones')
+        this.$store.commit('getJobsToBeDone')
         this.$refs.form.resetValidation();
       },
       resetForm () {

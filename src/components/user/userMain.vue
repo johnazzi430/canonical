@@ -134,7 +134,7 @@
                 </v-card-actions>
               </v-card>
             </v-row>
-            <h3 class="text-medium-emphasis">Journeys <v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("journey")'>Add Journey +</v-btn></h3>
+            <!-- <h3 class="text-medium-emphasis">Journeys <v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("journey")'>Add Journey +</v-btn></h3>
             <v-row
               no-gutters
               align-content="start"
@@ -168,7 +168,7 @@
                   </v-btn>
                 </v-card-actions>
               </v-card>
-            </v-row>
+            </v-row> -->
             <h3 class="text-medium-emphasis">JobsToBeDone <v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("jobToBeDone")'>Add JobsToBeDone +</v-btn></h3>
             <v-row
               no-gutters
