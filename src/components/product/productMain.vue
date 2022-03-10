@@ -208,127 +208,73 @@
             </v-row>
         </v-main>
         <div id="right-sidepanel" class="sidepanel-right">
-          <h1><a href="javascript:void(0)"
-            class="closebtn" @click="closeDetail(); ">&times;</a></h1>
-            <h1 style="text-transform:uppercase">{{$store.state.selected.source}}</h1>
-            <div class="panel-content" v-if='$store.state.selected.source === "product"'>
-              <productDetail
-              @selectDraft="onSelectDraft"
-              :draft='draft'
-              :id='$store.state.selected.index'
-              :key='$store.state.selected.index+draft'/>
-              <h3>Comments</h3>
-              <comment
-                v-if='$store.state.selected.index != null'
-                :doc-id='$store.state.selected.index'
-                :doc-type='$store.state.selected.source'
-                :key="$store.state.selected.index+draft+'comment'"/>
-              <h3>Assumptions</h3>
-              <assumption
+
+            <h1 class="panel-content" style="text-transform:uppercase">
+              {{$store.state.selected.source}}
+              <v-btn
+              icon
+              variant="text"
+              class="closebtn"
+              @click="closeDetail(); ">
+                <v-icon>mdi-close</v-icon>
+              </v-btn>
+              <v-btn
+              v-if="!detailExpandedLarge"
+              icon
+              variant="text"
+              @click='expandDetailLarge()'>
+                <v-icon>mdi-arrow-right-drop-circle-outline</v-icon>
+              </v-btn>
+              <v-btn
+              v-else
+              icon
+              variant="text"
+              @click='expandDetailsmall()'>
+                <v-icon>mdi-arrow-left-drop-circle-outline</v-icon>
+              </v-btn>
+            </h1>
+            <div class="flex-container">
+              <div class="panel-content" v-if='$store.state.selected.source === "product"'>
+                <productDetail
+                @selectDraft="onSelectDraft"
+                :draft='draft'
+                :id='$store.state.selected.index'
+                :key='$store.state.selected.index+draft'/>
+              </div>
+              <div class="panel-content" v-else-if='$store.state.selected.source ==="feature"'>
+                <featureDetail :key='$store.state.selected.index'/>
+              </div>
+              <div class="panel-content" v-else-if='$store.state.selected.source ==="idea"'>
+                <ideaDetail :key='$store.state.selected.index'/>
+              </div>
+              <div class="panel-content" v-else-if='$store.state.selected.source ==="goal"'>
+                <goalDetail :key='$store.state.selected.index'/>
+              </div>
+              <div class="panel-content" v-else-if='$store.state.selected.source ==="risk"'>
+                <riskDetail :key='$store.state.selected.index'/>
+              </div>
+              <div class="panel-content" v-if='$store.state.selected.index !== null'>
+                <h3>Comments</h3>
+                <comment
+                  v-if='$store.state.selected.index != null'
+                  :doc-id='$store.state.selected.index'
+                  :doc-type='$store.state.selected.source'
+                  :key="$store.state.selected.index+draft+'comment'"/>
+                <h3>Assumptions</h3>
+                <assumption
+                    v-if='$store.state.selected.index != null'
+                    :doc-id='$store.state.selected.index'
+                    :doc-type='"products"'
+                    :key="$store.state.selected.index+'change'"
+                      />
+                <h3>Changes</h3>
+                <change
                   v-if='$store.state.selected.index != null'
                   :doc-id='$store.state.selected.index'
                   :doc-type='"products"'
                   :key="$store.state.selected.index+'change'"
                     />
-              <h3>Changes</h3>
-              <change
-                v-if='$store.state.selected.index != null'
-                :doc-id='$store.state.selected.index'
-                :doc-type='"products"'
-                :key="$store.state.selected.index+'change'"
-                  />
-            </div>
-            <div class="panel-content" v-else-if='$store.state.selected.source ==="feature"'>
-              <featureDetail :key='$store.state.selected.index'/>
-              <h3>Comments</h3>
-              <comment
-                v-if='$store.state.selected.index != null'
-                :doc-id='$store.state.selected.index'
-                :doc-type='$store.state.selected.source'
-                :key="$store.state.selected.index+'comment'"/>
-              <h3>Assumptions</h3>
-              <assumption
-                    v-if='$store.state.selected.index != null'
-                    :doc-id='$store.state.selected.index'
-                    :doc-type='"features"'
-                    :key="$store.state.selected.index+'Assumptions'"
-                      />
-              <h3>Changes</h3>
-              <change
-                v-if='$store.state.selected.index != null'
-                :doc-id='$store.state.selected.index'
-                :doc-type='"features"'
-                :key="$store.state.selected.index+'change'"
-                />
-            </div>
-            <div class="panel-content" v-else-if='$store.state.selected.source ==="idea"'>
-              <ideaDetail :key='$store.state.selected.index'/>
-              <h3>Comments</h3>
-              <comment
-                v-if='$store.state.selected.index != null'
-                :doc-id='$store.state.selected.index'
-                :doc-type='$store.state.selected.source'
-                :key="$store.state.selected.index+'Assumptions'"/>
-              <h3>Assumptions</h3>
-              <assumption
-                      v-if='$store.state.selected.index != null'
-                      :doc-id='$store.state.selected.index'
-                      :doc-type='"ideas"'
-                      :key="$store.state.selected.index+'change'"
-                        />
-              <h3>Changes</h3>
-              <change
-                  v-if='$store.state.selected.index != null'
-                  :doc-id='$store.state.selected.index'
-                  :doc-type='"ideas"'
-                  :key="$store.state.selected.index+'change'"
-                    />
-            </div>
-            <div class="panel-content" v-else-if='$store.state.selected.source ==="goal"'>
-              <goalDetail :key='$store.state.selected.index'/>
-              <h3>Comments</h3>
-              <comment
-                v-if='$store.state.selected.index != null'
-                :doc-id='$store.state.selected.index'
-                :doc-type='$store.state.selected.source'
-                :key="$store.state.selected.index+'goals'"/>
-              <h3>Assumptions</h3>
-              <assumption
-                      v-if='$store.state.selected.index != null'
-                      :doc-id='$store.state.selected.index'
-                      :doc-type='"productGoals"'
-                      :key="$store.state.selected.index+'assumptions'"
-                        />
-              <h3>Changes</h3>
-              <change
-                    v-if='$store.state.selected.index != null'
-                    :doc-id='$store.state.selected.index'
-                    :doc-type='"productGoals"'
-                    :key="$store.state.selected.index+'change'"
-                      />
-            </div>
-            <div class="panel-content" v-else-if='$store.state.selected.source ==="risk"'>
-              <riskDetail :key='$store.state.selected.index'/>
-              <h3>Comments</h3>
-              <comment
-                v-if='$store.state.selected.index != null'
-                :doc-id='$store.state.selected.index'
-                :doc-type='$store.state.selected.source'
-                :key="$store.state.selected.index+'comment'"/>
-              <h3>Assumptions</h3>
-              <assumption
-                      v-if='$store.state.selected.index != null'
-                      :doc-id='$store.state.selected.index'
-                      :doc-type='"productRisks"'
-                      :key="$store.state.selected.index+'Assumptions'"
-                        />
-              <h3>Changes</h3>
-              <change
-                    v-if='$store.state.selected.index != null'
-                    :doc-id='$store.state.selected.index'
-                    :doc-type='"productRisks"'
-                    :key="$store.state.selected.index+'change'"
-                        />
+              </div>
             </div>
         </div>
       </v-layout>
@@ -360,7 +306,8 @@ export default {
   data() {
     return {
       search:"",
-      draft: false
+      draft: false,
+      detailExpandedLarge:false,
    }
   },
   async beforeMount() {
@@ -373,7 +320,7 @@ export default {
     this.$store.commit('getRisks')
   },
   mounted(){
-    if(this.$store.state.selected.index != null){document.getElementById("right-sidepanel").style.width = "60%";}
+    if(this.$store.state.selected.index != null){document.getElementById("right-sidepanel").style.width = "400px";}
   },
   watch:{
     closeDetail_(){
@@ -399,19 +346,19 @@ export default {
   methods: {
     expandDetail(index,source,draft=false) {
       this.$store.commit('selectItem',{index,source})
-      document.getElementById("right-sidepanel").style.width = "60%";
+      document.getElementById("right-sidepanel").style.width = "400px";
       this.draft=draft
       this.$router.push('/product/'+source+'/' + index )
     },
 
     expandDraftDetail(index,source) {
       this.$store.commit('selectItem',{index,source})
-      document.getElementById("right-sidepanel").style.width = "60%";
+      document.getElementById("right-sidepanel").style.width = "400px";
     },
 
     addItem(source) {
       this.$store.commit('selectItem',{index:null, source})
-      document.getElementById("right-sidepanel").style.width = "60%";
+      document.getElementById("right-sidepanel").style.width = "400px";
     },
 
     closeDetail() {
@@ -425,8 +372,18 @@ export default {
 
     onSelectDraft(event){
       this.$store.commit('selectItem',{index:event.index,source:event.source})
-      document.getElementById("right-sidepanel").style.width = "60%";
+      document.getElementById("right-sidepanel").style.width = "400px";
       this.draft=true
+    },
+
+    expandDetailLarge(){
+            document.getElementById("right-sidepanel").style.width = "850px";
+            this.detailExpandedLarge = true;
+    },
+
+    expandDetailsmall(){
+      document.getElementById("right-sidepanel").style.width = "400px";
+      this.detailExpandedLarge = false;
     }
 
   }
@@ -436,7 +393,7 @@ export default {
 
 <style lang="scss" scoped>
 
-.v-card{
+.v-card .rounded-0{
   margin: 4px;
   white-space: nowrap;
   overflow: hidden;
@@ -497,20 +454,34 @@ export default {
   width: 0; /* 0 width - change this with JavaScript */
   position: fixed; /* Stay in place */
   top: 0 ;
-  z-index: 1; /* Stay on top */
-  right: -88px;
+  z-index: 905; /* Stay on top */
+  right: -0px;
   background-color: #FFFFFF; /* Black*/
   overflow-x: hidden; /* Disable horizontal scroll */
   padding-top: 88px; /* Place content 60px from the top */
-  padding-right: 48px;
-  padding-left: 24px;
+  padding-right: 0px;
+  padding-left: 0px;
   padding-bottom: 88px;
   transition: 0.4s; /* 0.5 second transition effect to slide in the sidepanel */
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+  &.expanded-large{
+    width: 800px;
+  }
+
+  .flex-container{
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .panel-content{
+    width: 384px;
+    margin: 16px;
+  }
 }
 
-.panel-content{
-  padding-right: 24px;
+.v-field__input {
+  font-size: 14px !important;
 }
 
 </style>

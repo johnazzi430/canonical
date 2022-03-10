@@ -242,10 +242,18 @@
             </v-row>
         </v-main>
         <div id="right-sidepanel" class="sidepanel-right">
-          <h1><a href="javascript:void(0)"
-            class="closebtn" @click="closeDetail(); ">&times;</a></h1>
-          <h1 style="text-transform:uppercase">{{$store.state.selected.source}}</h1>
-          <div v-if='$store.state.selected.source === "persona"'>
+          <h1 class="panel-content" style="text-transform:uppercase">
+            {{$store.state.selected.source}}
+            <v-btn
+            icon
+            variant="text"
+            href="javascript:void(0)"
+            class="closebtn panel-content"
+            @click="closeDetail(); ">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </h1>
+          <div class="panel-content" v-if='$store.state.selected.source === "persona"'>
             <personaDetail :key='$store.state.selected.index' />
             <h3>Comments</h3>
             <comment
@@ -261,7 +269,7 @@
                 :key="$store.state.selected.index+'change'"
                   />
           </div>
-          <div v-else-if='$store.state.selected.source ==="insight"'>
+          <div class="panel-content" v-else-if='$store.state.selected.source ==="insight"'>
             <insightDetail :key='$store.state.selected.index'/>
             <h3>Comments</h3>
             <comment
@@ -277,7 +285,7 @@
                   :key="$store.state.selected.index+'change'"
                     />
           </div>
-          <div v-else-if='$store.state.selected.source ==="need"'>
+          <div class="panel-content" v-else-if='$store.state.selected.source ==="need"'>
             <needDetail :key='$store.state.selected.index'/>
             <h3>Comments</h3>
             <comment
@@ -293,7 +301,7 @@
                   :key="$store.state.selected.index+'change'"
                     />
           </div>
-          <div v-else-if='$store.state.selected.source ==="journey"'>
+          <div class="panel-content" v-else-if='$store.state.selected.source ==="journey"'>
             <journeyDetail :key='$store.state.selected.index'/>
             <h3>Comments</h3>
             <comment
@@ -309,7 +317,7 @@
                   :key="$store.state.selected.index+'change'"
                     />
           </div>
-          <div v-else-if='$store.state.selected.source ==="jobToBeDone"'>
+          <div class="panel-content" v-else-if='$store.state.selected.source ==="jobToBeDone"'>
             <jobToBeDoneDetail :key='$store.state.selected.index'/>
             <h3>Comments</h3>
             <comment
@@ -325,7 +333,7 @@
                   :key="$store.state.selected.index+'change'"
                     />
           </div>
-          <div v-else-if='$store.state.selected.source ==="interview"'>
+          <div class="panel-content" v-else-if='$store.state.selected.source ==="interview"'>
             <interviewDetail :key='$store.state.selected.index'/>
             <comment
               v-if='$store.state.selected.index != null'
@@ -382,7 +390,7 @@ export default {
     this.$store.commit('getInterviews')
   },
   mounted(){
-    if(this.$store.state.selected.index != null){document.getElementById("right-sidepanel").style.width = "50%";}
+    if(this.$store.state.selected.index != null){document.getElementById("right-sidepanel").style.width = "400px";}
   },
   watch:{
     closeDetail_(){
@@ -404,13 +412,13 @@ export default {
   methods: {
     expandDetail(index,source) {
       this.$store.commit('selectItem',{index,source})
-      document.getElementById("right-sidepanel").style.width = "50%";
+      document.getElementById("right-sidepanel").style.width = "400px";
       this.$router.push('/user/'+source+'/' + index )
     },
 
     addItem(source) {
       this.$store.commit('selectItem',{index:null, source})
-      document.getElementById("right-sidepanel").style.width = "50%";
+      document.getElementById("right-sidepanel").style.width = "400px";
     },
 
     closeDetail() {
@@ -427,7 +435,7 @@ export default {
 
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 
 .v-card{
   margin: 4px;
@@ -498,16 +506,24 @@ export default {
   width: 0; /* 0 width - change this with JavaScript */
   position: fixed; /* Stay in place */
   top: 0 ;
-  z-index: 1; /* Stay on top */
-  right: -48px;
+  z-index: 905;/* Stay on top */
+  right: -0px;
   background-color: #FFFFFF; /* Black*/
   overflow-x: hidden; /* Disable horizontal scroll */
   padding-top: 88px; /* Place content 60px from the top */
-  padding-right: 48px;
-  padding-left: 24px;
+  padding-right: 0px;
+  padding-left: 0px;
   padding-bottom: 88px;
   transition: 0.4s; /* 0.5 second transition effect to slide in the sidepanel */
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+  .panel-content{
+    margin: 16px;
+  }
+}
+
+.v-field__input {
+  font-size: 14px !important;
 }
 
 </style>
