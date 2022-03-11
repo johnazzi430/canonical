@@ -80,7 +80,9 @@
                       path:'/product/'+draftSelectedValues.parentType.slice(0, -1)+'/' + draftSelectedValues.draftID,
                       query:{draft:true}} )">Update Draft</v-btn>
                   <h2>approvals</h2>
-                  <v-list density="compact"
+                  <v-list
+                    style="margin:-4px"
+                    density="compact"
                     v-for="item in draftSelectedValues.approvalRecords.approvals"
                     :key="item"
                     >
@@ -97,16 +99,26 @@
                       <v-list-item-title>
                         {{item.approver.displayName}}
                       </v-list-item-title>
-                      <v-list-item-avatar right>
-                        <v-checkbox
-                            v-model="item.approved"
-                            disabled/>
+                      <v-list-item-avatar class="approval-record"
+                        right v-if="item.approved">
+                        <v-icon>mdi-checkbox-marked</v-icon>
                       </v-list-item-avatar>
+                      <v-list-item-avatar class="approval-record"
+                        right v-else>
+                        <v-icon>mdi-checkbox-blank-outline</v-icon>
+                      </v-list-item-avatar>
+
                     </v-list-item>
                   </v-list>
                 </v-container>
                 <v-container>
-                  <approvalComponent :approvalParentDocId='draftSelectedValues.draftID'/>
+                  <approvalComponent
+                      :approvalParentDocId='draftSelectedValues.draftID'
+                      :approvaldocType='draftSelectedValues.parentType'/>
+                  <div v-if="draftSelectedValues.approvalRecords">
+                    <v-btn v-if="draftSelectedValues.approvalRecords.isApproved"
+                      > Merge </v-btn>
+                  </div>
                 </v-container>
                 <v-container>
                   <h2>comments</h2>
@@ -203,10 +215,15 @@ export default {
 
 <style lang="scss" scoped>
 
+.approval-record{
+  position:absolute;
+  right:0px;
+}
+
 .view-changes{
   width:90vw;
   left:-5vw;
-  postion:relative;
+  position:relative;
 }
 
 .draft-table{

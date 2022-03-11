@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="!isApproved">
     <v-dialog
       v-model="modal"
       persistent
@@ -43,8 +43,8 @@
               v-model="newComment"
           />
         <v-card-actions>
-          <v-btn @click='approve()'>Reviewed and Approved</v-btn>
-          <v-btn @click='reviewAndComment()'>Reviewed with Comments</v-btn>
+          <v-btn outlined @click='approve()'>Reviewed and Approve</v-btn>
+          <v-btn outlined @click='reviewAndComment()'>Reviewed with Comments</v-btn>
           <v-btn text @click="modal = false">cancel</v-btn>
         </v-card-actions>
         </div>
@@ -114,7 +114,7 @@
 
 <script type="text/javascript">
 //import {Approval,Draft} from "../../services/firebaseDataService";
-import {Approval} from "../../services/firebaseDataService";
+import {Approval,Comment} from "../../services/firebaseDataService";
 import VueMultiselect from 'vue-multiselect';
 
 export default {
@@ -130,6 +130,10 @@ export default {
           default: "",
           type: String
         },
+        approvaldocType:{
+          default: "",
+          type: String
+        },
   },
   data: () => ({
     approvalExists: false,
@@ -138,7 +142,8 @@ export default {
     valid: false,
     approverRecords:[],
     approval: undefined,
-    newComment:""
+    newComment:"",
+    isApproved:false
   }),
   async beforeMount(){
     this.$store.commit('getUsers')
@@ -147,6 +152,7 @@ export default {
       this.approvalExists = true
       this.approval = approvalRec
       this.approverRecords = approvalRec.approvals
+      this.isApproved = approvalRec.isApproved
       if(approvalRec.approvals.filter(i => i.approver.id === this.$store.state.user.uid).length > 0 ) {
         this.loggedInUserIsApprover = true
       }
@@ -159,7 +165,7 @@ export default {
       //create Approval Record
       const approvalDoc = await new Approval({
             docID:this.approvalParentDocId,
-            docType:'product',
+            docType:this.approvaldocType,
             approvals:this.approverRecords
           })
           .create()
@@ -173,6 +179,26 @@ export default {
     async closeApprovalModal () {
 
     },
+    async addComment () {
+      const commentPayload = {
+          docID: this.approvalParentDocId,
+          docType: this.approvaldocType,
+          comment: this.newComment
+        }
+      await new Comment(commentPayload).createComment()
+      return
+    },
+
+    async approve(){
+      await this.addComment()
+      await Approval.approve(this.approval.id)
+
+    },
+    async reviewAndComment(){
+      await this.addComment()
+      await Approval.review(this.approval.id)
+    },
+
   }
 }
 </script>

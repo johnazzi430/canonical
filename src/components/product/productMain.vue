@@ -268,7 +268,7 @@
                     v-if='$store.state.selected.index != null'
                     :doc-id='$store.state.selected.index'
                     :doc-type='"products"'
-                    :key="$store.state.selected.index+'change'"
+                    :key="$store.state.selected.index+'assumption'"
                       />
                 <h3>Changes</h3>
                 <change

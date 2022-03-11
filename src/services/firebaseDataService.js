@@ -174,7 +174,7 @@ export class Comment {
 
   static async getCommentsByDocID(docType,docID){
     const snapshot = await db.collection("comments")
-      .where("docType","==", docType)
+      // .where("docType","==", docType)
       .where("docID","==", docID)
       .where("archived","==", false)
       .where("project","==",store.state.user.project)
@@ -187,15 +187,18 @@ export class Comment {
   }
 
   async createComment(){
-    return await db.collection("comments").add(JSON.parse(JSON.stringify(this)));
+    return await db.collection("comments").add(JSON.parse(JSON.stringify(this)))
+              .then(store.commit('alert',{type:'info',message:`comment added`,autoClear:true}));
   }
 
   async updateComment(id,newComment){
-    return await db.collection("comments").doc(id).update({comment: newComment, updatedDate: Date()});
+    return await db.collection("comments").doc(id).update({comment: newComment, updatedDate: Date()})
+        .then(store.commit('alert',{type:'info',message:`comment edited`,autoClear:true}));
   }
 
   async deleteComment(id){
-    return await db.collection("comments").doc(id).update({archived: true});
+    return await db.collection("comments").doc(id).update({archived: true})
+        .then(store.commit('alert',{type:'info',message:`comment archived`,autoClear:true}));
   }
 
   //   new Comment({docID:'',docType:'',comment:value}).createComment()
@@ -290,20 +293,51 @@ export class Approval {
     return snapshot.docs.map(doc =>({ id:doc.id, ...doc.data()}))
   }
 
+  static approvalLogic(data){
+    var required = []
+    data.approvals.forEach(a =>{
+      if(a.required === true){
+        if(a.approved === true){required.push(true)} else {required.push(false)}
+      } else {
+        if(a.approved === true){required.push(true)}
+      }
+    })
+    return required.every(v => v === true);
+  }
+
   static async getByDoc(docID){
     const snapshot = await db.collection("approvals")
               .where("archived","==", false)
               .where("docID","==", docID)
               .get();
-    return snapshot.docs.map(doc =>({ id:doc.id, ...doc.data()}))[0]
+    return snapshot.docs.map(doc =>({ id:doc.id, isApproved:this.approvalLogic(doc.data()), ...doc.data()}))[0]
   }
 
-  static async getByApprover(){
+  static async getByApproverRequested(){
     const snapshot = await db.collection("approvals")
               .where("archived","==", false)
               .whereField("approvals.approver",store.state.user.uid)
+              .whereField("approvals.approved",false)
               .get();
     return snapshot.docs.map(doc =>({ id:doc.id, ...doc.data()}))
+  }
+
+  static async review(id){
+    const snapshot = await db.collection("approvals").doc(id).get();
+    const approvalRecords = snapshot.data().approvals
+    approvalRecords[approvalRecords.findIndex(a => a.approver.id === store.state.user.uid)].reviewed = true
+    return db.collection("approvals").doc(id).update({approvals:approvalRecords,updatedDate:Date.now()})
+                  .then(store.commit('alert',{type:'info',message:`reviewed`,autoClear:true}))
+  }
+
+  static async approve(id){
+    const snapshot = await db.collection("approvals").doc(id).get();
+    // snapshot.Approvals
+    const approvalRecords = snapshot.data().approvals
+    approvalRecords[approvalRecords.findIndex(a => a.approver.id === store.state.user.uid)].approved = true
+    approvalRecords[approvalRecords.findIndex(a => a.approver.id === store.state.user.uid)].reviewed = true
+    return db.collection("approvals").doc(id).update({approvals:approvalRecords,updatedDate:Date.now()})
+      .then(store.commit('alert',{type:'info',message:`approval recorded`,autoClear:true}))
   }
 
   // static async recordApproval(payload){
