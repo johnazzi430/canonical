@@ -56,7 +56,7 @@
                       <productDetail
                       :draft='false'
                       :reviewing = 'true'
-                      :key='draftSelectedValues.parentID'
+                      :key='draftSelectedValues.parentID+refreshKey'
                       :id='draftSelectedValues.parentID'/>
                     </v-card>
                   </v-col>
@@ -68,7 +68,7 @@
                       <productDetail
                       :draft='true'
                       :reviewing ='true'
-                      :key='draftSelectedValues.draftID'
+                      :key='draftSelectedValues.draftID+refreshKey'
                       :id='draftSelectedValues.draftID'/>
                     </v-card>
                   </v-col>
@@ -113,15 +113,16 @@
                 </v-container>
                 <v-container>
                   <approvalComponent
+                      @approvalsUpdated="refreshData()"
                       :approvalParentDocId='draftSelectedValues.draftID'
                       :approvaldocType='draftSelectedValues.parentType'/>
                   <div v-if="draftSelectedValues.approvalRecords">
                     <v-btn v-if="draftSelectedValues.approvalRecords.isApproved"
                       @click="merge()"
                       > Change Approved, Merge? </v-btn>
-                    <v-btn v-else
-                        @click="merge()"
-                        > Merge without approvals? </v-btn>
+                  </div>
+                  <div v-else>
+                    <v-btn @click="merge()"> Merge without approvals? </v-btn>
                   </div>
                 </v-container>
                 <v-container>
@@ -130,7 +131,7 @@
                     v-if='draftSelectedValues.draftID != ""'
                     :doc-id='draftSelectedValues.draftID'
                     :doc-type='draftSelectedValues.parentType'
-                    :key="draftSelectedValues.draftID"/>
+                    :key="draftSelectedValues.draftID+refreshKey"/>
                 </v-container>
               </v-col>
             </v-row>
@@ -173,6 +174,7 @@ export default {
         approvalRecords:null,
         parentType:''
       },
+      refreshKey:0,
       approvalHeaders:[
         {text: 'Approval', value: 'id' },
         {text: 'Document', value: 'docType' },
@@ -220,6 +222,13 @@ export default {
 
     async merge(){
       await Draft.mergeWithParent(this.draftSelectedValues.draftID)
+      this.$router.push({path:'/product/'+this.draftSelectedValues.parentType.slice(0, -1)+'/' + this.draftSelectedValues.parentID})
+    },
+
+    async refreshData(){
+      this.refreshKey = this.refreshKey +1
+      const approvalRecord = await Approval.getByDoc(this.draftSelectedValues.draftID)
+      this.draftSelectedValues.approvalRecords = approvalRecord
     }
   },
   mounted () {}

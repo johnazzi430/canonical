@@ -50,6 +50,23 @@
         </div>
         <div v-else-if="approvalExists">
           Placeholder for reviewing existing approvals
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+              color="green darken-1"
+              text
+              @click="modal = false"
+            >
+              Cancel
+            </v-btn>
+            <v-btn
+              color="green darken-1"
+              text
+              @click="createApprovalRecord"
+            >
+              Request
+            </v-btn>
+          </v-card-actions>
         </div>
         <div v-else>
           <v-card-title class="text-h5">
@@ -86,25 +103,24 @@
               </v-btn>
             </v-col>
           </v-row>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+              color="green darken-1"
+              text
+              @click="modal = false"
+            >
+              Cancel
+            </v-btn>
+            <v-btn
+              color="green darken-1"
+              text
+              @click="createApprovalRecord"
+            >
+              Request
+            </v-btn>
+          </v-card-actions>
         </div>
-
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            color="green darken-1"
-            text
-            @click="modal = false"
-          >
-            Cancel
-          </v-btn>
-          <v-btn
-            color="green darken-1"
-            text
-            @click="createApprovalRecord"
-          >
-            Request
-          </v-btn>
-        </v-card-actions>
       </v-card>
     </v-dialog>
   </div>
@@ -160,18 +176,14 @@ export default {
   },
   methods:{
     async createApprovalRecord () {
-      //// TODO:  check if valid
-      //
-      //create Approval Record
-      const approvalDoc = await new Approval({
+      await new Approval({
             docID:this.approvalParentDocId,
             docType:this.approvaldocType,
             approvals:this.approverRecords
           })
           .create()
-      console.log(approvalDoc)
-      //UpdateDraft
-      // await Draft.updateDraftApproval(this.approvalParentDocId, approvalDoc)
+      this.$emit('approvalsUpdated')
+      this.modal = false
     },
     async modifyApproverRecords () {
       //// TODO:  check if valid
@@ -192,11 +204,15 @@ export default {
     async approve(){
       await this.addComment()
       await Approval.approve(this.approval.id)
+      this.$emit('approvalsUpdated')
+      this.modal = false
 
     },
     async reviewAndComment(){
       await this.addComment()
       await Approval.review(this.approval.id)
+      this.$emit('approvalsUpdated')
+      this.modal = false
     },
 
   }

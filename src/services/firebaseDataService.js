@@ -258,7 +258,6 @@ export class Change {
     this.unset = changedFields.unset
     return await db.collection("documentChanges").add(JSON.parse(JSON.stringify(this)))
                     .then(store.commit('alert',{type:'info',message:`${this.docType} updated`,autoClear:true}));
-    // return
   }
 }
 
@@ -409,9 +408,9 @@ export class Draft {
 
   static async mergeWithParent(id){
     const draft = await db.collection("documentDrafts").doc(id).get()
+    await new Change({docID:draft.data().parentID, docType:draft.data().parentType}).create(draft.data().docData)
     await db.collection(draft.data().parentType).doc(draft.data().parentID).update(draft.data().docData)
     await db.collection(draft.data().parentType).doc(draft.data().parentID).update({updatedDate: Date.now(), updatedBy:store.state.user.uid})
-    await new Change({docID:draft.data().parentID, docType:draft.data().parentType}).create(draft.data())
     await db.collection("documentDrafts").doc(id).update({archived:true,updatedDate: Date.now()})
   }
 
@@ -556,9 +555,7 @@ export class Idea {
             .where("archived","==", false)
             .where("project","==",store.state.user.project)
             .get();
-    const products = await db.collection("products")
-            .where("ideas","!=", [])
-            .get();
+    const products = await db.collection("products").where("ideas","!=", []).get();
     const joinProducts = products.docs.map(doc => ({id:doc.id, ideas:doc.data().ideas}) );
     return snapshot.docs.map(doc => ({
       id:doc.id,
@@ -637,7 +634,7 @@ export class Risk {
             .where("project","==",store.state.user.project)
             .get();
     const products = await db.collection("products").where("risks","!=", []).get();
-    const joinProducts = products.docs.map(doc => ({id:doc.id, goals:doc.data().risks}) );
+    const joinProducts = products.docs.map(doc => ({id:doc.id, risks:doc.data().risks}) );
     return snapshot.docs.map(doc => ({
       id:doc.id,
       data:doc.data(),
