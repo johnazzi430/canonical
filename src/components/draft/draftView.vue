@@ -189,9 +189,15 @@ export default {
   watch:{
     $route:{
       immediate:true,
-      handler(){
-      //   this.draftSelected= true
-      //   this.draftSelectedValues = this.$route.params.id
+      async handler(){
+        if(this.$route.query.draft && this.$route.query.parent && this.$route.query.docType  ){
+          this.draftSelected= true
+          this.draftSelectedValues.draftID = this.$route.query.draft
+          this.draftSelectedValues.parentID = this.$route.query.parent
+          this.draftSelectedValues.parentType = this.$route.query.docType
+          const approvalRecord = await Approval.getByDoc(this.$route.query.draft)
+          this.draftSelectedValues.approvalRecords = approvalRecord
+        }
        }
     }
   },

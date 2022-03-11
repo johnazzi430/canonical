@@ -2,7 +2,8 @@
   <div class="">
     <h1 style="color:red" v-if="draft === true && reviewing === false">
       DRAFT
-      <v-btn @click="$router.push({path:'/draft/'+product.id})" >
+      <v-btn
+      @click="openDraftCompare()" >
         Open Draft Compare
       </v-btn>
     </h1>
@@ -418,6 +419,7 @@ export default {
       draftChangeType:"minor",
       drafts:[],
       draftName:"",
+      draftData: {},
       rules:{
         required: value => !!value || 'Required.',
         counter: value => value.length <= 20 || 'Max 20 characters',
@@ -506,6 +508,17 @@ export default {
       resetForm () {
         this.$refs.form.reset()
       },
+
+      openDraftCompare(){
+        this.$router.push({
+            path:'/draft',
+            query: {
+              draft:this.product.id,
+              parent:this.draftData.parentID,
+              docType:this.draftData.parentType
+            }
+          })
+      }
     },
     computed:{
       featureOptions(){
