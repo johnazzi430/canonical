@@ -22,7 +22,18 @@
         required
       ></v-textarea>
 
-      priority
+      Uncertainty
+      <v-slider
+        v-model="risk.data.uncertainty"
+        step="1"
+        max="5"
+        show-ticks="always"
+        label="Impact"
+        thumb-label="always"
+        :disabled="!editing"
+      ></v-slider>
+
+      impact
       <v-slider
         v-model="risk.data.impact"
         step="1"
@@ -98,7 +109,8 @@ export default {
         data : {
           description:"",
           name:"",
-          impact:1
+          impact:3,
+          uncertainty:3
         }
       },
       rules:{

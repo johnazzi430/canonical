@@ -260,8 +260,9 @@ export class Change {
 }
 
 export class Approvals{
-  constructor({approver,approved = false, required = true}){
+  constructor({approver, approved = false, required = true, reviewed = false}){
     this.approver = approver; //String
+    this.reviewed = reviewed;
     this.approved = approved;  //Bool
     this.required = required; //Bool
   }

@@ -6,12 +6,20 @@
     >
       <template v-slot:activator="{ props }">
         <v-btn
-          v-if="!loggedInUserIsApprover"
+          v-if="loggedInUserIsApprover"
           color="primary"
           dark
           v-bind="props"
         >
-          Request Approvals
+          Review and Approve
+        </v-btn>
+        <v-btn
+          v-else-if="approvalExists"
+          color="primary"
+          dark
+          v-bind="props"
+        >
+          Review Approvals
         </v-btn>
         <v-btn
           v-else
@@ -19,26 +27,43 @@
           dark
           v-bind="props"
         >
-          Approve
+          Add Approvers
         </v-btn>
       </template>
       <v-card
-      style="width:500px"
+      style="width:800px"
       class ="approvals">
-        <v-card-title class="text-h5">
-          Add approvals to you change
-        </v-card-title>
 
-        <div>
+        <div v-if="loggedInUserIsApprover">
+          <v-card-title class="text-h5">
+            Review
+          </v-card-title>
+          <v-textarea
+              type="text"
+              v-model="newComment"
+          />
+        <v-card-actions>
+          <v-btn @click='approve()'>Reviewed and Approved</v-btn>
+          <v-btn @click='reviewAndComment()'>Reviewed with Comments</v-btn>
+          <v-btn text @click="modal = false">cancel</v-btn>
+        </v-card-actions>
+        </div>
+        <div v-else-if="approvalExists">
+          Placeholder for reviewing existing approvals
+        </div>
+        <div v-else>
+          <v-card-title class="text-h5">
+            Add approvals to you change
+          </v-card-title>
           <v-btn @click='approvers.push({approver: null,required:true})'>add row</v-btn>
           <v-row
             style="height: 60px"
             no-gutters
-            v-for="(approver, index) in approvers"
-            v-bind:key='approver'>
+            v-for="(approverItem, index) in approverRecords"
+            v-bind:key='index'>
             <v-col cols="12" sm="7">
               <VueMultiselect
-                v-model="approver.approver"
+                v-model="approverItem.approver"
                 :options="$store.state.users.map(doc => ({ id:doc.id, displayName:doc.displayName}))"
                 track-by="id"
                 label="displayName"></VueMultiselect>
@@ -48,15 +73,15 @@
                 label="required"
                 color="primary"
                 :disabled="loggedInUserIsApprover"
-                v-model="approver.required"/>
+                v-model="approverItem.required"/>
             </v-col>
             <v-col cols="12" sm="2" v-if="!loggedInUserIsApprover">
-              <v-btn @click='approvers.splice(index,1)' icon="mdi-minus"></v-btn>
+              <v-btn @click='approverRecords.splice(index,1)' icon="mdi-minus"></v-btn>
             </v-col>
             <v-col cols="12" sm="2" v-else>
               <v-btn
-                v-if="approvers.splice(index,1).id === $store.state.users.uid"
-                @click='approvers.splice(index,1)'
+                v-if="approverItem.approver.id === $store.state.user.uid"
+                @click='approverRecords.splice(index,1)'
                 >approve
               </v-btn>
             </v-col>
@@ -111,8 +136,9 @@ export default {
     loggedInUserIsApprover: false,
     modal: false,
     valid: false,
-    approvers:[],
-    approval: undefined
+    approverRecords:[],
+    approval: undefined,
+    newComment:""
   }),
   async beforeMount(){
     this.$store.commit('getUsers')
@@ -120,7 +146,7 @@ export default {
     if (approvalRec != undefined){
       this.approvalExists = true
       this.approval = approvalRec
-      this.approvers = approvalRec.approvals
+      this.approverRecords = approvalRec.approvals
       if(approvalRec.approvals.filter(i => i.approver.id === this.$store.state.user.uid).length > 0 ) {
         this.loggedInUserIsApprover = true
       }
@@ -134,7 +160,7 @@ export default {
       const approvalDoc = await new Approval({
             docID:this.approvalParentDocId,
             docType:'product',
-            approvals:this.approvers
+            approvals:this.approverRecords
           })
           .create()
       console.log(approvalDoc)

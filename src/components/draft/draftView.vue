@@ -75,13 +75,13 @@
                 </v-row>
               </v-col>
               <v-col cols="12" sm="4">
-                <v-container v-if="draftSelectedValues.approvals">
+                <v-container v-if="draftSelectedValues.approvalRecords">
                   <v-btn @click="$router.push({
                       path:'/product/'+draftSelectedValues.parentType.slice(0, -1)+'/' + draftSelectedValues.draftID,
                       query:{draft:true}} )">Update Draft</v-btn>
                   <h2>approvals</h2>
                   <v-list density="compact"
-                    v-for="item in draftSelectedValues.approvals.approvals"
+                    v-for="item in draftSelectedValues.approvalRecords.approvals"
                     :key="item"
                     >
                     <v-list-item>
@@ -154,7 +154,7 @@ export default {
       draftSelectedValues:{
         draftID:'',
         parentID:'',
-        approvals:null,
+        approvalRecords:null,
         parentType:''
       },
       approvalHeaders:[
@@ -191,7 +191,8 @@ export default {
       this.draftSelectedValues.parentID = draft.parentID
       this.draftSelectedValues.parentType = draft.parentType
       this.draftSelected = true
-      this.draftSelectedValues.approvals = await Approval.getByDoc(draft.id)
+      const approvalRecord = await Approval.getByDoc(draft.id)
+      this.draftSelectedValues.approvalRecords = approvalRecord
       return
     }
   },
