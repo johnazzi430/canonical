@@ -377,6 +377,7 @@ export default {
       this.$store.commit('selectItem',{index:event.index,source:event.source})
       document.getElementById("right-sidepanel").style.width = "400px";
       this.draft=true
+      this.$router.push( {path:'/product/'+event.source+'/' + event.index , query:{draft:true}})
     },
 
     expandDetailLarge(){
@@ -396,7 +397,7 @@ export default {
 
 <style lang="scss" scoped>
 
-.v-card .rounded-0{
+.v-card{
   margin: 4px;
   white-space: nowrap;
   overflow: hidden;

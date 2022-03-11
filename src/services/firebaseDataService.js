@@ -407,6 +407,14 @@ export class Draft {
     return await db.collection("documentDrafts").doc(id).update(request)
   }
 
+  static async mergeWithParent(id){
+    const draft = await db.collection("documentDrafts").doc(id).get()
+    await db.collection(draft.data().parentType).doc(draft.data().parentID).update(draft.data().docData)
+    await db.collection(draft.data().parentType).doc(draft.data().parentID).update({updatedDate: Date.now(), updatedBy:store.state.user.uid})
+    await new Change({docID:draft.data().parentID, docType:draft.data().parentType}).create(draft.data())
+    await db.collection("documentDrafts").doc(id).update({archived:true,updatedDate: Date.now()})
+  }
+
   static async updateDocApproval(id,data){
     return await db.collection("documentDrafts").doc(id).update({
         approval: data,

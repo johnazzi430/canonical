@@ -338,7 +338,7 @@
         <v-chip
           v-for="draft in drafts"
           :key="draft"
-          @click="$emit('selectDraft', {index:draft.id,source:'product',draft:true})"
+          @click="$emit('selectDraft', {index:draft.id, source:'product',draft:true})"
         >
           {{draft.draftName}}
         </v-chip>
@@ -580,7 +580,10 @@ export default {
             }
             this.draftName = selectedData.data.draftName,
             this.isDraft = true;
-            this.loading=false;
+            this.loading = false;
+            // this.respondToRouteChanges = false;
+            // this.$router.replace({query: { draft:true}})
+            //     .finally(() => {this.respondToRouteChanges = true});
           } else {
             this.editing = true
           }

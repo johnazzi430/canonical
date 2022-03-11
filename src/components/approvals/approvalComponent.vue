@@ -55,7 +55,7 @@
           <v-card-title class="text-h5">
             Add approvals to you change
           </v-card-title>
-          <v-btn @click='approvers.push({approver: null,required:true})'>add row</v-btn>
+          <v-btn @click='approverRecords.push({approver: null,required:true})'>add row</v-btn>
           <v-row
             style="height: 60px"
             no-gutters

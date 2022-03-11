@@ -117,7 +117,11 @@
                       :approvaldocType='draftSelectedValues.parentType'/>
                   <div v-if="draftSelectedValues.approvalRecords">
                     <v-btn v-if="draftSelectedValues.approvalRecords.isApproved"
-                      > Merge </v-btn>
+                      @click="merge()"
+                      > Change Approved, Merge? </v-btn>
+                    <v-btn v-else
+                        @click="merge()"
+                        > Merge without approvals? </v-btn>
                   </div>
                 </v-container>
                 <v-container>
@@ -139,7 +143,7 @@
 
 <script type="text/javascript">
 import productDetail from "../product/productDetail";
-import {Approval} from "../../services/firebaseDataService";
+import {Approval,Draft} from "../../services/firebaseDataService";
 // import featureDetail from "../product/featureDetail";
 // import ideaDetail from "../product/ideaDetail";
 // import goalDetail from "../product/goalDetail";
@@ -212,6 +216,10 @@ export default {
       const approvalRecord = await Approval.getByDoc(draft.id)
       this.draftSelectedValues.approvalRecords = approvalRecord
       return
+    },
+
+    async merge(){
+      await Draft.mergeWithParent(this.draftSelectedValues.draftID)
     }
   },
   mounted () {}
