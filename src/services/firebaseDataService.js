@@ -121,7 +121,7 @@ export class User{
 
   static async createUser(form){
     const auth = getAuth();
-    const userCredential = createUserWithEmailAndPassword(auth, form.email, form.password)
+    const userCredential = await createUserWithEmailAndPassword(auth, form.email, form.password)
       .then((result) => {return result})
       .catch((err) => {throw err});
     const newUser = {
@@ -531,7 +531,7 @@ export class Feature {
   }
 
 
-  static async createDoc(value) {
+  static async create(value) {
     value = addInDefaults(value)
     return db.collection("features").add(value)
             .then(store.commit('alert',{type:'info',message:`feature created`,autoClear:true}));

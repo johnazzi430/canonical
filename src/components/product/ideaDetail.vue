@@ -36,7 +36,7 @@
       >
         <v-text-field
           v-model="idea.data.idea"
-          :counter="20"
+          :counter="42"
           :rules="[rules.required,rules.counter]"
           label="idea"
           required
@@ -124,7 +124,7 @@ export default {
       },
       rules:{
         required: value => !!value || 'Required.',
-        counter: value => value.length <= 20 || 'Max 20 characters',
+        counter: value => value.length <= 42 || 'Max 42 characters',
         url: value => {
           // eslint-disable-next-line
           const pattern = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/

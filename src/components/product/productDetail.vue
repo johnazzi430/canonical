@@ -80,7 +80,7 @@
         <v-text-field
           v-if="draft === true && reviewing === false"
           v-model="draftName"
-          :counter="20"
+          :counter="42"
           :rules="[rules.required,rules.counter]"
           label="Draft Name"
           required
@@ -89,7 +89,7 @@
 
         <v-text-field
           v-model="product.data.name"
-          :counter="20"
+          :counter="42"
           :rules="[rules.required,rules.counter]"
           label="Name"
           required
@@ -310,7 +310,7 @@
           </v-btn>
           <v-text-field
             v-model="draftName"
-            :counter="20"
+            :counter="42"
             label="Draft Name"
             required
           />
@@ -456,7 +456,7 @@ export default {
       draftData: {},
       rules:{
         required: value => !!value || 'Required.',
-        counter: value => value.length <= 20 || 'Max 20 characters',
+        counter: value => value.length <= 42 || 'Max 42 characters',
         email: value => {
           // eslint-disable-next-line
             const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
