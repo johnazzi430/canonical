@@ -49,19 +49,10 @@
               height="200"
               elevation="3"
               variant ="contained-text"
-              @click="search=persona.id , $store.commit('filter',search.trim()) "
+              @click='expandDetail(persona.id,"persona")'
               >
                 <v-card-header>{{persona.data.name}}</v-card-header>
                 <v-card-text>{{persona.data.description}}</v-card-text>
-                <v-card-actions>
-                  <v-btn
-                    variant="text"
-                    color="blue"
-                    v-on:click.stop='expandDetail(persona.id,"persona")'
-                  >
-                    Details
-                  </v-btn>
-                </v-card-actions>
               </v-card>
             </v-row>
             <h3 class="text-medium-emphasis">Needs <v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("need")'>Add Needs +</v-btn></h3>
@@ -84,19 +75,10 @@
               height="150"
               elevation="3"
               variant ="contained-text"
-              @click="search=need.id , $store.commit('filter',search.trim()) "
+              @click='expandDetail(need.id,"need")'
               :ripple = 'true'>
               <v-card-header>{{need.data.name}}</v-card-header>
               <v-card-text>{{need.data.description}}</v-card-text>
-                <v-card-actions>
-                  <v-btn
-                    variant="text"
-                    color="blue"
-                    v-on:click.stop='expandDetail(need.id,"need")'
-                  >
-                    Details
-                  </v-btn>
-                </v-card-actions>
               </v-card>
             </v-row>
             <h3 class="text-medium-emphasis">Insights <v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("insight")'>Add Insights +</v-btn></h3>
@@ -119,19 +101,10 @@
               height="150"
               elevation="3"
               variant ="contained-text"
-              @click="search=insight.id , $store.commit('filter',search.trim()) "
+              @click='expandDetail(insight.id,"insight")'
               >
                 <v-card-header>{{insight.data.name}}</v-card-header>
                 <v-card-text>{{insight.data.description}}</v-card-text>
-                <v-card-actions>
-                  <v-btn
-                    variant="text"
-                    color="blue"
-                    v-on:click.stop='expandDetail(insight.id,"insight")'
-                  >
-                    Details
-                  </v-btn>
-                </v-card-actions>
               </v-card>
             </v-row>
             <!-- <h3 class="text-medium-emphasis">Journeys <v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("journey")'>Add Journey +</v-btn></h3>
@@ -188,20 +161,10 @@
               height="150"
               elevation="3"
               variant ="contained-text"
-              @click="search=jobToBeDone.id , $store.commit('filter',search.trim()) "
+              @click='expandDetail(jobToBeDone.id,"jobToBeDone")'
               >
                 <v-card-header>{{jobToBeDone.data.name}}</v-card-header>
                 <v-card-text>{{jobToBeDone.data.description}}</v-card-text>
-
-                <v-card-actions>
-                  <v-btn
-                    variant="text"
-                    color="blue"
-                    v-on:click.stop='expandDetail(jobToBeDone.id,"jobToBeDone")'
-                  >
-                    Button
-                  </v-btn>
-                </v-card-actions>
               </v-card>
             </v-row>
             <h3 class="text-medium-emphasis">Interviews <v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("interview")'>Add Interviews +</v-btn></h3>
@@ -223,21 +186,10 @@
               height="130"
               elevation="3"
               variant ="contained-text"
-              @click="search=interview.id , $store.commit('filter',search.trim()) "
+              @click='expandDetail(interview.id,"interview")'
               >
                 <v-card-header>{{interview.data.interviewee}}</v-card-header>
                 <v-card-text>{{interview.data.description}}</v-card-text>
-
-                <v-card-actions>
-                  <v-btn
-                    variant="outlined"
-                    rounded
-                    text
-                    v-on:click.stop='expandDetail(interview.id,"interview")'
-                  >
-                    Button
-                  </v-btn>
-                </v-card-actions>
               </v-card>
             </v-row>
         </v-main>
@@ -376,6 +328,8 @@ export default {
   },
   methods: {
     expandDetail(index,source) {
+      this.search=index
+      this.$store.commit('filter',index.trim())
       this.$store.commit('selectItem',{index,source})
       document.getElementById("right-sidepanel").style.width = "400px";
       this.$router.push('/user/'+source+'/' + index )
@@ -393,6 +347,8 @@ export default {
 
     closeNav() {
       document.getElementById("right-sidepanel").style.width = "0px";
+      this.$store.commit('filter','')
+      this.search = ''
     },
 
     onSelectDraft(event){

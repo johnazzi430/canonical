@@ -116,6 +116,13 @@ export default {
 
 <style lang="scss">
 
+.v-field__input {
+  font-size: 14px !important;
+}
+
+.v-input{
+  margin-bottom:-30px;
+}
 
 .user-menu{
    .v-overlay__content{

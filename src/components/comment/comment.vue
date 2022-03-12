@@ -18,6 +18,7 @@
         required
         rows="3"
         density="compact"
+        label="leave a comment"
       ></v-textarea>
 
       <div>

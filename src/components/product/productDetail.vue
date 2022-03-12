@@ -1,8 +1,10 @@
 <template>
-  <div class="">
+  <div class="view-product">
     <h1 style="color:red" v-if="draft === true && reviewing === false">
       DRAFT
       <v-btn
+      variant="outlined"
+      color="teal accent-4"
       @click="openDraftCompare()" >
         Open Draft Compare
       </v-btn>
@@ -32,6 +34,7 @@
       ></v-text-field>
 
       <v-textarea
+      class="text-body-2"
         v-model="product.data.description"
         :rules="[rules.required]"
         label="Description"
@@ -617,7 +620,17 @@ export default {
   }
 </script>
 
-<style scoped>
+<style lang="scss">
+
+.view-product{
+  .v-input{
+    margin-bottom:-30px;
+  }
+
+  .v-field{
+      font-size: 14px !important;
+  }
+}
 
 .detail-row{
   margin: 4px;

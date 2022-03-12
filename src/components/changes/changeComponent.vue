@@ -8,26 +8,23 @@
         <v-expansion-panel-text>
           <v-row style="margin:-4px 0px">
             <v-col>
-              <h3>Field</h3>
+              <h4>Field</h4>
             </v-col>
             <v-col>
-              <h3>-></h3>
+              <h4>-></h4>
             </v-col>
           </v-row>
-          <v-row style="margin:-4px 0px" v-for="setrow in Object.keys(change.data.set)" :key="setrow ">
-            <v-col>
-              <p>{{setrow}}</p>
-            </v-col>
-            <v-col class="change-data">
-              <v-sheet>
-                <p>(-) {{change.data.unset[setrow]}}</p>
-              </v-sheet>
-            </v-col>
-            <v-col class="change-data">
-              <v-sheet>
-                <p>(+) {{change.data.set[setrow]}}</p>
-              </v-sheet>
-            </v-col>
+          <v-row
+              style="margin:-4px 0px" v-for="setrow in Object.keys(change.data.set)" :key="setrow ">
+              <p class="text-body-2">{{setrow}}</p>
+              <div class="flex-container">
+                <v-sheet color = "red-lighten-5 change-data">
+                  <p class="text-body-2">(-) {{change.data.unset[setrow]}}</p>
+                </v-sheet>
+                <v-sheet color = "green-lighten-5 change-data">
+                  <p class="text-body-2"> (+) {{change.data.set[setrow]}}</p>
+                </v-sheet>
+              </div>
           </v-row>
           <br style="margin:-4px 0px"/>
         </v-expansion-panel-text>
@@ -64,6 +61,11 @@ export default {
 
 <style scoped>
 
+.flex-container{
+  display: flex;
+  flex-wrap: wrap;
+}
+
 .change-data{
   border: 1px lightgrey solid;
   margin:4px 4px 4px 4px;
@@ -75,5 +77,6 @@ export default {
   margin:4px;
   padding:4px;
 }
+
 
 </style>

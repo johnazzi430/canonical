@@ -5,27 +5,39 @@
     <div v-if="editing === false">
       <div>
         <v-card-subtitle class="">
-          {{comment.creator.displayName}} on {{new Date(comment.data.createDate).toISOString().split("T")[0]}}
+          <p class='font-weight-black'>{{comment.creator.displayName}}
+          </p>&nbsp;on&nbsp;
+          <p class='font-weight-black'>{{new Date(comment.data.createDate).toISOString().split("T")[0]}}</p>
+        </v-card-subtitle>
+        <v-card-text
+          class="text-body-2"
+          style="margin:-8px 0px"
+          >{{comment.data.comment}}
+        </v-card-text>
+        <v-card-actions
+        style="margin:-16px 0px"
+        v-if="$store.state.user.uid === comment.creator.id">
           <v-btn
-            v-if="$store.state.user.uid === comment.creator.id"
             variant="text"
             color="teal accent-4"
             @click="editing = true">edit comment
           </v-btn>
-        </v-card-subtitle>
-        <v-card-text style="margin:-4px" class="">{{comment.data.comment}}</v-card-text>
+        </v-card-actions>
       </div>
     </div>
-  <div v-if="editing === true">
-      <v-list-item-subtitle class="">{{comment.creator.displayName}} on {{comment.data.createDate}}</v-list-item-subtitle>
-        <v-textarea
-            type="text"
-            v-model="newComment"
-        />
+    <div v-if="editing === true">
+      <v-card-subtitle class="">
+        <p class='font-weight-black'>{{comment.creator.displayName}}
+        </p>&nbsp;on&nbsp;
+        <p class='font-weight-black'>{{new Date(comment.data.createDate).toISOString().split("T")[0]}}</p>
+      </v-card-subtitle>
+      <v-textarea
+              type="text"
+              v-model="newComment"
+          />
       <v-btn class="mr-4" @click="resetForm()">cancel</v-btn>
       <v-btn class="mr-4" @click="updateComment(comment.id,comment.data.comment)">submit</v-btn>
       <v-btn class="mr-4" @click="deleteComment(comment.id)">delete</v-btn>
-
     </div>
   </v-card>
 </template>
@@ -62,3 +74,13 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+
+.comment-card{
+  .v-field{
+      font-size: 14px !important;
+  }
+}
+
+</style>

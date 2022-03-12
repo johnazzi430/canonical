@@ -75,10 +75,16 @@
                 </v-row>
               </v-col>
               <v-col cols="12" sm="4">
-                <v-container v-if="draftSelectedValues.approvalRecords">
-                  <v-btn @click="$router.push({
+                <v-container>
+                  <v-btn
+                  variant="outlined"
+                  color="teal accent-4"
+                  @click="$router.push({
                       path:'/product/'+draftSelectedValues.parentType.slice(0, -1)+'/' + draftSelectedValues.draftID,
                       query:{draft:true}} )">Update Draft</v-btn>
+                  <hr style="margin: 8px 0px">
+                </v-container>
+                <v-container v-if="draftSelectedValues.approvalRecords">
                   <h2>approvals</h2>
                   <v-list
                     style="margin:-4px"
@@ -116,6 +122,7 @@
                       @approvalsUpdated="refreshData()"
                       :approvalParentDocId='draftSelectedValues.draftID'
                       :approvaldocType='draftSelectedValues.parentType'/>
+                  <hr style="margin: 8px 0px">
                   <div v-if="draftSelectedValues.approvalRecords">
                     <v-btn v-if="draftSelectedValues.approvalRecords.isApproved"
                       @click="merge()"

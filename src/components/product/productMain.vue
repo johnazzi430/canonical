@@ -49,20 +49,11 @@
               height="200"
               elevation="3"
               variant ="contained-text"
-              @click="search=product.id , $store.commit('filter',search.trim()) "
+              @click="expandDetail(product.id,'product')"
               >
                 <v-card-header>{{product.data.name}}</v-card-header>
                 <v-card-text class="text-wrap">{{product.data.description}}</v-card-text>
 
-                <v-card-actions>
-                  <v-btn
-                    variant="text"
-                    color="orange"
-                    v-on:click.stop='expandDetail(product.id,"product")'
-                  >
-                    Details
-                  </v-btn>
-                </v-card-actions>
               </v-card>
             </v-row>
             <h3 class="text-medium-emphasis">Features  <v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("feature")'>Add Feature +</v-btn></h3>
@@ -84,19 +75,10 @@
               height="150"
               elevation="3"
               variant ="contained-text"
-              @click="search=feature.id , $store.commit('filter',search.trim()) "
+              @click="expandDetail(feature.id,'feature')"
               >
                 <v-card-header>{{feature.data.name}}</v-card-header>
                 <v-card-text>{{feature.data.description}}</v-card-text>
-                <v-card-actions>
-                  <v-btn
-                  variant="text"
-                  color="orange"
-                    v-on:click.stop='expandDetail(feature.id,"feature")'
-                  >
-                    Details
-                  </v-btn>
-                </v-card-actions>
               </v-card>
             </v-row>
             <h3 class="text-medium-emphasis">Ideas <v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("idea")'>Add Idea +</v-btn></h3>
@@ -118,21 +100,10 @@
               height="150"
               elevation="3"
               variant ="contained-text"
-              @click="search=idea.id , $store.commit('filter',search.trim()) "
+              @click="expandDetail(idea.id,'idea')"
               >
                 <v-card-header>{{idea.data.idea}}</v-card-header>
                 <v-card-text>{{idea.data.description}}</v-card-text>
-
-                <v-card-actions>
-                  <v-btn
-                  variant="text"
-                  color="orange"
-                    text
-                    v-on:click.stop='expandDetail(idea.id,"idea")'
-                  >
-                    Details
-                  </v-btn>
-                </v-card-actions>
               </v-card>
             </v-row>
             <h3 class="text-medium-emphasis">Goals<v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("goal")'>Add Goal +</v-btn></h3>
@@ -154,20 +125,10 @@
               height="150"
               elevation="3"
               variant ="contained-text"
-              @click="search=goal.id , $store.commit('filter',search.trim()) "
+              @click="expandDetail(goal.id,'goal')"
               >
-                <v-card-header>{{goal.data.name}}{{goal.data.description}}</v-card-header>
+                <v-card-header>{{goal.data.name}}</v-card-header>
                 <v-card-text>{{goal.data.description}}</v-card-text>
-
-                <v-card-actions>
-                  <v-btn
-                  variant="text"
-                  color="orange"
-                    v-on:click.stop='expandDetail(goal.id,"goal")'
-                  >
-                    Details
-                  </v-btn>
-                </v-card-actions>
               </v-card>
             </v-row>
             <h3 class="text-medium-emphasis">Risks<v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("risk")'>Add Risk +</v-btn></h3>
@@ -190,20 +151,10 @@
               height="150"
               elevation="3"
               variant ="contained-text"
-              @click="search=risk.id , $store.commit('filter',search.trim()) "
+              @click="expandDetail(risk.id,'risk')"
               >
                 <v-card-header>{{risk.data.name}}</v-card-header>
                 <v-card-text>{{risk.data.description}}</v-card-text>
-
-                <v-card-actions>
-                  <v-btn
-                  variant="text"
-                  color="orange"
-                    v-on:click.stop='expandDetail(risk.id,"risk")'
-                  >
-                    Details
-                  </v-btn>
-                </v-card-actions>
               </v-card>
             </v-row>
         </v-main>
@@ -257,12 +208,14 @@
                 <riskDetail :key='$store.state.selected.index'/>
               </div>
               <div class="panel-content" v-if='$store.state.selected.index !== null'>
+                <hr style="margin: 8px 0px">
                 <h3>Comments</h3>
                 <comment
                   v-if='$store.state.selected.index != null'
                   :doc-id='$store.state.selected.index'
                   :doc-type='$store.state.selected.source'
                   :key="$store.state.selected.index+draft+'comment'"/>
+                <hr style="margin: 8px 0px">
                 <h3>Assumptions</h3>
                 <assumption
                     v-if='$store.state.selected.index != null'
@@ -270,6 +223,7 @@
                     :doc-type='"products"'
                     :key="$store.state.selected.index+'assumption'"
                       />
+                <hr style="margin: 8px 0px">
                 <h3>Changes</h3>
                 <change
                   v-if='$store.state.selected.index != null'
@@ -277,6 +231,7 @@
                   :doc-type='"products"'
                   :key="$store.state.selected.index+'change'"
                     />
+                <hr>
               </div>
             </div>
         </div>
@@ -348,6 +303,8 @@ export default {
   },
   methods: {
     expandDetail(index,source,draft=false) {
+      this.search=index
+      this.$store.commit('filter',index.trim()),
       this.$store.commit('selectItem',{index,source})
       document.getElementById("right-sidepanel").style.width = "400px";
       this.draft=draft
@@ -366,6 +323,8 @@ export default {
 
     closeDetail() {
       document.getElementById("right-sidepanel").style.width = "0px";
+      this.$store.commit('filter','')
+      this.search = ''
       // EventBus.$emit('selection-changed',this.selectedRow = null);
     },
 
