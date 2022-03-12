@@ -1,27 +1,10 @@
 <template>
   <div class="">
-    <v-form
-      ref="form"
-      v-model="valid"
-      lazy-validation
-    >
-      <v-text-field
-        v-model="idea.data.idea"
-        :counter="20"
-        :rules="[rules.required,rules.counter]"
-        label="idea"
-        required
-        :disabled="!editing"
-      ></v-text-field>
-
-      <v-textarea
-        v-model="idea.data.description"
-        :rules="[rules.required]"
-        label="Description"
-        :disabled="!editing"
-        required
-      ></v-textarea>
-
+    <div v-if="!editing">
+      <h2>{{idea.data.idea}}</h2>
+      <br>
+      <p style="white-space: pre-line">{{idea.data.description}}</p>
+      <br>
       priority
       <v-slider
         v-model="idea.data.priority"
@@ -35,24 +18,6 @@
 
       Idea owner: {{idea.data.owner}}
 
-      <hr>
-
-      <div v-if="selected.index === null">
-        <v-btn
-          color="success"
-          class="mr-4"
-          @click="addIdea()"
-        >
-          Add
-        </v-btn>
-        <v-btn
-          color="info"
-          class="mr-4"
-          @click="resetForm()"
-        >
-          Clear
-        </v-btn>
-      </div>
       <div v-if="editing === false">
         <v-btn
           v-if="selected.index != null && $store.getters.isUserLoggedIn"
@@ -62,27 +27,83 @@
         >Edit
         </v-btn>
       </div>
-      <div v-if="selected.index != null && editing === true">
-        <v-btn
-          color="success"
-          class="mr-4"
-          @click="updateIdea()"
-        >Confirm
-        </v-btn>
-        <v-btn
-          color="info"
-          class="mr-4"
-          @click="editing = false; this.$store.commit('closeDetail')"
-        >Cancel
-        </v-btn>
-        <v-btn
-          color="error"
-          class="mr-4"
-          @click="deleteIdea()"
-        >Delete
-        </v-btn>
-      </div>
-    </v-form>
+    </div>
+    <div v-else>
+      <v-form
+        ref="form"
+        v-model="valid"
+        lazy-validation
+      >
+        <v-text-field
+          v-model="idea.data.idea"
+          :counter="20"
+          :rules="[rules.required,rules.counter]"
+          label="idea"
+          required
+          :disabled="!editing"
+        ></v-text-field>
+
+        <v-textarea
+          v-model="idea.data.description"
+          :rules="[rules.required]"
+          label="Description"
+          :disabled="!editing"
+          required
+        ></v-textarea>
+
+        priority
+        <v-slider
+          v-model="idea.data.priority"
+          step="1"
+          max="5"
+          show-ticks="always"
+          label="Priority"
+          thumb-label="always"
+          :disabled="!editing"
+        ></v-slider>
+
+        Idea owner: {{idea.data.owner}}
+
+        <hr>
+
+        <div v-if="selected.index === null">
+          <v-btn
+            color="success"
+            class="mr-4"
+            @click="addIdea()"
+          >
+            Add
+          </v-btn>
+          <v-btn
+            color="info"
+            class="mr-4"
+            @click="resetForm()"
+          >
+            Clear
+          </v-btn>
+        </div>
+        <div v-if="selected.index != null && editing === true">
+          <v-btn
+            color="success"
+            class="mr-4"
+            @click="updateIdea()"
+          >Confirm
+          </v-btn>
+          <v-btn
+            color="info"
+            class="mr-4"
+            @click="editing = false; this.$store.commit('closeDetail')"
+          >Cancel
+          </v-btn>
+          <v-btn
+            color="error"
+            class="mr-4"
+            @click="deleteIdea()"
+          >Delete
+          </v-btn>
+        </div>
+      </v-form>
+    </div>
   </div>
 </template>
 

@@ -1,5 +1,6 @@
 <template>
   <v-container class="">
+    <h3 v-if="changes.length > 0">Changes</h3>
     <v-expansion-panels>
       <v-expansion-panel v-for="change in changes" :key="change">
         <v-expansion-panel-title>

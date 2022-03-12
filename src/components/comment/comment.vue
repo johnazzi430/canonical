@@ -1,5 +1,6 @@
 <template>
   <div class="">
+    <h3 v-if="comments.length>0">Comments:</h3>
     <commentCard
       class="comment-card"
       v-for="commentItem in comments"

@@ -891,7 +891,7 @@ export class Interview {
   }
 
   static async getDocById(id) {
-    const snapshot = await db.collection("interview").doc(id).get()
+    const snapshot = await db.collection("interviewFeedback").doc(id).get()
     return {id:snapshot.id, data:snapshot.data()}
   }
 

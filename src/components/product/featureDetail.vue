@@ -1,28 +1,12 @@
 <template>
   <div class="">
-    <v-form
-      ref="form"
-      v-model="valid"
-      lazy-validation
-    >
-      <v-text-field
-        v-model="feature.data.name"
-        :counter="20"
-        :rules="[rules.required,rules.counter]"
-        label="Name"
-        required
-        :disabled="!editing"
-      ></v-text-field>
 
-      <v-textarea
-        v-model="feature.data.description"
-        :rules="[rules.required]"
-        label="Description"
-        :disabled="!editing"
-        required
-      ></v-textarea>
-
-      priority
+    <div v-if="!editing">
+      <h2>{{feature.data.name}}</h2>
+      <br>
+      <p style="white-space: pre-line">{{feature.data.description}}</p>
+      <br>
+      <h3>Priority</h3>
       <v-slider
         v-model="feature.data.priority"
         step="1"
@@ -30,76 +14,20 @@
         show-ticks="always"
         label="Priority"
         thumb-label="always"
-        :disabled="!editing"
+        :disabled="true"
       ></v-slider>
 
-      <v-text-field
-        v-model="feature.data.jiraLink"
-        label="Github Link"
-        :rules="[rules.url]"
-        :disabled="!editing"
-      ></v-text-field>
+      <v-chip v-if="feature.data.jiraLink.lenght>0" :href="feature.data.jiraLink" target="_blank">
+        <v-icon>mdi-jira</v-icon>
+      </v-chip>
 
-      <v-textarea
-        v-model="feature.data.leadingIndicators"
-        label="leading indicators"
-        :disabled="!editing"
-      ></v-textarea>
+      <h3 v-if="feature.data.leadingIndicators.length > 0">Leading Indicators</h3>
+      <p>{{feature.data.leadingIndicators}}</p>
+      <h3 v-if="feature.data.businessOutcomes.length > 0">Business Outcomes</h3>
+      <p>{{feature.data.businessOutcomes}}</p>
+      <h3 v-if="feature.data.nonFunctionalRequirements.length > 0">Non Functional Requirements (NFRs)</h3>
+      <p>{{feature.data.nonFunctionalRequirements}}</p>
 
-      <v-textarea
-        v-model="feature.data.businessOutcomes"
-        label="Business Outcomes"
-        :disabled="!editing"
-      ></v-textarea>
-
-      <v-textarea
-        v-model="feature.data.nonFunctionalRequirements"
-        label="Non Functional Requirements"
-        :disabled="!editing"
-      ></v-textarea>
-
-      <v-switch
-        v-model="feature.data.delivered"
-        color="primary"
-        :label="`delivered: ${feature.data.delivered}`"
-      ></v-switch>
-
-      <v-switch
-        v-model="feature.data.validated"
-        color="primary"
-        :label="`validated: ${feature.data.validated}`"
-      ></v-switch>
-
-      <!-- <v-select
-        :v-model="feature.product"
-        :items="$store.state.products"
-        return-object
-        item-text='data.name'
-        item-value='id'
-        label="feature"
-        required
-      ></v-select> -->
-
-      Feature owner: {{feature.data.owner}}
-
-      <hr>
-
-      <div v-if="selected.index === null">
-        <v-btn
-          color="success"
-          class="mr-4"
-          @click="addFeature()"
-        >
-          Add
-        </v-btn>
-        <v-btn
-          color="info"
-          class="mr-4"
-          @click="resetForm()"
-        >
-          Clear
-        </v-btn>
-      </div>
       <div v-if="editing === false">
         <v-btn
           v-if="selected.index != null && $store.getters.isUserLoggedIn"
@@ -109,27 +37,130 @@
         >Edit
         </v-btn>
       </div>
-      <div v-if="selected.index != null && editing === true">
-        <v-btn
-          color="success"
-          class="mr-4"
-          @click="updateFeature()"
-        >Confirm
-        </v-btn>
-        <v-btn
-          color="info"
-          class="mr-4"
-          @click="editing = false; this.$store.commit('closeDetail')"
-        >Cancel
-        </v-btn>
-        <v-btn
-          color="error"
-          class="mr-4"
-          @click="deleteFeature()"
-        >Delete
-        </v-btn>
-      </div>
-    </v-form>
+    </div>
+    <div v-else>
+      <v-form
+        ref="form"
+        v-model="valid"
+        lazy-validation
+      >
+        <v-text-field
+          v-model="feature.data.name"
+          :counter="20"
+          :rules="[rules.required,rules.counter]"
+          label="Name"
+          required
+          :disabled="!editing"
+        ></v-text-field>
+
+        <v-textarea
+          v-model="feature.data.description"
+          :rules="[rules.required]"
+          label="Description"
+          :disabled="!editing"
+          required
+        ></v-textarea>
+
+        priority
+        <v-slider
+          v-model="feature.data.priority"
+          step="1"
+          max="5"
+          show-ticks="always"
+          label="Priority"
+          thumb-label="always"
+          :disabled="!editing"
+        ></v-slider>
+
+        <v-text-field
+          v-model="feature.data.jiraLink"
+          label="Github Link"
+          :rules="[rules.url]"
+          :disabled="!editing"
+        ></v-text-field>
+
+        <v-textarea
+          v-model="feature.data.leadingIndicators"
+          label="leading indicators"
+          :disabled="!editing"
+        ></v-textarea>
+
+        <v-textarea
+          v-model="feature.data.businessOutcomes"
+          label="Business Outcomes"
+          :disabled="!editing"
+        ></v-textarea>
+
+        <v-textarea
+          v-model="feature.data.nonFunctionalRequirements"
+          label="Non Functional Requirements"
+          :disabled="!editing"
+        ></v-textarea>
+
+        <v-switch
+          v-model="feature.data.delivered"
+          color="primary"
+          :label="`delivered: ${feature.data.delivered}`"
+        ></v-switch>
+
+        <v-switch
+          v-model="feature.data.validated"
+          color="primary"
+          :label="`validated: ${feature.data.validated}`"
+        ></v-switch>
+
+        <!-- <v-select
+          :v-model="feature.product"
+          :items="$store.state.products"
+          return-object
+          item-text='data.name'
+          item-value='id'
+          label="feature"
+          required
+        ></v-select> -->
+
+        Feature owner: {{feature.data.owner}}
+
+        <hr>
+
+        <div v-if="selected.index === null">
+          <v-btn
+            color="success"
+            class="mr-4"
+            @click="addFeature()"
+          >
+            Add
+          </v-btn>
+          <v-btn
+            color="info"
+            class="mr-4"
+            @click="resetForm()"
+          >
+            Clear
+          </v-btn>
+        </div>
+        <div v-if="selected.index != null && editing === true">
+          <v-btn
+            color="success"
+            class="mr-4"
+            @click="updateFeature()"
+          >Confirm
+          </v-btn>
+          <v-btn
+            color="info"
+            class="mr-4"
+            @click="editing = false; this.$store.commit('closeDetail')"
+          >Cancel
+          </v-btn>
+          <v-btn
+            color="error"
+            class="mr-4"
+            @click="deleteFeature()"
+          >Delete
+          </v-btn>
+        </div>
+      </v-form>
+    </div>
   </div>
 </template>
 

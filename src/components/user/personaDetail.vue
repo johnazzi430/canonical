@@ -1,39 +1,16 @@
 <template>
   <div class="">
-    <v-form
-      ref="form"
-      v-model="valid"
-      lazy-validation
-    >
-      <v-text-field
-        v-model="persona.data.name"
-        :counter="20"
-        :rules="[rules.required,rules.counter]"
-        label="Name"
-        required
-        :disabled="!editing"
-      ></v-text-field>
 
-      <v-textarea
-        v-model="persona.data.description"
-        :rules="[rules.required]"
-        label="Description"
-        :disabled="!editing"
-        required
-      ></v-textarea>
-
-      <v-textarea
-        v-model="persona.data.gains"
-        label="Gains"
-        :disabled="!editing"
-      ></v-textarea>
-
-      <v-textarea
-        v-model="persona.data.pains"
-        label="Pains"
-        :disabled="!editing"
-      ></v-textarea>
-
+    <div v-if="!editing">
+      <h2>{{persona.data.name}}</h2>
+      <br>
+      <p>{{persona.data.description}}</p>
+      <br>
+      <h3>Gains</h3>
+      <p>{{persona.data.gains}}</p>
+      <br>
+      <h3>Pains</h3>
+      <p>{{persona.data.pains}}</p>
       <v-switch
         v-model="persona.data.validated"
         color="primary"
@@ -41,98 +18,158 @@
       ></v-switch>
 
       <br>
-      <h4>Insights</h4>
-      <VueMultiselect
-        v-model="insights"
-        :options="$store.state.insights.map(doc => ({ id:doc.id, name:doc.data.name}))"
-        :multiple="true"
-        track-by="id"
-        label="name"></VueMultiselect>
+      <h4 v-if="insights.length > 0">Insights</h4>
+      <v-chip size="small" v-for="insight in insights" :key="insight.id">{{insight.name}}</v-chip>
 
+      <h4 v-if="needs.length > 0">Needs</h4>
+      <v-chip size="small" v-for="need in needs" :key="need.id">{{need.name}}</v-chip>
+
+      <h4 v-if="journeys.length > 0">Journeys</h4>
+      <v-chip size="small" v-for="journey in journeys" :key="journey.id">{{journey.name}}</v-chip>
+
+      <h4 v-if="jobsToBeDone.length > 0">Jobs To Be Done</h4>
+      <v-chip size="small" v-for="jobToBeDone in jobsToBeDone" :key="jobToBeDone.id">{{jobToBeDone.name}}</v-chip>
+
+      <h4 v-if="interviews.length > 0">Interviews</h4>
+      <v-chip size="small" v-for="interview in interviews" :key="interview.id">{{interview.name}}</v-chip>
       <br>
-      <h4>Needs</h4>
-      <VueMultiselect
-        v-model="needs"
-        :options="$store.state.needs.map(doc => ({ id:doc.id, name:doc.data.name}))"
-        :multiple="true"
-        track-by="id"
-        label="name"></VueMultiselect>
-
-      <br>
-      <h4>Journeys</h4>
-      <VueMultiselect
-        v-model="journeys"
-        :options="$store.state.journeys.map(doc => ({ id:doc.id, name:doc.data.name}))"
-        :multiple="true"
-        track-by="id"
-        label="name"></VueMultiselect>
-
-      <br>
-      <h4>Jobs To Be Done</h4>
-      <VueMultiselect
-        v-model="jobsToBeDone"
-        :options="$store.state.jobsToBeDone.map(doc => ({ id:doc.id, name:doc.data.name}))"
-        :multiple="true"
-        track-by="id"
-        label="name"></VueMultiselect>
-
-      <br>
-      <h4>Interviews</h4>
-      <VueMultiselect
-        v-model="interviews"
-        :options="$store.state.interviews.map(doc => ({ id:doc.id, name:doc.data.interviewee}))"
-        :multiple="true"
-        track-by="id"
-        label="name"></VueMultiselect>
-
       <hr>
-
-      <div v-if="selected.index === null">
-        <v-btn
-          color="success"
-          class="mr-4"
-          @click="addPersona()"
-        >
-          Add
-        </v-btn>
-        <v-btn
-          color="info"
-          class="mr-4"
-          @click="resetForm()"
-        >
-          Clear
-        </v-btn>
-      </div>
-      <div v-if="editing === false">
-        <v-btn
+      <br>
+      <v-btn
           v-if="selected.index != null && $store.getters.isUserLoggedIn"
           color="success"
           class="mr-4"
           @click="editing = true"
         >Edit
-        </v-btn>
-      </div>
-      <div v-if="selected.index != null && editing === true">
-        <v-btn
-          color="success"
-          class="mr-4"
-          @click="updatePersona()"
-        >Confirm
-        </v-btn>
-        <v-btn
-          color="info"
-          class="mr-4"
-          @click="editing = false; this.$store.commit('closeDetail')"
-        >Cancel
-        </v-btn>
-        <v-btn
-          color="error"
-          class="mr-4"
-          @click="deletePersona()"
-        >Delete
-        </v-btn>
-      </div>
-    </v-form>
+      </v-btn>
+    </div>
+    <div v-else>
+      <v-form
+        ref="form"
+        v-model="valid"
+        lazy-validation
+      >
+        <v-text-field
+          v-model="persona.data.name"
+          :counter="20"
+          :rules="[rules.required,rules.counter]"
+          label="Name"
+          required
+          :disabled="!editing"
+        ></v-text-field>
+
+        <v-textarea
+          v-model="persona.data.description"
+          :rules="[rules.required]"
+          label="Description"
+          :disabled="!editing"
+          required
+        ></v-textarea>
+
+        <v-textarea
+          v-model="persona.data.gains"
+          label="Gains"
+          :disabled="!editing"
+        ></v-textarea>
+
+        <v-textarea
+          v-model="persona.data.pains"
+          label="Pains"
+          :disabled="!editing"
+        ></v-textarea>
+
+        <v-switch
+          v-model="persona.data.validated"
+          color="primary"
+          :label="`Validated: ${persona.data.validated}`"
+        ></v-switch>
+
+        <br>
+        <h4>Insights</h4>
+        <VueMultiselect
+          v-model="insights"
+          :options="$store.state.insights.map(doc => ({ id:doc.id, name:doc.data.name}))"
+          :multiple="true"
+          track-by="id"
+          label="name"></VueMultiselect>
+
+        <br>
+        <h4>Needs</h4>
+        <VueMultiselect
+          v-model="needs"
+          :options="$store.state.needs.map(doc => ({ id:doc.id, name:doc.data.name}))"
+          :multiple="true"
+          track-by="id"
+          label="name"></VueMultiselect>
+
+        <br>
+        <h4>Journeys</h4>
+        <VueMultiselect
+          v-model="journeys"
+          :options="$store.state.journeys.map(doc => ({ id:doc.id, name:doc.data.name}))"
+          :multiple="true"
+          track-by="id"
+          label="name"></VueMultiselect>
+
+        <br>
+        <h4>Jobs To Be Done</h4>
+        <VueMultiselect
+          v-model="jobsToBeDone"
+          :options="$store.state.jobsToBeDone.map(doc => ({ id:doc.id, name:doc.data.name}))"
+          :multiple="true"
+          track-by="id"
+          label="name"></VueMultiselect>
+
+        <br>
+        <h4>Interviews</h4>
+        <VueMultiselect
+          v-model="interviews"
+          :options="$store.state.interviews.map(doc => ({ id:doc.id, name:doc.data.interviewee}))"
+          :multiple="true"
+          track-by="id"
+          label="name"></VueMultiselect>
+        <hr>
+
+        <div v-if="selected.index === null">
+          <v-btn
+            color="success"
+            class="mr-4"
+            @click="addPersona()"
+          >
+            Add
+          </v-btn>
+          <v-btn
+            color="info"
+            class="mr-4"
+            @click="resetForm()"
+          >
+            Clear
+          </v-btn>
+        </div>
+        <div v-if="selected.index != null && editing === true">
+          <v-btn
+            color="success"
+            class="mr-4"
+            @click="updatePersona()"
+          >Confirm
+          </v-btn>
+          <v-btn
+            color="info"
+            class="mr-4"
+            @click="editing = false; this.$store.commit('closeDetail')"
+          >Cancel
+          </v-btn>
+          <v-btn
+            color="error"
+            class="mr-4"
+            @click="deletePersona()"
+          >Delete
+          </v-btn>
+        </div>
+      </v-form>
+    </div>
+
+
   </div>
 </template>
 

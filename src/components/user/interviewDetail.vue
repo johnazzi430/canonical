@@ -1,77 +1,85 @@
 <template>
   <div class="">
-    <v-form
-      ref="form"
-      v-model="valid"
-      lazy-validation
-    >
-      <v-text-field
-        v-model="interview.data.interviewee"
-        :counter="20"
-        :rules="[rules.required,rules.counter]"
-        label="Interview Name"
-        required
-        :disabled="!editing"
-      ></v-text-field>
-
-      <v-textarea
-        v-model="interview.data.details"
-        :rules="[rules.required]"
-        label="Details"
-        :disabled="!editing"
-        required
-      ></v-textarea>
-
-      Interview owner: {{interview.data.owner}}
-
+    <div v-if="!editing">
+      <h2>{{interview.data.interviewee}}</h2>
+      <br>
+      <p style="white-space: pre-line">{{interview.data.details}}</p>
+      <br>
       <hr>
-
-      <div v-if="selected.index === null">
-        <v-btn
-          color="success"
-          class="mr-4"
-          @click="addInterview()"
-        >
-          Add
-        </v-btn>
-        <v-btn
-          color="info"
-          class="mr-4"
-          @click="resetForm()"
-        >
-          Clear
-        </v-btn>
-      </div>
-      <div v-if="editing === false">
-        <v-btn
+      <br>
+      <v-btn
           v-if="selected.index != null && $store.getters.isUserLoggedIn"
           color="success"
           class="mr-4"
           @click="editing = true"
         >Edit
-        </v-btn>
-      </div>
-      <div v-if="selected.index != null && editing === true">
-        <v-btn
-          color="success"
-          class="mr-4"
-          @click="updateInterview()"
-        >Confirm
-        </v-btn>
-        <v-btn
-          color="info"
-          class="mr-4"
-          @click="editing = false; this.$store.commit('closeDetail')"
-        >Cancel
-        </v-btn>
-        <v-btn
-          color="error"
-          class="mr-4"
-          @click="deleteInterview()"
-        >Delete
-        </v-btn>
-      </div>
-    </v-form>
+      </v-btn>
+    </div>
+    <div v-else>
+      <v-form
+        ref="form"
+        v-model="valid"
+        lazy-validation
+      >
+        <v-text-field
+          v-model="interview.data.interviewee"
+          :counter="20"
+          :rules="[rules.required,rules.counter]"
+          label="Interview Name"
+          required
+          :disabled="!editing"
+        ></v-text-field>
+
+        <v-textarea
+          v-model="interview.data.details"
+          :rules="[rules.required]"
+          label="Details"
+          :disabled="!editing"
+          required
+        ></v-textarea>
+
+        Interview owner: {{interview.data.owner}}
+
+        <hr>
+
+        <div v-if="selected.index === null">
+          <v-btn
+            color="success"
+            class="mr-4"
+            @click="addInterview()"
+          >
+            Add
+          </v-btn>
+          <v-btn
+            color="info"
+            class="mr-4"
+            @click="resetForm()"
+          >
+            Clear
+          </v-btn>
+        </div>
+        <div v-if="selected.index != null && editing === true">
+          <v-btn
+            color="success"
+            class="mr-4"
+            @click="updateInterview()"
+          >Confirm
+          </v-btn>
+          <v-btn
+            color="info"
+            class="mr-4"
+            @click="editing = false; this.$store.commit('closeDetail')"
+          >Cancel
+          </v-btn>
+          <v-btn
+            color="error"
+            class="mr-4"
+            @click="deleteInterview()"
+          >Delete
+          </v-btn>
+        </div>
+      </v-form>
+    </div>
   </div>
 </template>
 

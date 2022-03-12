@@ -209,14 +209,12 @@
               </div>
               <div class="panel-content" v-if='$store.state.selected.index !== null'>
                 <hr style="margin: 8px 0px">
-                <h3>Comments</h3>
                 <comment
                   v-if='$store.state.selected.index != null'
                   :doc-id='$store.state.selected.index'
                   :doc-type='$store.state.selected.source'
                   :key="$store.state.selected.index+draft+'comment'"/>
                 <hr style="margin: 8px 0px">
-                <h3>Assumptions</h3>
                 <assumption
                     v-if='$store.state.selected.index != null'
                     :doc-id='$store.state.selected.index'
@@ -224,7 +222,6 @@
                     :key="$store.state.selected.index+'assumption'"
                       />
                 <hr style="margin: 8px 0px">
-                <h3>Changes</h3>
                 <change
                   v-if='$store.state.selected.index != null'
                   :doc-id='$store.state.selected.index'

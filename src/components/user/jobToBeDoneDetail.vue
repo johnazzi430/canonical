@@ -1,75 +1,83 @@
 <template>
   <div class="">
-    <v-form
-      ref="form"
-      v-model="valid"
-      lazy-validation
-    >
-      <v-text-field
-        v-model="jobToBeDone.data.name"
-        :counter="20"
-        :rules="[rules.required,rules.counter]"
-        label="Name"
-        required
-        :disabled="!editing"
-      ></v-text-field>
-
-      <v-textarea
-        v-model="jobToBeDone.data.description"
-        :rules="[rules.required]"
-        label="Description"
-        :disabled="!editing"
-        required
-      ></v-textarea>
-
+    <div v-if="!editing">
+      <h2>{{jobToBeDone.data.name}}</h2>
+      <br>
+      <p style="white-space: pre-line">{{jobToBeDone.data.description}}</p>
+      <br>
       <hr>
-
-      <div v-if="selected.index === null">
-        <v-btn
-          color="success"
-          class="mr-4"
-          @click="addJobToBeDone()"
-        >
-          Add
-        </v-btn>
-        <v-btn
-          color="info"
-          class="mr-4"
-          @click="resetForm()"
-        >
-          Clear
-        </v-btn>
-      </div>
-      <div v-if="editing === false">
-        <v-btn
+      <br>
+      <v-btn
           v-if="selected.index != null && $store.getters.isUserLoggedIn"
           color="success"
           class="mr-4"
           @click="editing = true"
         >Edit
-        </v-btn>
-      </div>
-      <div v-if="selected.index != null && editing === true">
-        <v-btn
-          color="success"
-          class="mr-4"
-          @click="updateJobToBeDone()"
-        >Confirm
-        </v-btn>
-        <v-btn
-          color="info"
-          class="mr-4"
-          @click="editing = false; this.$store.commit('closeDetail')"
-        >Cancel
-        </v-btn>
-        <v-btn
-          color="error"
-          class="mr-4"
-          @click="deleteJobToBeDone()"
-        >Delete
-        </v-btn>
-      </div>
-    </v-form>
+      </v-btn>
+    </div>
+    <div v-else>
+      <v-form
+        ref="form"
+        v-model="valid"
+        lazy-validation
+      >
+        <v-text-field
+          v-model="jobToBeDone.data.name"
+          :counter="20"
+          :rules="[rules.required,rules.counter]"
+          label="Name"
+          required
+          :disabled="!editing"
+        ></v-text-field>
+
+        <v-textarea
+          v-model="jobToBeDone.data.description"
+          :rules="[rules.required]"
+          label="Description"
+          :disabled="!editing"
+          required
+        ></v-textarea>
+
+        <hr>
+
+        <div v-if="selected.index === null">
+          <v-btn
+            color="success"
+            class="mr-4"
+            @click="addJobToBeDone()"
+          >
+            Add
+          </v-btn>
+          <v-btn
+            color="info"
+            class="mr-4"
+            @click="resetForm()"
+          >
+            Clear
+          </v-btn>
+        </div>
+        <div v-if="selected.index != null && editing === true">
+          <v-btn
+            color="success"
+            class="mr-4"
+            @click="updateJobToBeDone()"
+          >Confirm
+          </v-btn>
+          <v-btn
+            color="info"
+            class="mr-4"
+            @click="editing = false; this.$store.commit('closeDetail')"
+          >Cancel
+          </v-btn>
+          <v-btn
+            color="error"
+            class="mr-4"
+            @click="deleteJobToBeDone()"
+          >Delete
+          </v-btn>
+        </div>
+      </v-form>
+    </div>
   </div>
 </template>
 

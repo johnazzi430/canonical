@@ -1,88 +1,107 @@
 <template>
   <div class="">
-    <v-form
-      ref="form"
-      v-model="valid"
-      lazy-validation
-    >
-      <v-text-field
-        v-model="need.data.name"
-        :counter="20"
-        :rules="[rules.required,rules.counter]"
-        label="Name"
-        required
-        :disabled="!editing"
-      ></v-text-field>
-
-      <v-textarea
-        v-model="need.data.description"
-        :rules="[rules.required]"
-        label="Description"
-        :disabled="!editing"
-        required
-      ></v-textarea>
-
-      Impact
+    <div v-if="!editing">
+      <h2>{{need.data.name}}</h2>
+      <br>
+      <p style="white-space: pre-line">{{need.data.description}}</p>
+      <br>
+      <h4>Impact</h4>
       <v-slider
         v-model="need.data.impact"
         step="1"
         max="5"
         show-ticks="always"
-        label="Impact"
+        label="Intensity"
         thumb-label="always"
-        :disabled="!editing"
+        :disabled="true"
       ></v-slider>
-
-      Need owner: {{need.data.owner}}
-
+      <br>
       <hr>
-
-      <div v-if="selected.index === null">
-        <v-btn
-          color="success"
-          class="mr-4"
-          @click="addNeed()"
-        >
-          Add
-        </v-btn>
-        <v-btn
-          color="info"
-          class="mr-4"
-          @click="resetForm()"
-        >
-          Clear
-        </v-btn>
-      </div>
-      <div v-if="editing === false">
-        <v-btn
+      <br>
+      <v-btn
           v-if="selected.index != null && $store.getters.isUserLoggedIn"
           color="success"
           class="mr-4"
           @click="editing = true"
         >Edit
-        </v-btn>
-      </div>
-      <div v-if="selected.index != null && editing === true">
-        <v-btn
-          color="success"
-          class="mr-4"
-          @click="updateNeed()"
-        >Confirm
-        </v-btn>
-        <v-btn
-          color="info"
-          class="mr-4"
-          @click="editing = false; this.$store.commit('closeDetail')"
-        >Cancel
-        </v-btn>
-        <v-btn
-          color="error"
-          class="mr-4"
-          @click="deleteNeed()"
-        >Delete
-        </v-btn>
-      </div>
-    </v-form>
+      </v-btn>
+    </div>
+    <div v-else>
+      <v-form
+        ref="form"
+        v-model="valid"
+        lazy-validation
+      >
+        <v-text-field
+          v-model="need.data.name"
+          :counter="20"
+          :rules="[rules.required,rules.counter]"
+          label="Name"
+          required
+          :disabled="!editing"
+        ></v-text-field>
+
+        <v-textarea
+          v-model="need.data.description"
+          :rules="[rules.required]"
+          label="Description"
+          :disabled="!editing"
+          required
+        ></v-textarea>
+
+        Impact
+        <v-slider
+          v-model="need.data.impact"
+          step="1"
+          max="5"
+          show-ticks="always"
+          label="Impact"
+          thumb-label="always"
+          :disabled="!editing"
+        ></v-slider>
+
+        Need owner: {{need.data.owner}}
+
+        <hr>
+
+        <div v-if="selected.index === null">
+          <v-btn
+            color="success"
+            class="mr-4"
+            @click="addNeed()"
+          >
+            Add
+          </v-btn>
+          <v-btn
+            color="info"
+            class="mr-4"
+            @click="resetForm()"
+          >
+            Clear
+          </v-btn>
+        </div>
+        <div v-if="selected.index != null && editing === true">
+          <v-btn
+            color="success"
+            class="mr-4"
+            @click="updateNeed()"
+          >Confirm
+          </v-btn>
+          <v-btn
+            color="info"
+            class="mr-4"
+            @click="editing = false; this.$store.commit('closeDetail')"
+          >Cancel
+          </v-btn>
+          <v-btn
+            color="error"
+            class="mr-4"
+            @click="deleteNeed()"
+          >Delete
+          </v-btn>
+        </div>
+      </v-form>
+    </div>
   </div>
 </template>
 

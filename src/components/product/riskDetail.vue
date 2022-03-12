@@ -1,39 +1,11 @@
 <template>
   <div class="">
-    <v-form
-      ref="form"
-      v-model="valid"
-      lazy-validation
-    >
-      <v-text-field
-        v-model="risk.data.name"
-        :counter="20"
-        :rules="[rules.required,rules.counter]"
-        label="Name"
-        required
-        :disabled="!editing"
-      ></v-text-field>
-
-      <v-textarea
-        v-model="risk.data.description"
-        :rules="[rules.required]"
-        label="Description"
-        :disabled="!editing"
-        required
-      ></v-textarea>
-
-      Uncertainty
-      <v-slider
-        v-model="risk.data.uncertainty"
-        step="1"
-        max="5"
-        show-ticks="always"
-        label="Impact"
-        thumb-label="always"
-        :disabled="!editing"
-      ></v-slider>
-
-      impact
+    <div v-if="!editing">
+      <h2>{{risk.data.name}}</h2>
+      <br>
+      <p style="white-space: pre-line">{{risk.data.description}}</p>
+      <br>
+      <h3>Impact</h3>
       <v-slider
         v-model="risk.data.impact"
         step="1"
@@ -43,27 +15,17 @@
         thumb-label="always"
         :disabled="!editing"
       ></v-slider>
-
-      Risk owner: {{risk.data.owner}}
-
-      <hr>
-
-      <div v-if="selected.index === null">
-        <v-btn
-          color="success"
-          class="mr-4"
-          @click="addRisk()"
-        >
-          Add
-        </v-btn>
-        <v-btn
-          color="info"
-          class="mr-4"
-          @click="resetForm()"
-        >
-          Clear
-        </v-btn>
-      </div>
+      <h3>Uncertainty</h3>
+      <v-slider
+        v-model="risk.data.uncertainty"
+        step="1"
+        max="5"
+        show-ticks="always"
+        label="Uncertainty"
+        thumb-label="always"
+        :disabled="!editing"
+      ></v-slider>
+      risk owner: {{risk.data.owner}}
       <div v-if="editing === false">
         <v-btn
           v-if="selected.index != null && $store.getters.isUserLoggedIn"
@@ -73,27 +35,95 @@
         >Edit
         </v-btn>
       </div>
-      <div v-if="selected.index != null && editing === true">
-        <v-btn
-          color="success"
-          class="mr-4"
-          @click="updateRisk()"
-        >Confirm
-        </v-btn>
-        <v-btn
-          color="info"
-          class="mr-4"
-          @click="editing = false; this.$store.commit('closeDetail')"
-        >Cancel
-        </v-btn>
-        <v-btn
-          color="error"
-          class="mr-4"
-          @click="deleteRisk()"
-        >Delete
-        </v-btn>
-      </div>
-    </v-form>
+    </div>
+    <div v-else>
+      <v-form
+        ref="form"
+        v-model="valid"
+        lazy-validation
+      >
+        <v-text-field
+          v-model="risk.data.name"
+          :counter="20"
+          :rules="[rules.required,rules.counter]"
+          label="Name"
+          required
+          :disabled="!editing"
+        ></v-text-field>
+
+        <v-textarea
+          v-model="risk.data.description"
+          :rules="[rules.required]"
+          label="Description"
+          :disabled="!editing"
+          required
+        ></v-textarea>
+
+        Impact
+        <v-slider
+          v-model="risk.data.impact"
+          step="1"
+          max="5"
+          show-ticks="always"
+          label="Impact"
+          thumb-label="always"
+          :disabled="!editing"
+        ></v-slider>
+
+        Uncertainty
+        <v-slider
+          v-model="risk.data.uncertainty"
+          step="1"
+          max="5"
+          show-ticks="always"
+          label="Impact"
+          thumb-label="always"
+          :disabled="!editing"
+        ></v-slider>
+
+        Risk owner: {{risk.data.owner}}
+
+        <hr>
+
+        <div v-if="selected.index === null">
+          <v-btn
+            color="success"
+            class="mr-4"
+            @click="addRisk()"
+          >
+            Add
+          </v-btn>
+          <v-btn
+            color="info"
+            class="mr-4"
+            @click="resetForm()"
+          >
+            Clear
+          </v-btn>
+        </div>
+
+        <div v-if="selected.index != null && editing === true">
+          <v-btn
+            color="success"
+            class="mr-4"
+            @click="updateRisk()"
+          >Confirm
+          </v-btn>
+          <v-btn
+            color="info"
+            class="mr-4"
+            @click="editing = false; this.$store.commit('closeDetail')"
+          >Cancel
+          </v-btn>
+          <v-btn
+            color="error"
+            class="mr-4"
+            @click="deleteRisk()"
+          >Delete
+          </v-btn>
+        </div>
+      </v-form>
+    </div>
   </div>
 </template>
 

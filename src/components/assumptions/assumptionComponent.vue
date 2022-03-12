@@ -1,5 +1,6 @@
 <template>
   <div class="">
+    <h3 v-if="assumptions.length>0">Assumptions:</h3>
     <v-card
       class="assumption-card"
       v-for="(assumptionItem, index) in assumptions"
@@ -68,7 +69,7 @@
       <!-- //TODO: editing and deleting assumptions -->
     </v-card>
     <v-btn
-      v-if="addingAssumption === false"
+      v-if="addingAssumption === false && $store.getters.isUserLoggedIn"
       color="success"
       class="mr-4"
       @click="addingAssumption = !addingAssumption"

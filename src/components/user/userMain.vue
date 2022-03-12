@@ -189,7 +189,7 @@
               @click='expandDetail(interview.id,"interview")'
               >
                 <v-card-header>{{interview.data.interviewee}}</v-card-header>
-                <v-card-text>{{interview.data.description}}</v-card-text>
+                <v-card-text>{{interview.data.details}}</v-card-text>
               </v-card>
             </v-row>
         </v-main>
@@ -241,20 +241,17 @@
               <interviewDetail :key='$store.state.selected.index'/>
             </div>
             <div class="panel-content" v-if='$store.state.selected.index !== null'>
-              <h3>Comments</h3>
               <comment
                 v-if='$store.state.selected.index != null'
                 :doc-id='$store.state.selected.index'
                 :doc-type='$store.state.selected.source'
                 :key="$store.state.selected.index+draft+'comment'"/>
-              <h3>Assumptions</h3>
               <assumption
                   v-if='$store.state.selected.index != null'
                   :doc-id='$store.state.selected.index'
                   :doc-type='"products"'
                   :key="$store.state.selected.index+'assumption'"
                     />
-              <h3>Changes</h3>
               <change
                 v-if='$store.state.selected.index != null'
                 :doc-id='$store.state.selected.index'
@@ -276,6 +273,7 @@ import jobToBeDoneDetail from "./jobToBeDoneDetail";
 import interviewDetail from "./interviewDetail";
 import comment from "../comment/comment";
 import change from '../changes/changeComponent'
+import assumption from '../assumptions/assumptionComponent'
 
 export default {
   name: 'persona-panel',
@@ -286,6 +284,7 @@ export default {
      journeyDetail,
      jobToBeDoneDetail,
      interviewDetail,
+     assumption,
      comment,
     change
   },
@@ -342,6 +341,8 @@ export default {
 
     closeDetail() {
       document.getElementById("right-sidepanel").style.width = "0px";
+      this.search=""
+      this.$store.commit('filter',"")
       // EventBus.$emit('selection-changed',this.selectedRow = null);
     },
 
