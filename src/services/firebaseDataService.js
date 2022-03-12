@@ -75,6 +75,7 @@ export class User{
      await firebase.auth().onAuthStateChanged(async user => {
       if (user) {
         const userDetails = await db.collection("users").doc(user.uid).get().then((doc) => ({ id:doc.id, ...doc.data()}));
+        if (typeof userDetails.data === undefined) {return}
         store.commit('login',userDetails)
       } else {
         console.log('user not logged in')
@@ -103,10 +104,19 @@ export class User{
     const provider = new GoogleAuthProvider();
     const userCredential = await signInWithPopup(auth, provider)
       .then((result) => {return result})
-      .catch((err) => {throw err});
+      .catch((err) => {
+        throw err
+      });
     const userDetails = await db.collection("users").doc(userCredential.user.uid).get().then((doc) => ({ id:doc.id, ...doc.data()}));
-    store.commit('login',userDetails)
-    store.commit('alert',{type:'info',message:'logged in',autoClear:true})
+    // if userDetails
+    console.log(userDetails)
+    console.log(userDetails.data)
+    if (typeof userDetails.data == undefined){
+      console.log(userDetails)
+    } else {
+      store.commit('login',userDetails)
+      store.commit('alert',{type:'info',message:'logged in',autoClear:true})
+    }
     return;
   }
 

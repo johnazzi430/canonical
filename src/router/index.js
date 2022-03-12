@@ -3,8 +3,9 @@ import Home from '@/components/Home.vue'
 import Login from '../components/Login'
 import Register from '../components/Register'
 import Product from '../components/product/productMain'
-import User from '../components/user/userMain'
+import UserC from '../components/user/userMain'
 import Draft from '../components/draft/draftView'
+import {User} from "../services/firebaseDataService";
 
 const routes = [
   {
@@ -31,14 +32,14 @@ const routes = [
   {
     path: '/user',
     name: 'User',
-    component: User,
+    component: UserC,
     children:[
-        { path: 'persona/:id', component: User},
-        { path: 'need/:id', component: User},
-        { path: 'insight/:id', component: User},
-        { path: 'journey/:id', component: User},
-        { path: 'jobToBeDone/:id', component: User},
-        { path: 'interview/:id', component: User},
+        { path: 'persona/:id', component: UserC},
+        { path: 'need/:id', component: UserC},
+        { path: 'insight/:id', component: UserC},
+        { path: 'journey/:id', component: UserC},
+        { path: 'jobToBeDone/:id', component: UserC},
+        { path: 'interview/:id', component: UserC},
       ]
   },
   {
@@ -66,6 +67,15 @@ const routes = [
     path: '/register',
     name: 'Register',
     component: Register
+  },
+  {
+    path: '/logout',
+    name: 'logout',
+    component: () => {
+      User.logout();
+      this.$store.commit('logout')
+      this.$router.push('/')
+    }
   },
 ]
 
