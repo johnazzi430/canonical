@@ -267,12 +267,7 @@ export default {
   },
   async beforeMount() {
     this.search = this.$store.state.filter
-    //// TODO: reduce calls for new data when switching components
-    this.$store.commit('getProducts')
-    this.$store.commit('getFeatures')
-    this.$store.commit('getIdeas')
-    this.$store.commit('getGoals')
-    this.$store.commit('getRisks')
+
   },
   mounted(){
     if(this.$store.state.selected.index != null){document.getElementById("right-sidepanel").style.width = "400px";}

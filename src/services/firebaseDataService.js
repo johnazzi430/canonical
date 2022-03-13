@@ -1,10 +1,11 @@
 import firebase from "../firebase";
 import 'firebase/compat/firestore';
-import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "firebase/auth";
+import { getAuth, signOut } from "firebase/auth";
 import store from "../store";
 import _ from 'lodash';
 
 const db = firebase.firestore();
+
 
 export const collectionMap = {
   product:'products',
@@ -75,48 +76,25 @@ export class User{
      await firebase.auth().onAuthStateChanged(async user => {
       if (user) {
         const userDetails = await db.collection("users").doc(user.uid).get().then((doc) => ({ id:doc.id, ...doc.data()}));
-        if (typeof userDetails.data === undefined) {return}
-        store.commit('login',userDetails)
+        if (!userDetails.project) { // create user record if user not created yet
+            const newUser ={
+              displayName: user.email,
+              email: user.email,
+              uid: user.uid
+            }
+            await this.createUser(newUser)
+            store.commit('alert',{type:'info',message:'New User Account Created!'})
+          return
+        } else {
+          store.commit('login',userDetails)
+        }
+
       } else {
         console.log('user not logged in')
         // store.commit('alert',{type:'error',message:'not logged in',autoClear:true})
         return null
       }
     });
-    return;
-  }
-
-  static async login(form){
-    const auth = getAuth();
-    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
-    const userCredential = await signInWithEmailAndPassword(auth, form.email, form.password)
-      .then((result) => {return result})
-      .catch((err) => {throw err; });
-    const userDetails = await db.collection("users").doc(userCredential.user.uid).get().then((doc) => ({ id:doc.id, ...doc.data()}));
-    store.commit('login',userDetails)
-    store.commit('alert',{type:'info',message:'logged in',autoClear:true})
-    return;
-  }
-
-  static async loginWithGoogle(){
-    const auth = getAuth();
-    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
-    const provider = new GoogleAuthProvider();
-    const userCredential = await signInWithPopup(auth, provider)
-      .then((result) => {return result})
-      .catch((err) => {
-        throw err
-      });
-    const userDetails = await db.collection("users").doc(userCredential.user.uid).get().then((doc) => ({ id:doc.id, ...doc.data()}));
-    // if userDetails
-    console.log(userDetails)
-    console.log(userDetails.data)
-    if (typeof userDetails.data == undefined){
-      console.log(userDetails)
-    } else {
-      store.commit('login',userDetails)
-      store.commit('alert',{type:'info',message:'logged in',autoClear:true})
-    }
     return;
   }
 
@@ -129,38 +107,18 @@ export class User{
     store.commit('alert',{type:'info',message:'logged out',autoClear:true})
   }
 
-  static async createUser(form){
-    const auth = getAuth();
-    const userCredential = await createUserWithEmailAndPassword(auth, form.email, form.password)
-      .then((result) => {return result})
-      .catch((err) => {throw err});
+  static async createUser(payload){
+    const project = await db.collection("project").add({name:payload.email,createdBy:payload.uid});
     const newUser = {
-      displayName : form.firstName + ' ' +form.lastName,
-      email : form.email,
-      project : 'nCHJGmd9sx9VuiiqKrFN' //hardcode to default projectID
+      displayName : payload.displayName,
+      email : payload.email,
+      project : project.id //hardcode to default projectID
     }
-    await db.collection("users").doc(userCredential.user.uid).set(newUser);
-    const userDetails = await db.collection("users").doc(userCredential.user.uid).get().then((doc) => ({ id:doc.id, ...doc.data()}));
+
+    await db.collection("users").doc(payload.uid).set(newUser);
+    const userDetails = await db.collection("users").doc(payload.uid).get().then((doc) => ({ id:doc.id, ...doc.data()}));
     store.commit('login',userDetails)
     return
-  }
-
-  static async createUserWithGoogle(){
-    const auth = getAuth();
-    const provider = new GoogleAuthProvider();
-    const userCredential = await signInWithPopup(auth, provider)
-      .then((result) => {return result})
-      .catch((err) => {throw err})
-    const newUser ={
-        displayName : userCredential.user.displayName,
-        email : userCredential.user.email,
-        project : 'nCHJGmd9sx9VuiiqKrFN' //hardcode to default projectID
-    }
-    await db.collection("users").doc(userCredential.user.uid).set(newUser);
-    const userDetails = await db.collection("users").doc(userCredential.user.uid).get().then((doc) => ({ id:doc.id, ...doc.data()}));
-    store.commit('login',userDetails)
-    return
-
   }
 
   static async updateUser(){

@@ -297,13 +297,6 @@ export default {
   },
   async beforeMount() {
     this.search = this.$store.state.filter
-    //// TODO: reduce calls for new data when switching components
-    this.$store.commit('getPersonas')
-    this.$store.commit('getInsights')
-    this.$store.commit('getNeeds')
-    this.$store.commit('getJourneys')
-    this.$store.commit('getJobsToBeDone')
-    this.$store.commit('getInterviews')
   },
   mounted(){
     if(this.$store.state.selected.index != null){document.getElementById("right-sidepanel").style.width = "400px";}

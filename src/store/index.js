@@ -96,16 +96,40 @@ const store = createStore({
   },
   mutations: {
 
+    async getAllData(state){
+      state.products = await Product.getAll()
+      state.features = await Feature.getAll()
+      state.ideas = await Idea.getAll()
+      state.goals = await Goal.getAll()
+      state.risks = await Risk.getAll()
+      state.personas = await Persona.getAll()
+      state.insights = await Insight.getAll()
+      state.needs = await Need.getAll()
+      state.journeys = await Journey.getAll()
+      state.jobsToBeDone = await JobToBeDone.getAll()
+      state.interviews = await Interview.getAll()
+      state.users = await User.getUsersByProject()
+      state.approvals = await Approval.getAll()
+      state.drafts  = await Draft.getAll()
+    },
+
     async enter(){
       await User.getUserAuth()
+      store.commit('getAllData')
     },
 
     login(state,payload){
-      state.user.loggedIn = true;
-      state.user.displayName = payload.displayName;
-      state.user.uid = payload.id;
-      state.user.email = payload.email;
-      state.user.project = payload.project;
+      if (!payload.project) {
+        console.warn("no user record exists")
+        return
+      } else {
+        state.user.loggedIn = true;
+        state.user.displayName = payload.displayName;
+        state.user.uid = payload.id;
+        state.user.email = payload.email;
+        state.user.project = payload.project;
+        store.commit('getAllData')
+      }
     },
 
     logout(state){
@@ -114,6 +138,7 @@ const store = createStore({
       state.user.uid = "";
       state.user.email = "";
       state.user.project= 'nCHJGmd9sx9VuiiqKrFN';
+      store.commit('getAllData')
     },
 
     alert(state,payload){
