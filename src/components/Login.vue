@@ -1,4 +1,6 @@
 <template>
+  <section id="firebaseui-auth-container"></section>
+  <!--
   <div class="container center">
     <v-form
       ref="form"
@@ -60,11 +62,17 @@
         Register
       </v-btn>
     </v-form>
-  </div>
+  </div> -->
+
+
 </template>
 
 <script>
-import {User} from "../services/firebaseDataService";
+//import {User} from "../services/firebaseDataService";
+import firebase from "../firebase";
+import * as firebaseui from 'firebaseui'
+import "firebaseui/dist/firebaseui.css";
+import router from "../router"
 
 export default {
   data() {
@@ -85,32 +93,61 @@ export default {
       errorMessage: null
     };
   },
+  async mounted() {
+      firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+      let ui = firebaseui.auth.AuthUI.getInstance();
+      if (!ui) {ui = new firebaseui.auth.AuthUI(firebase.auth());}
+      var uiConfig = {
+            // signInSuccessUrl: "/",
+            //autoUpgradeAnonymousUsers: true,
+            signInFlow: 'popup',
+            signInOptions: [
+              {
+                provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+                customParameters: { prompt: 'select_account'}
+              },
+              firebase.auth.EmailAuthProvider.PROVIDER_ID,
+              firebase.auth.GithubAuthProvider.PROVIDER_ID
+            ],
+            callbacks: {
+              signInSuccessWithAuthResult: async function(){
+//                await User.getUserAuth()
+                router.back()
+              }
+            }
+        };
+      await ui.start("#firebaseui-auth-container", uiConfig);
+      // User.getUserAuth()
+      // this.$router.back()
+    },
   methods: {
-    async login() {
-      await User.login(this.form)
-        .catch((error) => {
-          this.error = true;
-          this.errorMessage = error;
-        });
-//      this.$router.replace({ path: '/' })
-    },
-
-    clear(){
-      this.$refs.form.reset()
-    },
-
-    async loginWithGoogle(){
-      await User.loginWithGoogle()
-      this.$router.replace({ path: '/' })
-    }
+    // async login() {
+    //   await User.login(this.form)
+    //     .catch((error) => {
+    //       this.error = true;
+    //       this.errorMessage = error;
+    //     });
+    //   this.$router.back()
+    // },
+    //
+    // clear(){
+    //   this.$refs.form.reset()
+    // },
+    //
+    // async loginWithGoogle(){
+    //   await User.loginWithGoogle()
+    //   this.$router.back()
+    //   return
+    // }
 
   }
 };
 </script>
 
-<style>
+<style scoped>
 .center {
   margin: auto;
+  margin-top: 88px;
   width: 50%;
   border: 3px solid green;
   padding: 10px;
