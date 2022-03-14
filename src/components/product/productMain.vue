@@ -6,11 +6,11 @@
           rail
           permanent>
           <v-list nav color="transparent">
-            <v-list-item prepend-icon="mdi-semantic-web" title="Products" value="products"></v-list-item>
-            <v-list-item prepend-icon="mdi-application" title="Features" value="Features"></v-list-item>
-            <v-list-item prepend-icon="mdi-lightbulb" title="Ideas" value="ideas"></v-list-item>
-            <v-list-item prepend-icon="mdi-chart-areaspline" title="Goals" value="goals"></v-list-item>
-            <v-list-item prepend-icon="mdi-flag" title="Risks" value="risks"></v-list-item>
+            <v-list-item prepend-icon="mdi-semantic-web" title="Products" value="products" v-on:click='addItem("product"); draft=false'></v-list-item>
+            <v-list-item prepend-icon="mdi-application" title="Features" value="Features" v-on:click='addItem("feature"); draft=false'></v-list-item>
+            <v-list-item prepend-icon="mdi-lightbulb" title="Ideas" value="ideas" v-on:click='addItem("idea"); draft=false'></v-list-item>
+            <v-list-item prepend-icon="mdi-chart-areaspline" title="Goals" value="goals" v-on:click='addItem("goal"); draft=false'></v-list-item>
+            <v-list-item prepend-icon="mdi-flag" title="Risks" value="risks" v-on:click='addItem("risk"); draft=false'></v-list-item>
             <!-- <v-list-item prepend-icon="mdi-desktop-classic" title="Architecture" value="architecture"></v-list-item> -->
           </v-list>
         </v-navigation-drawer>
@@ -42,17 +42,18 @@
                     flex-direction: column;
                     overflow-x: auto;">
               <v-card
-              v-for="product in $store.getters.filteredProducts"
-              v-bind:key="product"
-              class="rounded-0 product-card"
-              width="300"
-              height="200"
-              elevation="3"
-              variant ="contained-text"
-              @click="expandDetail(product.id,'product')"
-              >
-                <v-card-header>{{product.data.name}}</v-card-header>
+                v-for="product in $store.getters.filteredProducts"
+                v-bind:key="product"
+                class="rounded-0 product-card"
+                width="300"
+                height="200"
+                elevation="3"
+                variant ="outlined"
+                @click="expandDetail(product.id,'product')"
+                >
+                <v-card-header><v-icon>mdi-semantic-web</v-icon> {{product.data.name}}</v-card-header>
                 <v-card-text class="text-wrap">{{product.data.description}}</v-card-text>
+                <v-chip v-for="user in product.data.personaNeedMap" :key="user">{{user.persona.name}}</v-chip>
 
               </v-card>
             </v-row>
@@ -74,10 +75,10 @@
               width="200"
               height="150"
               elevation="3"
-              variant ="contained-text"
+              variant ="outlined"
               @click="expandDetail(feature.id,'feature')"
               >
-                <v-card-header>{{feature.data.name}}</v-card-header>
+                <v-card-header><v-icon>mdi-application</v-icon> {{feature.data.name}}</v-card-header>
                 <v-card-text>{{feature.data.description}}</v-card-text>
               </v-card>
             </v-row>
@@ -99,10 +100,10 @@
               width="200"
               height="150"
               elevation="3"
-              variant ="contained-text"
+              variant ="outlined"
               @click="expandDetail(idea.id,'idea')"
               >
-                <v-card-header>{{idea.data.idea}}</v-card-header>
+                <v-card-header><v-icon>mdi-lightbulb</v-icon> {{idea.data.idea}}</v-card-header>
                 <v-card-text>{{idea.data.description}}</v-card-text>
               </v-card>
             </v-row>
@@ -124,10 +125,14 @@
               width="280"
               height="150"
               elevation="3"
-              variant ="contained-text"
+              variant ="outlined"
               @click="expandDetail(goal.id,'goal')"
               >
-                <v-card-header>{{goal.data.name}}</v-card-header>
+                <v-card-header>
+                  <v-icon>mdi-chart-areaspline</v-icon>
+                  {{goal.data.name}}
+                  <v-chip>{{goal.data.goalType}}</v-chip>
+                </v-card-header>
                 <v-card-text>{{goal.data.description}}</v-card-text>
               </v-card>
             </v-row>
@@ -150,10 +155,10 @@
               width="200"
               height="150"
               elevation="3"
-              variant ="contained-text"
+              variant ="outlined"
               @click="expandDetail(risk.id,'risk')"
               >
-                <v-card-header>{{risk.data.name}}</v-card-header>
+                <v-card-header><v-icon>mdi-flag</v-icon> {{risk.data.name}}</v-card-header>
                 <v-card-text>{{risk.data.description}}</v-card-text>
               </v-card>
             </v-row>
@@ -353,6 +358,7 @@ export default {
   margin: 4px;
   white-space: nowrap;
   overflow: hidden;
+  border: 1px lightgrey solid;
 
   &:hover{
       background: #E5E5E5;

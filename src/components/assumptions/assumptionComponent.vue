@@ -7,7 +7,11 @@
       :key="assumptionItem"
       density="compact">
       <div v-if="assumptionItem.editing===false">
-        <v-card-subtitle class="">{{assumptionItem.data.createdBy}} on {{assumptionItem.data.createDate}}</v-card-subtitle>
+        <v-card-subtitle class="">
+          <p class='font-weight-black'>{{assumptionItem.creator.displayName}}
+          </p>&nbsp;on&nbsp;
+          <p class='font-weight-black'>{{new Date(assumptionItem.data.createDate).toISOString().split("T")[0]}}</p>
+        </v-card-subtitle>
         <v-card-title>{{assumptionItem.data.name}}</v-card-title>
         <v-card-text style="white-space: pre-line">{{assumptionItem.data.details}}</v-card-text>
         <v-card-actions>
