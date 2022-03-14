@@ -128,6 +128,12 @@ export class User{
     const snapshot =  await db.collection("users").where('project', '==' ,store.state.user.project).get()
     return snapshot.docs.map(doc =>({ id:doc.id, ...doc.data()}))
   }
+
+  static async getDefaultProject(){
+    const val = "default"
+    const snapshot =  await db.collection("project").where('name', '==',val).get()
+    return snapshot.docs.map(doc =>({ id:doc.id, ...doc.data()}))
+  }
 }
 
 

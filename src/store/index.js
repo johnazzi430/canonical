@@ -24,7 +24,7 @@ const store = createStore({
         displayName: null,
         uid:null,
         email: null,
-        project: 'nCHJGmd9sx9VuiiqKrFN' //hardcode to default projectID
+        project: '' //hardcode to default projectID
       },
       personas: [],
       features: [],
@@ -116,6 +116,8 @@ const store = createStore({
     async enter(){
       await User.getUserAuth()
       store.commit('getAllData')
+      var project = await User.getDefaultProject()
+      store.state.user.project = project[0].id
     },
 
     login(state,payload){

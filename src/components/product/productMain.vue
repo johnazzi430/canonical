@@ -159,34 +159,35 @@
             </v-row>
         </v-main>
         <div id="right-sidepanel" class="sidepanel-right">
-
-            <h1 class="panel-content" style="text-transform:uppercase">
-              {{$store.state.selected.source}}
-              <v-btn
-                style="{right:0;position:absolute}"
-                icon
-                variant="text"
-                class="closebtn"
-                @click="closeDetail(); ">
-                <v-icon>mdi-close</v-icon>
-              </v-btn>
-              <v-btn
-                style="{right:0;position:absolute}"
-                v-if="!detailExpandedLarge"
-                icon
-                variant="text"
-                @click='expandDetailLarge()'>
-                <v-icon>mdi-arrow-right-drop-circle-outline</v-icon>
-              </v-btn>
-              <v-btn
-                style="{right:0;position:absolute}"
-                v-else
-                icon
-                variant="text"
-                @click='expandDetailSmall()'>
-                <v-icon>mdi-arrow-left-drop-circle-outline</v-icon>
-              </v-btn>
-            </h1>
+            <v-row style="margin:16px">
+              <h1 style="text-transform:uppercase">
+                {{$store.state.selected.source}}
+                <v-btn-group class="panel-controls">
+                  <v-btn
+                    icon
+                    variant="text"
+                    class="closebtn"
+                    @click="closeDetail(); ">
+                    <v-icon>mdi-close</v-icon>
+                  </v-btn>
+                  <v-spacer/>
+                  <v-btn
+                    v-if="!detailExpandedLarge"
+                    icon
+                    variant="text"
+                    @click='expandDetailLarge()'>
+                    <v-icon>mdi-arrow-right-drop-circle-outline</v-icon>
+                  </v-btn>
+                  <v-btn
+                    v-else
+                    icon
+                    variant="text"
+                    @click='expandDetailSmall()'>
+                    <v-icon>mdi-arrow-left-drop-circle-outline</v-icon>
+                  </v-btn>
+                </v-btn-group>
+              </h1>
+            </v-row>
             <div class="flex-container">
               <div class="panel-content" v-if='$store.state.selected.source === "product"'>
                 <productDetail
@@ -433,6 +434,11 @@ export default {
     width: 384px;
     margin: 16px;
   }
+}
+
+.panel-controls{
+  right: 0px;
+  position: absolute;
 }
 
 .v-field__input {
