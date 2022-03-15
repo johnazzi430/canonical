@@ -115,7 +115,7 @@ export default {
       need:{
         id: null,
         data : {
-          description:"",
+          description:"I’m trying to... \nBut... \nBecause... \nWhich makes me feel... \n",
           name:"",
           impact:1
         }
