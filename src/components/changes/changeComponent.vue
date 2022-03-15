@@ -4,9 +4,10 @@
     <v-expansion-panels>
       <v-expansion-panel v-for="change in changes" :key="change">
         <v-expansion-panel-title>
-          {{change.id}} on {{new Date(change.data.createDate).toISOString().split("T")[0]}}
+          {{change.id.slice(0,10)}}... {{$dayjs(change.data.createDate).fromNow()}}
         </v-expansion-panel-title>
         <v-expansion-panel-text>
+          Changed By: {{change.creator.displayName}}
           <v-row style="margin:-4px 0px">
             <v-col>
               <h4>Field</h4>
@@ -47,7 +48,7 @@ export default {
     }),
     async mounted(){
       this.changes = await Change.getByDocID(this.docType,this.docId)
-      this.changes.sort((a, b) => a.createDate - b.createDate);
+      this.changes.sort((a, b) => a.data.createDate - b.data.createDate);
       this.changes.forEach((item, i) => {
         if(item){""}
         this.changes[i].data.set = Object.assign(...this.changes[i].data.set)

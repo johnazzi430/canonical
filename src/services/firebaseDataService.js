@@ -224,7 +224,11 @@ export class Change {
       .where("archived","==", false)
       .where("project","==",store.state.user.project)
       .get();
-    return snapshot.docs.map(doc => ({id:doc.id, data:doc.data()}));
+    return await Promise.all(snapshot.docs.map(async doc => ({
+      id:doc.id,
+      data:doc.data(),
+      creator: await User.getUserData(doc.data().createdBy)
+    })));
   }
 
   async create(set){
