@@ -53,8 +53,9 @@
                 >
                 <v-card-header><v-icon>mdi-semantic-web</v-icon> {{product.data.name}}</v-card-header>
                 <v-card-text class="text-wrap">{{product.data.description}}</v-card-text>
-                <v-chip v-for="user in product.data.personaNeedMap" :key="user">{{user.persona.name}}</v-chip>
-
+                <v-card-text>
+                  <v-chip v-for="user in product.data.personaNeedMap" :key="user">{{user.persona.name}}</v-chip>
+                </v-card-text>
               </v-card>
             </v-row>
             <h3 class="text-medium-emphasis">Features  <v-btn variant="contained-text" color="success" v-if='$store.getters.isUserLoggedIn' type="button" name="button" v-on:click='addItem("feature")'>Add Feature +</v-btn></h3>
