@@ -576,7 +576,7 @@ export class Goal {
             .where("archived","==", false)
             .where("project","==",store.state.user.project)
             .get();
-    const products = await db.collection("products").where("productGoals","!=", []).get();
+    const products = await db.collection("products").where("goals","!=", []).get();
     const joinProducts = products.docs.map(doc => ({id:doc.id, goals:doc.data().goals}) );
     return snapshot.docs.map(doc => ({
       id:doc.id,
