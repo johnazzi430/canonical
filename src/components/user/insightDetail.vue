@@ -166,7 +166,7 @@ export default {
       async addInsight () {
         await this.$refs.form.validate();
         if (this.valid ){
-          await Insight.createDoc(this.insight.data)
+          await Insight.create(this.insight.data)
           this.$store.commit('getInsights')
           this.$store.commit('closeDetail')
         }

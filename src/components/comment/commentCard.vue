@@ -6,8 +6,8 @@
       <div>
         <v-card-subtitle class="">
           <p class='font-weight-black'>{{comment.creator.displayName}}
-          </p>&nbsp;on&nbsp;
-          <p class='font-weight-black'>{{new Date(comment.data.createDate).toISOString().split("T")[0]}}</p>
+          </p>&nbsp;
+          <p class=''>{{$dayjs(comment.data.createDate).fromNow()}}</p>
         </v-card-subtitle>
         <v-card-text
           class="text-body-2"

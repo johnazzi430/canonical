@@ -132,7 +132,7 @@ export default {
       },
       async updateInterview () {
         await this.$refs.form.validate();
-        this.valid ? await Interview.updateDoc(this.intervew.id,this.interview.data) : console.log('not valid');
+        this.valid ? await Interview.updateDoc(this.interview.id,this.interview.data) : console.log('not valid');
         this.$store.commit('getInterviews')
         this.$refs.form.resetValidation();
       },

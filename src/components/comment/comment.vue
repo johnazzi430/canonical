@@ -63,7 +63,7 @@ export default {
     }),
     async mounted(){
       this.comments = await Comment.getCommentsByDocID(this.docType,this.docId)
-      this.comments = this.comments.reverse()
+      this.comments = this.comments.sort((a, b) => a.date.createDate - b.date.createDate);
     },
     methods: {
       async addComment () {
@@ -76,6 +76,7 @@ export default {
           }
           await new Comment(commentPayload).createComment()
           this.comments = await Comment.getCommentsByDocID(this.docType,this.docId)
+          this.comments = this.comments.sort((a, b) => a.date.createDate - b.date.createDate);
         }
       },
       async editComment (id,updatedComment) {

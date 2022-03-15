@@ -8,10 +8,10 @@
         >
           <v-list nav color="transparent">
             <v-list-item prepend-icon="mdi-account-supervisor-circle" title="Personas" value="persona"></v-list-item>
-            <v-list-item prepend-icon="mdi-binoculars" title="insights" value="insights"></v-list-item>
             <v-list-item prepend-icon="mdi-fire" title="Needs" value="needs"></v-list-item>
-            <v-list-item prepend-icon="mdi-account-convert" title="Journeys" value="journeys"></v-list-item>
+            <v-list-item prepend-icon="mdi-binoculars" title="insights" value="insights"></v-list-item>
             <v-list-item prepend-icon="mdi-wrench" title="Jobs to be done" value="jobsToBeDone"></v-list-item>
+            <v-list-item prepend-icon="mdi-account-convert" title="Interviews" value="interviews"></v-list-item>
           </v-list>
         </v-navigation-drawer>
         <v-main style="
@@ -48,10 +48,10 @@
               width="400"
               height="200"
               elevation="3"
-              variant ="contained-text"
+              variant ="outlined"
               @click='expandDetail(persona.id,"persona")'
               >
-                <v-card-header>{{persona.data.name}}</v-card-header>
+                <v-card-header><v-icon>mdi-account</v-icon> {{persona.data.name}}</v-card-header>
                 <v-card-text>{{persona.data.description}}</v-card-text>
               </v-card>
             </v-row>
@@ -67,17 +67,17 @@
                     flex-direction: column;
                     overflow-x: auto;">
               <v-card
-              v-for="need in $store.getters.filteredNeeds"
-              v-bind:key="need"
-              density ="compact"
-              class="rounded-0"
-              width="200"
-              height="150"
-              elevation="3"
-              variant ="contained-text"
-              @click='expandDetail(need.id,"need")'
-              :ripple = 'true'>
-              <v-card-header>{{need.data.name}}</v-card-header>
+                v-for="need in $store.getters.filteredNeeds"
+                v-bind:key="need"
+                density ="compact"
+                class="rounded-0"
+                width="200"
+                height="150"
+                elevation="3"
+                variant ="outlined"
+                @click='expandDetail(need.id,"need")'
+                :ripple = 'true'>
+              <v-card-header><v-icon>mdi-fire</v-icon> {{need.data.name}}</v-card-header>
               <v-card-text>{{need.data.description}}</v-card-text>
               </v-card>
             </v-row>
@@ -100,10 +100,10 @@
               width="300"
               height="150"
               elevation="3"
-              variant ="contained-text"
+              variant ="outlined"
               @click='expandDetail(insight.id,"insight")'
               >
-                <v-card-header>{{insight.data.name}}</v-card-header>
+                <v-card-header><v-icon>mdi-binoculars</v-icon> {{insight.data.name}}</v-card-header>
                 <v-card-text>{{insight.data.description}}</v-card-text>
               </v-card>
             </v-row>
@@ -125,7 +125,7 @@
               width="200"
               height="150"
               elevation="3"
-              variant ="contained-text"
+              variant ="outlined"
               @click="search=journey.id , $store.commit('filter',search.trim()) "
               >
                 <v-card-header>{{journey.data.name}}</v-card-header>
@@ -160,10 +160,10 @@
               width="200"
               height="150"
               elevation="3"
-              variant ="contained-text"
+              variant ="outlined"
               @click='expandDetail(jobToBeDone.id,"jobToBeDone")'
               >
-                <v-card-header>{{jobToBeDone.data.name}}</v-card-header>
+                <v-card-header><v-icon>mdi-wrench</v-icon> {{jobToBeDone.data.name}}</v-card-header>
                 <v-card-text>{{jobToBeDone.data.description}}</v-card-text>
               </v-card>
             </v-row>
@@ -185,10 +185,10 @@
               width="200"
               height="130"
               elevation="3"
-              variant ="contained-text"
+              variant ="outlined"
               @click='expandDetail(interview.id,"interview")'
               >
-                <v-card-header>{{interview.data.interviewee}}</v-card-header>
+                <v-card-header><v-icon>mdi-account-convert</v-icon> {{interview.data.interviewee}}</v-card-header>
                 <v-card-text>{{interview.data.details}}</v-card-text>
               </v-card>
             </v-row>
@@ -372,6 +372,7 @@ export default {
   margin: 4px;
   white-space: nowrap;
   overflow: hidden;
+  border: 1px lightgrey solid;
 
   &:hover{
       background: #E5E5E5;

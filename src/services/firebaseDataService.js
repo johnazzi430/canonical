@@ -128,6 +128,12 @@ export class User{
     const snapshot =  await db.collection("users").where('project', '==' ,store.state.user.project).get()
     return snapshot.docs.map(doc =>({ id:doc.id, ...doc.data()}))
   }
+
+  static async getDefaultProject(){
+    const val = "default"
+    const snapshot =  await db.collection("project").where('name', '==',val).get()
+    return snapshot.docs.map(doc =>({ id:doc.id, ...doc.data()}))
+  }
 }
 
 
@@ -191,7 +197,11 @@ export class Assumption {
       .where("archived","==", false)
       .where("project","==",store.state.user.project)
       .get();
-    return snapshot.docs.map(doc => ({id:doc.id, data:doc.data()}));
+    return await Promise.all(snapshot.docs.map(async doc => ({
+      id:doc.id,
+      data:doc.data(),
+      creator: await User.getUserData(doc.data().createdBy)
+    })));
   }
 
   async create(){
@@ -214,7 +224,11 @@ export class Change {
       .where("archived","==", false)
       .where("project","==",store.state.user.project)
       .get();
-    return snapshot.docs.map(doc => ({id:doc.id, data:doc.data()}));
+    return await Promise.all(snapshot.docs.map(async doc => ({
+      id:doc.id,
+      data:doc.data(),
+      creator: await User.getUserData(doc.data().createdBy)
+    })));
   }
 
   async create(set){

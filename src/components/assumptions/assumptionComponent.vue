@@ -7,7 +7,11 @@
       :key="assumptionItem"
       density="compact">
       <div v-if="assumptionItem.editing===false">
-        <v-card-subtitle class="">{{assumptionItem.data.createdBy}} on {{assumptionItem.data.createDate}}</v-card-subtitle>
+        <v-card-subtitle class="">
+          <p class='font-weight-black'>{{assumptionItem.creator.displayName}}
+          </p>&nbsp;
+          <p class=''>{{$dayjs(assumptionItem.data.createDate).fromNow()}}</p>
+        </v-card-subtitle>
         <v-card-title>{{assumptionItem.data.name}}</v-card-title>
         <v-card-text style="white-space: pre-line">{{assumptionItem.data.details}}</v-card-text>
         <v-card-actions>
@@ -153,7 +157,7 @@ export default {
     }),
     async mounted(){
       this.assumptions = await Assumption.getByDocID(this.docType,this.docId)
-      this.assumptions = this.assumptions.reverse()
+      this.assumptions = this.assumptions.sort((a, b) => a.date.createDate - b.date.createDate);
       this.assumptions.forEach((item) => {
         item.editing = false;
       });
