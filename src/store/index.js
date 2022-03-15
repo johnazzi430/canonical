@@ -115,9 +115,9 @@ const store = createStore({
 
     async enter(){
       await User.getUserAuth()
-      store.commit('getAllData')
       var project = await User.getDefaultProject()
       store.state.user.project = project[0].id
+      store.commit('getAllData')
     },
 
     login(state,payload){
